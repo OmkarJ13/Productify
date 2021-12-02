@@ -1,0 +1,12 @@
+.TimerEntries {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  padding-block: 4em;
+  width: 100%;
+}
+
+.TimerEntries__empty-msg {
+  margin: auto;
+  color: grey;
+}

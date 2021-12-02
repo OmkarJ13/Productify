@@ -1,0 +1,9 @@
+.TimeTracker {
+  width: 80%;
+  height: 90vh;
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}

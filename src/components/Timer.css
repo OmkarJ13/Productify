@@ -1,0 +1,26 @@
+.Timer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid silver;
+}
+
+.Timer__task-input {
+  width: 80%;
+  padding: 1em 2em;
+}
+
+.Timer__time {
+  padding-left: 1em;
+}
+
+.Timer__start-btn,
+.Timer__stop-btn {
+  width: 20%;
+  padding: 1em 2em;
+  background-color: skyblue;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 500;
+}

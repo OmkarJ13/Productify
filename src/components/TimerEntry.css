@@ -1,0 +1,66 @@
+.TimerEntry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4em;
+  padding: 2em;
+  border: 1px solid silver;
+}
+
+.TimerEntry__actions {
+  display: flex;
+  gap: 2em;
+}
+
+.TimerEntry__task {
+  text-transform: uppercase;
+}
+
+.TimerEntry__time {
+  padding: 0.5em 2em;
+  border-left: 1px solid silver;
+  background-color: rgb(255, 255, 255, 0.75);
+}
+
+.TimerEntry i {
+  color: grey;
+}
+
+.TimerEntry-editor {
+  width: 100%;
+  padding: 2em;
+  display: flex;
+  justify-content: space-between;
+  gap: 4em;
+  align-items: center;
+  border: 1px solid silver;
+}
+
+.TimerEntry-editor__inputs {
+  display: flex;
+  gap: 8em;
+}
+
+.TimerEntry-editor__task-input input {
+  padding: 1em;
+  border: 1px solid silver;
+}
+
+.TimerEntry-editor__task-input,
+.TimerEntry-editor__time-input {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.TimerEntry-editor__time-input input {
+  width: 100px;
+  padding: 1em;
+  border: 1px solid silver;
+}
+
+.TimerEntry-editor__confirm-btn {
+  padding: 1em;
+  background-color: skyblue;
+  color: white;
+}
