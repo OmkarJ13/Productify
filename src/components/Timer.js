@@ -56,7 +56,7 @@ class Timer extends React.Component {
       id: uuid(),
       taskName: this.state.taskName,
       time: this.state.timePassed,
-      date: new Date(2021, 10, 25),
+      date: new Date(),
     };
 
     this.props.onTimerEntryCreated(timerEntry);

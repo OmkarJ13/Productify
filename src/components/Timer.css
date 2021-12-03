@@ -24,3 +24,7 @@
   text-transform: uppercase;
   font-weight: 500;
 }
+
+.Timer__stop-btn {
+  background-color: salmon;
+}

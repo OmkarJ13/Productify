@@ -19,4 +19,26 @@ const calculateDaysPassed = (date) => {
   return daysSince;
 };
 
-export { startInterval, calculateDaysPassed, days };
+const addTime = (timeA, timeB) => {
+  const secondsTotal = Number(timeA.seconds) + Number(timeB.seconds);
+  const minutesTotal = Number(timeA.minutes) + Number(timeB.minutes);
+  const hoursTotal = Number(timeA.hours) + Number(timeB.hours);
+
+  if (secondsTotal >= 60) {
+    minutesTotal++;
+    secondsTotal = secondsTotal % 60;
+  }
+
+  if (minutesTotal >= 60) {
+    hoursTotal++;
+    minutesTotal = minutesTotal % 60;
+  }
+
+  return {
+    hours: hoursTotal.toString().padStart(2, "0"),
+    minutes: minutesTotal.toString().padStart(2, "0"),
+    seconds: secondsTotal.toString().padStart(2, "0"),
+  };
+};
+
+export { days, startInterval, calculateDaysPassed, addTime };
