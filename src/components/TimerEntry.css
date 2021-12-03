@@ -2,9 +2,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   gap: 4em;
   padding: 2em;
   border: 1px solid silver;
+}
+
+.TimerEntry__date {
+  width: 100%;
+  text-transform: uppercase;
+  border-bottom: 1px solid silver;
 }
 
 .TimerEntry__actions {

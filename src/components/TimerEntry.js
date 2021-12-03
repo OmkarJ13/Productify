@@ -1,6 +1,8 @@
 import React from "react";
 import "./TimerEntry.css";
 
+import { calculateDaysPassed, days } from "../helpers/timerHelpers";
+
 class TimerEntry extends React.Component {
   constructor(props) {
     super(props);
@@ -46,6 +48,7 @@ class TimerEntry extends React.Component {
     e.preventDefault();
     const editedTimerEntry = {
       id: this.props.id,
+      date: this.props.date,
       taskName: this.state.taskName,
       time: this.state.time,
     };
@@ -59,9 +62,13 @@ class TimerEntry extends React.Component {
 
   generateTimerEntry() {
     const { hours, minutes, seconds } = this.props.time;
+    const daysSince = calculateDaysPassed(this.props.date);
 
     return (
       <div className="TimerEntry">
+        <div className="TimerEntry__date">
+          <span>{days[daysSince]}</span>
+        </div>
         <div className="TimerEntry__actions">
           <button className="TimerEntry__edit-btn" onClick={this.handleEdit}>
             <i className="fa fa-pencil fa-2x" />

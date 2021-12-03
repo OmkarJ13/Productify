@@ -1,4 +1,5 @@
 .TimerEntries {
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 2em;
@@ -8,5 +9,4 @@
 
 .TimerEntries__empty-msg {
   margin: auto;
-  color: grey;
 }

@@ -56,6 +56,7 @@ class Timer extends React.Component {
       id: uuid(),
       taskName: this.state.taskName,
       time: this.state.timePassed,
+      date: new Date(2021, 10, 25),
     };
 
     this.props.onTimerEntryCreated(timerEntry);
@@ -86,9 +87,9 @@ class Timer extends React.Component {
 
     return (
       <>
-        <h3 className="Timer__time">
+        <span className="Timer__time">
           {hours}:{minutes}:{seconds}
-        </h3>
+        </span>
         <button onClick={this.stopTracking} className="Timer__stop-btn">
           Stop Tracking
         </button>
@@ -104,7 +105,7 @@ class Timer extends React.Component {
           type="text"
           className="Timer__task-input"
           value={this.state.taskName}
-          placeholder="Enter Task..."
+          placeholder="What are you working on?"
           onChange={this.handleInputChange}
         />
         <button onClick={this.startTracking} className="Timer__start-btn">
