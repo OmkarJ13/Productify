@@ -5,7 +5,10 @@ class SideBar extends React.Component {
   render() {
     return (
       <div className="SideBar">
-        <h3 className="SideBar__link">Time Tracker</h3>
+        <h4 className="SideBar__link SideBar__link--active">
+          <i className="fa fa-clock-o" />
+          Time Tracker
+        </h4>
       </div>
     );
   }

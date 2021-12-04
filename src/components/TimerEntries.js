@@ -2,16 +2,14 @@ import React from "react";
 import "./TimerEntries.css";
 import TimerEntry from "./TimerEntry";
 
-import { calculateDaysPassed, addTime } from "../helpers/timerHelpers";
+import { calculateDaysPassed } from "../helpers/timerHelpers";
+import Time from "../classes/Time";
 
 class TimerEntries extends React.Component {
   calculateTotal(timerEntries) {
-    return timerEntries.reduce(
-      (total, timerEntry) => {
-        return addTime(total, timerEntry.time);
-      },
-      { hours: 0, minutes: 0, seconds: 0 }
-    );
+    return timerEntries.reduce((total, timerEntry) => {
+      return total.addTime(timerEntry.duration);
+    }, new Time());
   }
 
   render() {
@@ -25,10 +23,7 @@ class TimerEntries extends React.Component {
       <div className="TimerEntries">
         <div className="TimerEntries__stats">
           <h2>This week</h2>
-          <h2>
-            Week Total: {weekTotal.hours}:{weekTotal.minutes}:
-            {weekTotal.seconds}
-          </h2>
+          <h2>Week Total - {weekTotal.getTimeString()}</h2>
         </div>
         {filteredTimerEntries.length > 0 &&
           filteredTimerEntries
@@ -41,9 +36,11 @@ class TimerEntries extends React.Component {
                 <TimerEntry
                   key={timerEntry.id}
                   id={timerEntry.id}
-                  taskName={timerEntry.taskName}
-                  time={timerEntry.time}
+                  task={timerEntry.task}
+                  duration={timerEntry.duration}
                   date={timerEntry.date}
+                  startTime={timerEntry.startTime}
+                  endTime={timerEntry.endTime}
                   onTimerEntryEdited={this.props.onTimerEntryEdited}
                   onTimerEntryDeleted={this.props.onTimerEntryDeleted}
                 />

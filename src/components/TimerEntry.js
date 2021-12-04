@@ -2,158 +2,166 @@ import React from "react";
 import "./TimerEntry.css";
 
 import { calculateDaysPassed, days } from "../helpers/timerHelpers";
+import Time from "../classes/Time";
+
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class TimerEntry extends React.Component {
   constructor(props) {
     super(props);
+    this.editTimer = undefined;
+
     this.state = {
-      isEditing: false,
-      taskName: this.props.taskName,
-      time: this.props.time,
+      task: this.props.task,
+      date: new Date(this.props.date),
+      startTime: new Time(...Object.values(this.props.startTime)),
+      endTime: new Time(...Object.values(this.props.endTime)),
+      duration: new Time(...Object.values(this.props.duration)),
     };
 
-    this.handleTaskChange = this.handleTaskChange.bind(this);
-    this.handleTimeChange = this.handleTimeChange.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
+    this.textEditHandler = this.textEditHandler.bind(this);
+    this.timeEditHandler = this.timeEditHandler.bind(this);
+    this.dateEditHandler = this.dateEditHandler.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleEditSubmit = this.handleEditSubmit.bind(this);
   }
 
-  handleEdit(e) {
+  textEditHandler(e) {
     this.setState({
-      isEditing: true,
+      [e.target.name]: e.target.value,
     });
+
+    this.setSaveTimer();
+  }
+
+  timeEditHandler(e) {
+    const type = this.state[e.target.name];
+    const time = new Time(...e.target.value.split(":"), type.seconds);
+
+    this.setState(
+      {
+        [e.target.name]: time,
+      },
+      () => {
+        const changedDuration = this.state.endTime.subtractTime(
+          this.state.startTime
+        );
+        this.setState({
+          duration: changedDuration,
+        });
+      }
+    );
+
+    this.setSaveTimer();
+  }
+
+  dateEditHandler(e) {
+    this.setState({
+      date: new Date(e),
+    });
+
+    this.setSaveTimer();
+  }
+
+  setSaveTimer() {
+    if (this.editTimer !== undefined) {
+      clearTimeout(this.editTimer);
+    }
+
+    this.editTimer = setTimeout(() => {
+      this.saveEditedChanges();
+    }, 1000);
+  }
+
+  saveEditedChanges() {
+    const editedTimerEntry = {
+      id: this.props.id,
+      ...this.state,
+    };
+
+    console.log(editedTimerEntry);
+
+    this.props.onTimerEntryEdited(editedTimerEntry);
   }
 
   handleDelete(e) {
     this.props.onTimerEntryDeleted(this.props.id);
   }
 
-  handleTaskChange(e) {
-    this.setState({
-      taskName: e.target.value,
-    });
-  }
+  getDateString() {
+    const { date } = this.state;
+    const dayString = (date.getDay() + 1).toString().padStart(2, "0");
+    const monthString = (date.getMonth() + 1).toString().padStart(2, "0");
+    const yearString = date.getFullYear().toString();
 
-  handleTimeChange(e) {
-    this.setState({
-      time: {
-        ...this.state.time,
-        [e.target.name]: e.target.value.padStart(2, "0"),
-      },
-    });
-  }
-
-  handleEditSubmit(e) {
-    e.preventDefault();
-    const editedTimerEntry = {
-      id: this.props.id,
-      date: this.props.date,
-      taskName: this.state.taskName,
-      time: this.state.time,
-    };
-
-    this.props.onTimerEntryEdited(editedTimerEntry);
-
-    this.setState({
-      isEditing: false,
-    });
+    return `${dayString}/${monthString}/${yearString}`;
   }
 
   generateTimerEntry() {
-    const { hours, minutes, seconds } = this.props.time;
-    const daysSince = calculateDaysPassed(this.props.date);
+    let daysSince = calculateDaysPassed(this.state.date);
+    const { startTime, endTime, duration } = this.state;
 
     return (
       <div className="TimerEntry">
         <div className="TimerEntry__date">
-          <span>{days[daysSince]}</span>
-        </div>
-        <div className="TimerEntry__actions">
-          <button className="TimerEntry__edit-btn" onClick={this.handleEdit}>
-            <i className="fa fa-pencil fa-2x" />
-          </button>
-          <button
-            className="TimerEntry__delete-btn"
-            onClick={this.handleDelete}
-          >
-            <i className="fa fa-trash fa-2x" />
-          </button>
-        </div>
-
-        <div className="TimerEntry__task">
-          <span>{this.props.taskName}</span>
-        </div>
-
-        <div className="TimerEntry__time">
           <span>
-            {hours}:{minutes}:{seconds}
+            {days[daysSince] === undefined
+              ? this.getDateString()
+              : days[daysSince]}
           </span>
+          <div className="TimerEntry__date-change">
+            <ReactDatePicker
+              value={this.state.date}
+              selected={this.state.date}
+              onChange={this.dateEditHandler}
+              customInput={<i className="fa fa-calendar" />}
+            />
+          </div>
+        </div>
+        <div className="TimerEntry__content">
+          <input
+            type="text"
+            name="task"
+            value={this.state.task}
+            placeholder="Add Task Name"
+            onChange={this.textEditHandler}
+            className="TimerEntry__task-input"
+          />
+
+          <div className="TimerEntry__time">
+            <div className="TimerEntry__start-time">
+              <input
+                type="time"
+                name="startTime"
+                value={
+                  startTime.getHourString() + ":" + startTime.getMinuteString()
+                }
+                onChange={this.timeEditHandler}
+              />
+            </div>
+            <span>-</span>
+            <div className="TimerEntry__end-time">
+              <input
+                type="time"
+                name="endTime"
+                value={
+                  endTime.getHourString() + ":" + endTime.getMinuteString()
+                }
+                onChange={this.timeEditHandler}
+              />
+            </div>
+          </div>
+
+          <div className="TimerEntry__duration">
+            <span>{duration.getTimeString()}</span>
+          </div>
         </div>
       </div>
     );
   }
 
-  generateTimerEntryEditor() {
-    const { hours, minutes, seconds } = this.state.time;
-
-    return (
-      <form className="TimerEntry-editor" onSubmit={this.handleEditSubmit}>
-        <div className="TimerEntry-editor__inputs">
-          <div className="TimerEntry-editor__task-input">
-            <label htmlFor="taskName">Task</label>
-            <input
-              name="taskName"
-              type="text"
-              value={this.state.taskName}
-              onChange={this.handleTaskChange}
-            />
-          </div>
-
-          <div className="TimerEntry-editor__time-input">
-            <label htmlFor="hours">Hours</label>
-            <input
-              name="hours"
-              type="number"
-              min="0"
-              value={hours}
-              onChange={this.handleTimeChange}
-            />
-            <label htmlFor="minutes">Minutes</label>
-            <input
-              name="minutes"
-              type="number"
-              min="0"
-              max="59"
-              value={minutes}
-              onChange={this.handleTimeChange}
-            />
-            <label htmlFor="seconds">Seconds</label>
-            <input
-              name="seconds"
-              type="number"
-              min="0"
-              max="59"
-              value={seconds}
-              onChange={this.handleTimeChange}
-            />
-          </div>
-        </div>
-
-        <div className="TimerEntry-editor__actions">
-          <button type="submit" className="TimerEntry-editor__confirm-btn">
-            <i className="fa fa-check" />
-          </button>
-        </div>
-      </form>
-    );
-  }
-
   render() {
-    const { isEditing } = this.state;
-    return isEditing
-      ? this.generateTimerEntryEditor()
-      : this.generateTimerEntry();
+    return this.generateTimerEntry();
   }
 }
 

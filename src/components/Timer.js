@@ -1,19 +1,22 @@
 import React from "react";
 import "./Timer.css";
+
 import { v4 as uuid } from "uuid";
 import { startInterval } from "../helpers/timerHelpers";
+import Time from "../classes/Time";
 
 class Timer extends React.Component {
   constructor(props) {
     super(props);
 
     this.timerId = undefined;
+    this.startTime = undefined;
     this.secondsPassed = 0;
 
     this.state = {
       tracking: false,
-      taskName: "",
-      timePassed: { hours: "00", minutes: "00", seconds: "00" },
+      task: "",
+      duration: undefined,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -29,66 +32,60 @@ class Timer extends React.Component {
   }
 
   startTracking(e) {
-    this.secondsPassed = 0;
+    const curDate = new Date();
+    this.startTime = new Time(
+      curDate.getHours(),
+      curDate.getMinutes(),
+      curDate.getSeconds()
+    );
 
     this.setState(
       {
         tracking: true,
-        timePassed: this.generateTime(this.secondsPassed),
+        duration: new Time(),
       },
       () => {
-        this.timerId = startInterval(this.startTimer, 1000);
+        this.timerId = setInterval(this.startTimer, 1000);
       }
     );
   }
 
   startTimer() {
     this.secondsPassed++;
+    console.log(Time.fromSeconds(this.secondsPassed).getTimeString());
+
     this.setState({
-      timePassed: this.generateTime(this.secondsPassed),
+      duration: Time.fromSeconds(this.secondsPassed),
     });
   }
 
   stopTracking(e) {
     clearInterval(this.timerId);
+    const endTime = this.startTime.addTime(this.state.duration);
 
     const timerEntry = {
       id: uuid(),
-      taskName: this.state.taskName,
-      time: this.state.timePassed,
+      task: this.state.task,
+      duration: this.state.duration,
       date: new Date(),
+      startTime: this.startTime,
+      endTime: endTime,
     };
 
-    this.props.onTimerEntryCreated(timerEntry);
-
+    this.secondsPassed = 0;
     this.setState({
       tracking: false,
       taskName: "",
     });
-  }
 
-  generateTime(seconds) {
-    const hour = 3600;
-    const minute = 60;
-
-    const hoursPassed = Math.floor(seconds / hour);
-    const minutesPassed = Math.floor((seconds % hour) / minute);
-    const secondsPassed = seconds % minute;
-
-    return {
-      hours: String(hoursPassed).padStart(2, "0"),
-      minutes: String(minutesPassed).padStart(2, "0"),
-      seconds: String(secondsPassed).padStart(2, "0"),
-    };
+    this.props.onTimerEntryCreated(timerEntry);
   }
 
   generateTimerRunning() {
-    const { hours, minutes, seconds } = this.state.timePassed;
-
     return (
       <>
         <span className="Timer__time">
-          {hours}:{minutes}:{seconds}
+          {this.state.duration.getTimeString()}
         </span>
         <button onClick={this.stopTracking} className="Timer__stop-btn">
           Stop Tracking
@@ -101,11 +98,12 @@ class Timer extends React.Component {
     return (
       <>
         <input
-          name="taskName"
+          name="task"
           type="text"
           className="Timer__task-input"
           value={this.state.taskName}
           placeholder="What are you working on?"
+          autoComplete="off"
           onChange={this.handleInputChange}
         />
         <button onClick={this.startTracking} className="Timer__start-btn">

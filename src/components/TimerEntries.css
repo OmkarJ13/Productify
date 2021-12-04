@@ -5,8 +5,8 @@
   flex-direction: column;
   gap: 2em;
   overflow-y: auto;
-  padding-block: 4em;
-  padding-right: 2em;
+  padding-block: 2em;
+  padding-right: 0.5em;
 }
 
 .TimerEntries__stats {
