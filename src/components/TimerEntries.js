@@ -43,6 +43,7 @@ class TimerEntries extends React.Component {
                   endTime={timerEntry.endTime}
                   onTimerEntryEdited={this.props.onTimerEntryEdited}
                   onTimerEntryDeleted={this.props.onTimerEntryDeleted}
+                  onTimerEntryDuplicated={this.props.onTimerEntryDuplicated}
                 />
               );
             })}

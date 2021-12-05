@@ -75,7 +75,7 @@ class Timer extends React.Component {
     this.secondsPassed = 0;
     this.setState({
       tracking: false,
-      taskName: "",
+      task: "",
     });
 
     this.props.onTimerEntryCreated(timerEntry);

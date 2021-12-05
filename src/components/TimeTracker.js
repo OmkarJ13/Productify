@@ -14,6 +14,8 @@ class TimeTracker extends React.Component {
     this.handleTimerEntryCreated = this.handleTimerEntryCreated.bind(this);
     this.handleTimerEntryEdited = this.handleTimerEntryEdited.bind(this);
     this.handleTimerEntryDeleted = this.handleTimerEntryDeleted.bind(this);
+    this.handleTimerEntryDuplicated =
+      this.handleTimerEntryDuplicated.bind(this);
   }
 
   handleTimerEntryCreated(timerEntry) {
@@ -53,6 +55,16 @@ class TimeTracker extends React.Component {
     });
   }
 
+  handleTimerEntryDuplicated(duplicatedTimerEntry) {
+    this.setState((prevState) => {
+      const timerEntries = prevState.timerEntries.slice();
+
+      return {
+        timerEntries: [...timerEntries, duplicatedTimerEntry],
+      };
+    });
+  }
+
   componentDidMount() {
     const storedTimerEntries = JSON.parse(localStorage.getItem("timerEntries"));
     if (storedTimerEntries) {
@@ -77,6 +89,7 @@ class TimeTracker extends React.Component {
           timerEntries={this.state.timerEntries}
           onTimerEntryEdited={this.handleTimerEntryEdited}
           onTimerEntryDeleted={this.handleTimerEntryDeleted}
+          onTimerEntryDuplicated={this.handleTimerEntryDuplicated}
         />
       </div>
     );

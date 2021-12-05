@@ -6,12 +6,47 @@
   border: 1px solid silver;
 }
 
-.TimerEntry__date {
+.TimerEntry__top {
+  position: relative;
   width: 100%;
   padding: 0.5em;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   text-transform: uppercase;
+  background-color: rgb(230, 230, 230);
+}
+
+.TimerEntry__top-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.TimerEntry__dropdown-btn {
+  padding: 0.5em;
+  margin-left: 1em;
+}
+
+.TimerEntry__dropdown-options {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  background-color: white;
+  box-shadow: 0 2px 6px 0 #d5d0d7;
+}
+
+.TimerEntry__dropdown-options ul {
+  list-style: none;
+}
+
+.TimerEntry__dropdown-item {
+  padding: 0.5em 1em;
+  text-transform: capitalize;
+  transition: all 0.25s ease-in-out;
+}
+
+.TimerEntry__edit-option-item:hover {
   background-color: rgb(230, 230, 230);
 }
 
