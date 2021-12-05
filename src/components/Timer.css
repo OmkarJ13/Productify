@@ -3,22 +3,61 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1em;
+  padding: 1em;
   border: 1px solid silver;
 }
 
-.Timer__task-input {
-  width: 80%;
-  padding: 1em 2em;
+.Timer__controls {
+  flex-grow: 2;
+  display: flex;
+  align-items: center;
+  gap: 1em;
 }
 
-.Timer__time {
-  padding-left: 1em;
+.Timer__task-input {
+  width: 100%;
+  padding: 1em 2em;
+  border: 1px solid transparent;
+  transition: border 0.25s ease-in-out;
+}
+
+.Timer__time-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.Timer__time-input input {
+  padding: 0.5em 1em;
+  border: 1px solid transparent;
+  transition: border 0.25s ease-in-out;
+}
+
+.Timer:hover .Timer__time-input input {
+  border: 1px solid silver;
+}
+
+.Timer:hover .Timer__task-input {
+  border: 1px solid silver;
+}
+
+.Timer__duration {
+  flex-grow: 1;
+}
+
+.Timer__actions {
+  flex-grow: 0;
+  display: flex;
+  align-items: center;
+  gap: 1em;
 }
 
 .Timer__start-btn,
-.Timer__stop-btn {
-  width: 20%;
-  padding: 1em 2em;
+.Timer__stop-btn,
+.Timer__add-btn {
+  padding: 1em;
   background-color: skyblue;
   color: white;
   text-transform: uppercase;
@@ -27,4 +66,15 @@
 
 .Timer__stop-btn {
   background-color: salmon;
+}
+
+.Timer__modes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.Timer__modes i {
+  color: grey;
 }

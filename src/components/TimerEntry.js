@@ -63,7 +63,10 @@ class TimerEntry extends React.Component {
 
   timeEditHandler(e) {
     const type = this.state.timerEntry[e.target.name];
-    const time = new Time(...e.target.value.split(":"), type.seconds);
+    const time = new Time(
+      ...e.target.value.split(":").map((time) => Number(time)),
+      type.seconds
+    );
 
     this.setState(
       {
