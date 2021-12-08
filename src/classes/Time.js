@@ -18,23 +18,72 @@ class Time {
     return new Time(hours, minutes, seconds);
   }
 
-  addTime(time) {
-    let seconds = this.seconds + time.seconds;
-    let minutes = this.minutes + time.minutes;
-    let hours = this.hours + time.hours;
+  static getMin(...timeArr) {
+    let min = timeArr[0];
+    timeArr.forEach((time) => {
+      if (time.hours < min.hours) {
+        min = time;
+      } else if (time.hours === min.hours) {
+        if (time.minutes < min.minutes) {
+          min = time;
+        } else if (time.minutes === min.minutes) {
+          if (time.seconds < min.seconds) {
+            min = time;
+          }
+        }
+      }
+    });
 
-    if (seconds >= 60) {
-      minutes++;
-      seconds = seconds % 60;
-    }
+    return min;
+  }
 
-    if (minutes >= 60) {
-      hours++;
-      minutes = minutes % 60;
-    }
+  static getMax(...timeArr) {
+    let max = timeArr[0];
+    timeArr.forEach((time) => {
+      if (time.hours > max.hours) {
+        max = time;
+      } else if (time.hours === max.hours) {
+        if (time.minutes > max.minutes) {
+          max = time;
+        } else if (time.minutes === max.minutes) {
+          if (time.seconds > max.seconds) {
+            max = time;
+          }
+        }
+      }
+    });
 
-    const result = new Time(hours, minutes, seconds);
-    return result;
+    return max;
+  }
+
+  static addTime(...timeArr) {
+    return timeArr.reduce((acc, cur) => {
+      let seconds = cur.seconds + acc.seconds;
+      let minutes = cur.minutes + acc.minutes;
+      let hours = cur.hours + acc.hours;
+
+      if (seconds >= 60) {
+        minutes++;
+        seconds = seconds % 60;
+      }
+
+      if (minutes >= 60) {
+        hours++;
+        minutes = minutes % 60;
+      }
+
+      acc = new Time(hours, minutes, seconds);
+      return acc;
+    }, new Time());
+  }
+
+  static getCurrentTime() {
+    const curDate = new Date();
+    return new Time(
+      curDate.getHours(),
+      curDate.getMinutes(),
+      curDate.getSeconds()
+    );
   }
 
   subtractTime(time) {
@@ -44,7 +93,7 @@ class Time {
 
     if (seconds < 0) {
       minutes--;
-      seconds = seconds % 60;
+      seconds = seconds + 60;
     }
 
     if (minutes < 0) {
@@ -61,23 +110,23 @@ class Time {
   }
 
   getTimeString() {
-    const hourString = this.hours.toString().padStart(2, "0");
-    const minuteString = this.minutes.toString().padStart(2, "0");
-    const secondString = this.seconds.toString().padStart(2, "0");
+    return `${this.getHourString()}:${this.getMinuteString()}:${this.getSecondString()}`;
+  }
 
-    return `${hourString}:${minuteString}:${secondString}`;
+  getTimeStringShort() {
+    return `${this.getHourString()}:${this.getMinuteString()}`;
   }
 
   getHourString() {
-    return this.getTimeString().split(":")[0];
+    return this.hours.toString().padStart(2, "0");
   }
 
   getMinuteString() {
-    return this.getTimeString().split(":")[1];
+    return this.minutes.toString().padStart(2, "0");
   }
 
   getSecondString() {
-    return this.getTimeString().split(":")[2];
+    return this.seconds.toString().padStart(2, "0");
   }
 }
 

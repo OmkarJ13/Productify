@@ -3,41 +3,42 @@ import "./Timer.css";
 
 import { v4 as uuid } from "uuid";
 import Time from "../classes/Time";
-import ReactDatePicker from "react-datepicker";
 
 class Timer extends React.Component {
   constructor(props) {
     super(props);
 
     this.timerId = undefined;
-    this.startTime = undefined;
     this.secondsPassed = 0;
 
     this.state = {
-      tracking: false,
-      mode: "timer",
+      isTracking: false,
+      trackingMode: "timer",
       timerEntry: {
         task: "",
-        date: new Date(),
+        date: new Date().toDateString(),
         startTime: new Time(),
         endTime: new Time(),
         duration: new Time(),
       },
     };
 
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleDateChange = this.handleDateChange.bind(this);
-    this.handleTimeChange = this.handleTimeChange.bind(this);
+    this.taskChangeHandler = this.taskChangeHandler.bind(this);
+    this.dateChangeHandler = this.dateChangeHandler.bind(this);
+    this.timeChangeHandler = this.timeChangeHandler.bind(this);
     this.saveTimerEntry = this.saveTimerEntry.bind(this);
     this.resetState = this.resetState.bind(this);
     this.startTracking = this.startTracking.bind(this);
     this.stopTracking = this.stopTracking.bind(this);
-    this.startTimer = this.startTimer.bind(this);
+    this.updateTimer = this.updateTimer.bind(this);
     this.switchToTimerMode = this.switchToTimerMode.bind(this);
     this.switchToManualMode = this.switchToManualMode.bind(this);
   }
 
-  handleInputChange(e) {
+  /*
+  Handles changes in task name of the timer entry
+  */
+  taskChangeHandler(e) {
     this.setState({
       timerEntry: {
         ...this.state.timerEntry,
@@ -46,21 +47,31 @@ class Timer extends React.Component {
     });
   }
 
-  handleDateChange(e) {
+  /*
+  Handles changes in date of the timer entry
+  */
+  dateChangeHandler(e) {
     this.setState({
       timerEntry: {
         ...this.state.timerEntry,
-        date: new Date(e),
+        date: new Date(e.target.value).toDateString(),
       },
     });
   }
 
-  handleTimeChange(e) {
+  /*
+  Handles changes in start and end times of the timer entry
+  */
+  timeChangeHandler(e) {
+    // Gets the type of time that is changes, e.g. starting time or ending time
     const type = this.state.timerEntry[e.target.name];
-    const time = new Time(
-      ...e.target.value.split(":").map((time) => Number(time)),
-      type.seconds
-    );
+
+    // Get hours, minutes by splitting the input string and converting it to numbers
+    const timeArrayString = e.target.value.split(":");
+    const timeArrayNumber = timeArrayString.map((time) => Number(time));
+
+    // Creates Time object
+    const time = new Time(...timeArrayNumber, type.seconds);
 
     this.setState(
       {
@@ -70,6 +81,8 @@ class Timer extends React.Component {
         },
       },
       () => {
+        // After setting state,
+        // Updates duration based on changed start or end time
         const { startTime, endTime } = this.state.timerEntry;
         const changedDuration = endTime.subtractTime(startTime);
         this.setState({
@@ -82,25 +95,28 @@ class Timer extends React.Component {
     );
   }
 
+  /* 
+  Starts tracking time
+  */
   startTracking(e) {
-    const curDate = new Date();
-    this.startTime = new Time(
-      curDate.getHours(),
-      curDate.getMinutes(),
-      curDate.getSeconds()
-    );
-
     this.setState(
       {
-        tracking: true,
+        isTracking: true,
+        timerEntry: {
+          ...this.state.timerEntry,
+          startTime: Time.getCurrentTime(),
+        },
       },
       () => {
-        this.timerId = setInterval(this.startTimer, 1000);
+        this.timerId = setInterval(this.updateTimer, 1000);
       }
     );
   }
 
-  startTimer() {
+  /*
+  Updates the timer by one second
+  */
+  updateTimer() {
     this.secondsPassed++;
 
     this.setState({
@@ -111,19 +127,22 @@ class Timer extends React.Component {
     });
   }
 
+  /*
+  Stops tracking time 
+  */
   stopTracking(e) {
     clearInterval(this.timerId);
     this.secondsPassed = 0;
 
-    const endTime = this.state.timerEntry.startTime.addTime(
-      this.state.timerEntry.duration
-    );
+    const { startTime, duration } = this.state.timerEntry;
 
     this.setState(
       {
+        isTracking: false,
+
         timerEntry: {
           ...this.state.timerEntry,
-          endTime: endTime,
+          endTime: Time.addTime(startTime, duration),
         },
       },
       () => {
@@ -132,6 +151,9 @@ class Timer extends React.Component {
     );
   }
 
+  /* 
+  Saves the timer entry
+  */
   saveTimerEntry() {
     const timerEntry = {
       id: uuid(),
@@ -142,12 +164,15 @@ class Timer extends React.Component {
     this.resetState();
   }
 
+  /*
+  Resets state as it was initially
+  */
   resetState() {
     this.setState({
       tracking: false,
       timerEntry: {
         task: "",
-        date: new Date(),
+        date: new Date().toDateString(),
         startTime: new Time(),
         endTime: new Time(),
         duration: new Time(),
@@ -155,96 +180,102 @@ class Timer extends React.Component {
     });
   }
 
+  /*
+  Generates timer JSX as it is running
+  */
   generateTimerRunning() {
     const { duration } = this.state.timerEntry;
     return (
-      <>
-        <span className="Timer__time">{duration.getTimeString()}</span>
+      <div className="Timer">
+        <span className="Timer__duration">{duration.getTimeString()}</span>
         <button onClick={this.stopTracking} className="Timer__stop-btn">
           Stop Tracking
         </button>
-      </>
+      </div>
     );
   }
 
+  /*
+  Generates timer mode form JSX
+  */
   generateTimerModeForm() {
     const { task } = this.state.timerEntry;
 
     return (
-      <>
-        <div className="Timer__controls">
-          <input
-            name="task"
-            type="text"
-            className="Timer__task-input"
-            value={task}
-            placeholder="What are you working on?"
-            autoComplete="off"
-            onChange={this.handleInputChange}
-          />
-        </div>
+      <div className="Timer">
+        <input
+          name="task"
+          type="text"
+          className="Timer__task-input"
+          value={task}
+          placeholder="What are you working on?"
+          autoComplete="off"
+          onChange={this.taskChangeHandler}
+        />
 
-        <div className="Timer__actions">
-          <button onClick={this.startTracking} className="Timer__start-btn">
-            Start Tracking
+        <button onClick={this.startTracking} className="Timer__start-btn">
+          Start Tracking
+        </button>
+        <div className="Timer__modes">
+          <button
+            onClick={this.switchToTimerMode}
+            className="Timer__timer-mode-btn"
+          >
+            <i className="fa fa-clock-o" />
           </button>
-          <div className="Timer__modes">
-            <button
-              onClick={this.switchToTimerMode}
-              className="Timer__timer-mode-btn"
-            >
-              <i className="fa fa-clock-o" />
-            </button>
-            <button
-              onClick={this.switchToManualMode}
-              className="Timer__manual-mode-btn"
-            >
-              <i className="fa fa-bars" />
-            </button>
-          </div>
+          <button
+            onClick={this.switchToManualMode}
+            className="Timer__manual-mode-btn"
+          >
+            <i className="fa fa-bars" />
+          </button>
         </div>
-      </>
+      </div>
     );
   }
 
+  getDateString(date) {
+    const year = String(date.getFullYear());
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  /*
+  Generates manual mode JSX
+  */
   generateManualModeForm() {
     const { task, date, startTime, endTime, duration } = this.state.timerEntry;
+    const dateValue = this.getDateString(new Date(date));
 
     return (
-      <>
-        <div className="Timer__controls">
+      <div className="Timer">
+        <input
+          name="task"
+          type="text"
+          className="Timer__task-input"
+          value={task}
+          placeholder="What have you worked on?"
+          autoComplete="off"
+          onChange={this.taskChangeHandler}
+        />
+
+        <div className="Timer__time-input-container">
           <input
-            name="task"
-            type="text"
-            className="Timer__task-input"
-            value={task}
-            placeholder="What have you worked on?"
-            autoComplete="off"
-            onChange={this.handleInputChange}
+            name="startTime"
+            type="time"
+            value={startTime.getTimeStringShort()}
+            onChange={this.timeChangeHandler}
+            className="Timer__start-time-input"
           />
-
-          <div className="Timer__time-input">
-            <input
-              name="startTime"
-              type="time"
-              value={startTime.getTimeString()}
-              onChange={this.handleTimeChange}
-            />
-            <span> - </span>
-            <input
-              name="endTime"
-              type="time"
-              value={endTime.getTimeString()}
-              onChange={this.handleTimeChange}
-            />
-          </div>
-
-          <ReactDatePicker
-            selected={date}
-            value={date}
-            customInput={<i className="fa fa-calendar" />}
-            className="Timer__date-input"
-            onChange={this.handleDateChange}
+          <span> - </span>
+          <input
+            name="endTime"
+            type="time"
+            value={endTime.getTimeStringShort()}
+            onChange={this.timeChangeHandler}
+            className="Timer__end-time-input"
           />
         </div>
 
@@ -252,56 +283,59 @@ class Timer extends React.Component {
           <span>{duration.getTimeString()}</span>
         </div>
 
-        <div className="Timer__actions">
-          <button onClick={this.saveTimerEntry} className="Timer__add-btn">
-            Add
-          </button>
+        <input
+          type="date"
+          value={dateValue}
+          onChange={this.dateChangeHandler}
+          className="Timer__date-input"
+        />
 
-          <div className="Timer__modes">
-            <button
-              onClick={this.switchToTimerMode}
-              className="Timer__timer-mode-btn"
-            >
-              <i className="fa fa-clock-o" />
-            </button>
-            <button
-              onClick={this.switchToManualMode}
-              className="Timer__manual-mode-btn"
-            >
-              <i className="fa fa-bars" />
-            </button>
-          </div>
+        <button onClick={this.saveTimerEntry} className="Timer__add-btn">
+          Add
+        </button>
+
+        <div className="Timer__modes">
+          <button
+            onClick={this.switchToTimerMode}
+            className="Timer__timer-mode-btn"
+          >
+            <i className="fa fa-clock-o" />
+          </button>
+          <button
+            onClick={this.switchToManualMode}
+            className="Timer__manual-mode-btn"
+          >
+            <i className="fa fa-bars" />
+          </button>
         </div>
-      </>
+      </div>
     );
   }
 
+  /* 
+  Generates timer form based on mode
+  */
   generateTimerForm() {
-    return this.state.mode === "timer"
+    return this.state.trackingMode === "timer"
       ? this.generateTimerModeForm()
       : this.generateManualModeForm();
   }
 
   switchToManualMode() {
     this.setState({
-      mode: "manual",
+      trackingMode: "manual",
     });
   }
 
   switchToTimerMode() {
     this.setState({
-      mode: "timer",
+      trackingMode: "timer",
     });
   }
 
   render() {
-    const { tracking } = this.state;
-
-    return (
-      <div className="Timer">
-        {tracking ? this.generateTimerRunning() : this.generateTimerForm()}
-      </div>
-    );
+    const { isTracking } = this.state;
+    return isTracking ? this.generateTimerRunning() : this.generateTimerForm();
   }
 }
 

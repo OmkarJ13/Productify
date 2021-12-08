@@ -20,7 +20,8 @@ class TimeTracker extends React.Component {
 
   handleTimerEntryCreated(timerEntry) {
     this.setState((prevState) => {
-      const { timerEntries } = prevState;
+      const timerEntries = prevState.timerEntries.slice();
+
       return {
         timerEntries: [timerEntry, ...timerEntries],
       };

@@ -1,57 +1,44 @@
 .Timer {
   width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 1em;
   padding: 1em;
   border: 1px solid silver;
 }
 
-.Timer__controls {
-  flex-grow: 2;
-  display: flex;
-  align-items: center;
-  gap: 1em;
-}
-
 .Timer__task-input {
-  width: 100%;
-  padding: 1em 2em;
-  border: 1px solid transparent;
-  transition: border 0.25s ease-in-out;
+  flex-grow: 1;
+  padding: 1em 0.5em;
+  border: 1px solid silver;
 }
 
-.Timer__time-input {
+.Timer__time-input-container {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.25em;
 }
 
-.Timer__time-input input {
-  padding: 0.5em 1em;
-  border: 1px solid transparent;
-  transition: border 0.25s ease-in-out;
-}
-
-.Timer:hover .Timer__time-input input {
-  border: 1px solid silver;
-}
-
-.Timer:hover .Timer__task-input {
+.Timer__time-input-container input {
+  padding: 0.8em 0.4em;
   border: 1px solid silver;
 }
 
 .Timer__duration {
   flex-grow: 1;
+  text-align: center;
 }
 
-.Timer__actions {
-  flex-grow: 0;
-  display: flex;
-  align-items: center;
-  gap: 1em;
+.Timer__date-input {
+  padding: 0.8em 0.4em;
+  border: 1px solid silver;
+}
+
+.Timer__duration span {
+  padding-inline: 1em;
+  border-left: 1px solid silver;
+  border-right: 1px solid silver;
 }
 
 .Timer__start-btn,
@@ -73,8 +60,4 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.Timer__modes i {
-  color: grey;
 }

@@ -17,3 +17,14 @@
 .TimerEntries__empty-msg {
   margin: auto;
 }
+
+.TimerEntries-grouped {
+  border: 1px solid silver;
+}
+
+.TimerEntries-grouped__day {
+  padding: 1em;
+  text-transform: capitalize;
+  background-color: rgb(230, 230, 230);
+  border-bottom: 1px solid silver;
+}

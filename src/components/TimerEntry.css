@@ -1,36 +1,89 @@
 .TimerEntry {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  border: 1px solid silver;
-}
-
-.TimerEntry__top {
   position: relative;
-  width: 100%;
-  padding: 0.5em;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-transform: uppercase;
-  background-color: rgb(230, 230, 230);
+  border-bottom: 1px solid silver;
 }
 
-.TimerEntry__top-options {
+.TimerEntry:last-of-type {
+  border-bottom: none;
+}
+
+.TimerEntry__content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 1em;
+}
+
+.TimerEntry__meh {
+  display: flex;
+  gap: 1em;
+  flex-grow: 1;
+}
+
+.TimerEntry__duplicates {
+  width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgb(230, 230, 230);
+  border-radius: 50%;
+}
+
+.TimerEntry__task-input {
+  flex-grow: 1;
+  padding: 0.5em;
+  border: 1px solid transparent;
+}
+
+.TimerEntry__time {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.TimerEntry__time input {
+  padding: 0.4em 0.2em;
+  text-align: center;
+  border: 1px solid rgb(0, 0, 0, 0);
+}
+
+.TimerEntry__content:hover .TimerEntry__task-input,
+.TimerEntry__content:hover .TimerEntry__time input {
+  border: 1px solid silver;
+  transition: border 0.3s ease-in-out;
+}
+
+.TimerEntry__duration {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.TimerEntry__duration span {
+  padding-inline: 1em;
+  border-left: 1px solid silver;
+  border-right: 1px solid silver;
+}
+
+.TimerEntry__date-input {
+  padding: 0.4em 0.2em;
+  border: 1px solid transparent;
+  transition: border 0.3s ease-in-out;
+}
+
+.TimerEntry:hover .TimerEntry__date-input {
+  border: 1px solid silver;
 }
 
 .TimerEntry__dropdown-btn {
   padding: 0.5em;
-  margin-left: 1em;
 }
 
 .TimerEntry__dropdown-options {
   position: absolute;
-  top: 35px;
+  z-index: 10;
+  top: 55px;
   right: 0;
   background-color: white;
   box-shadow: 0 2px 6px 0 #d5d0d7;
@@ -41,47 +94,16 @@
 }
 
 .TimerEntry__dropdown-item {
-  padding: 0.5em 1em;
   text-transform: capitalize;
   transition: all 0.25s ease-in-out;
 }
 
-.TimerEntry__edit-option-item:hover {
+.TimerEntry__dropdown-item:hover {
   background-color: rgb(230, 230, 230);
 }
 
-.TimerEntry__content {
+.TimerEntry__dropdown-item button {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1em;
-}
-
-.TimerEntry__task-input {
-  padding: 0.5em 1em;
-  border: 1px solid rgb(0, 0, 0, 0);
-}
-
-.TimerEntry__time {
-  display: flex;
-  align-items: center;
-  gap: 0.25em;
-}
-
-.TimerEntry__start-time,
-.TimerEntry__end-time {
-  display: flex;
-}
-
-.TimerEntry__time input {
-  padding: 0.5em 0em;
-  text-align: center;
-  border: 1px solid rgb(0, 0, 0, 0);
-}
-
-.TimerEntry__content:hover .TimerEntry__task-input,
-.TimerEntry__content:hover .TimerEntry__time input {
-  border: 1px solid silver;
-  transition: border 0.3s ease-in-out;
+  padding: 1em 2em;
+  text-align: left;
 }
