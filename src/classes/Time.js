@@ -109,6 +109,10 @@ class Time {
     return result;
   }
 
+  getSeconds() {
+    return this.hours * 3600 + this.minutes * 60 + this.seconds;
+  }
+
   getTimeString() {
     return `${this.getHourString()}:${this.getMinuteString()}:${this.getSecondString()}`;
   }

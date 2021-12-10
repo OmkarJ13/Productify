@@ -10,6 +10,7 @@ class TimerEntry extends React.Component {
     super(props);
 
     this.saveTimerID = undefined;
+    this.taskInput = React.createRef();
     this.dropdownOptionsDiv = React.createRef();
 
     this.state = {
@@ -155,6 +156,7 @@ class TimerEntry extends React.Component {
     };
 
     onTimerEntryEdited(editedTimerEntry);
+    this.taskInput.current.blur();
   }
 
   /* 
@@ -174,9 +176,14 @@ class TimerEntry extends React.Component {
 
     if (allEntries) {
       allEntries.forEach((entry) => {
+        const { task, date, startTime, endTime, duration } = entry.props;
         const duplicatedEntry = {
           id: uuid(),
-          ...entry,
+          task,
+          date,
+          startTime,
+          endTime,
+          duration,
         };
 
         onTimerEntryDuplicated(duplicatedEntry);
@@ -243,25 +250,27 @@ class TimerEntry extends React.Component {
       <>
         <div
           className="TimerEntry"
-          onClick={isCombined && this.toggleAllEntries}
+          onClick={isCombined ? this.toggleAllEntries : null}
         >
           <div className="TimerEntry__content">
-            {isCombined && (
-              <div className="TimerEntry__duplicates">
-                {this.props.allEntries.length}
-              </div>
-            )}
-
-            <input
-              type="text"
-              name="task"
-              value={task}
-              placeholder="Add Task Name"
-              readOnly={isCombined}
-              autoComplete="off"
-              onChange={this.taskChangeHandler}
-              className="TimerEntry__task-input"
-            />
+            <div className="TimerEntry__title">
+              {isCombined && (
+                <div className="TimerEntry__duplicates">
+                  {this.props.allEntries.length}
+                </div>
+              )}
+              <input
+                type="text"
+                name="task"
+                value={task}
+                placeholder="Add Task Name"
+                ref={this.taskInput}
+                readOnly={isCombined}
+                autoComplete="off"
+                onChange={this.taskChangeHandler}
+                className="TimerEntry__task-input"
+              />
+            </div>
 
             <div className="TimerEntry__time">
               <div className="TimerEntry__start-time">
@@ -296,6 +305,10 @@ class TimerEntry extends React.Component {
               readOnly={isCombined}
               className="TimerEntry__date-input"
             />
+
+            {/* <button className="TimerEntry__resume-btn">
+              <i className="fa fa-play" />
+            </button> */}
 
             <div className="TimerEntry__dropdown" ref={this.dropdownOptionsDiv}>
               <button

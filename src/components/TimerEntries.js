@@ -8,16 +8,36 @@ import { calculateDaysPassed, days } from "../helpers/timerHelpers";
 import Time from "../classes/Time";
 
 class TimerEntries extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      view: "weekly",
+    };
+
+    this.viewChangeHandler = this.viewChangeHandler.bind(this);
+  }
+
+  viewChangeHandler(e) {
+    const view = e.target.value.toLowerCase();
+    this.setState({
+      view: view,
+    });
+  }
+
   /*
   Returns total duration of timer entries tracked by the user for this week
   */
   getWeeklyTotal(timerEntries) {
-    // Filtered by latest week
-    const filteredEntries = timerEntries.filter((timerEntry) => {
-      const daysPassed = calculateDaysPassed(timerEntry.date);
-      return daysPassed < 7 && daysPassed > -1;
-    });
+    const filteredEntries = this.getWeeklyEntries(timerEntries);
+    const durations = filteredEntries.map((timerEntry) => timerEntry.duration);
+    return Time.addTime(...durations);
+  }
 
+  /*
+  Returns total duration of timer entries tracked by the user for today
+  */
+  getDailyTotal(timerEntries) {
+    const filteredEntries = this.getDailyEntries(timerEntries);
     const durations = filteredEntries.map((timerEntry) => timerEntry.duration);
     return Time.addTime(...durations);
   }
@@ -88,14 +108,8 @@ class TimerEntries extends React.Component {
   returns only those which are relevant to the user in a processed way.
   */
   getTimerEntries(timerEntries) {
-    // Filtered to show only entries that are recorded in this week
-    const filteredEntries = timerEntries.filter((timerEntry) => {
-      const daysPassed = calculateDaysPassed(timerEntry.date);
-      return daysPassed < 7 && daysPassed > -1;
-    });
-
     // Grouped by dates
-    const groupedByDate = this.groupTimerEntriesBy(filteredEntries, ["date"]);
+    const groupedByDate = this.groupTimerEntriesBy(timerEntries, ["date"]);
 
     // Sorted to show latest entry first
     const sortedByDate = groupedByDate.sort(
@@ -168,15 +182,61 @@ class TimerEntries extends React.Component {
     );
   }
 
+  getWeeklyEntries(timerEntries) {
+    return timerEntries.filter((timerEntry) => {
+      const daysPassed = calculateDaysPassed(timerEntry.date);
+      return daysPassed < 7 && daysPassed > -1;
+    });
+  }
+
+  getDailyEntries(timerEntries) {
+    return timerEntries.filter((timerEntry) => {
+      const daysPassed = calculateDaysPassed(timerEntry.date);
+      return daysPassed === 0;
+    });
+  }
+
+  getFilteredEntries(timerEntries) {
+    const { view } = this.state;
+    switch (view) {
+      case "weekly":
+        return this.getWeeklyEntries(timerEntries);
+
+      case "daily":
+        return this.getDailyEntries(timerEntries);
+
+      case "all":
+        return timerEntries;
+    }
+  }
+
   render() {
+    const filteredEntries = this.getFilteredEntries(this.props.timerEntries);
+
     const weekTotal = this.getWeeklyTotal(this.props.timerEntries);
-    const timerEntries = this.getTimerEntries(this.props.timerEntries);
+    const dailyTotal = this.getDailyTotal(this.props.timerEntries);
+
+    const timerEntries = this.getTimerEntries(filteredEntries);
 
     return (
       <div className="TimerEntries">
         <div className="TimerEntries__stats">
-          <h2>This week</h2>
-          <h2>Week Total - {weekTotal.getTimeString()}</h2>
+          <div className="TimerEntries__stats-total">
+            <h4>
+              Today<span>{dailyTotal.getTimeString()}</span>
+            </h4>
+            <h4>
+              This Week<span>{weekTotal.getTimeString()}</span>
+            </h4>
+          </div>
+          <select
+            className="TimerEntries__view-options"
+            onChange={this.viewChangeHandler}
+          >
+            <option>Weekly</option>
+            <option>Daily</option>
+            <option>All</option>
+          </select>
         </div>
         {timerEntries.length > 0 && timerEntries}
         {timerEntries.length === 0 && this.generateEmptyMessage()}

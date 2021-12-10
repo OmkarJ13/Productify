@@ -12,6 +12,27 @@
 .TimerEntries__stats {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+}
+
+.TimerEntries__stats-total {
+  display: flex;
+  gap: 2em;
+}
+
+.TimerEntries__stats-total h4 {
+  display: flex;
+  gap: 0.5em;
+}
+
+.TimerEntries__stats-total span {
+  font-weight: 700;
+}
+
+.TimerEntries__view-options {
+  padding-inline: 0.5em;
+  font-size: 1rem;
+  color: grey;
 }
 
 .TimerEntries__empty-msg {
