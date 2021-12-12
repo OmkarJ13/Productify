@@ -1,8 +1,11 @@
 import React from "react";
 import "./Timer.css";
 
+import TimerModeForm from "./TimerModeForm";
+import ManualModeForm from "./ManualModeForm";
+
 import { v4 as uuid } from "uuid";
-import Time from "../classes/Time";
+import Time from "../../classes/Time";
 
 class Timer extends React.Component {
   constructor(props) {
@@ -160,7 +163,6 @@ class Timer extends React.Component {
   Updates the timer by one second
   */
   updateTimer() {
-    console.log("Im Running");
     this.secondsPassed++;
 
     if (this.isMounted()) {
@@ -249,130 +251,39 @@ class Timer extends React.Component {
     );
   }
 
-  /*
-  Generates timer mode form JSX
-  */
-  generateTimerModeForm() {
-    const { task } = this.state.timerEntry;
-
-    return (
-      <>
-        <input
-          name="task"
-          type="text"
-          className="Timer__task-input"
-          value={task}
-          placeholder="What are you working on?"
-          autoComplete="off"
-          onChange={this.taskChangeHandler}
-        />
-
-        <button onClick={this.startTracking} className="Timer__start-btn">
-          Start Tracking
-        </button>
-        <div className="Timer__modes">
-          <button
-            onClick={this.switchToTimerMode}
-            className="Timer__timer-mode-btn"
-          >
-            <i className="fa fa-clock-o" />
-          </button>
-          <button
-            onClick={this.switchToManualMode}
-            className="Timer__manual-mode-btn"
-          >
-            <i className="fa fa-bars" />
-          </button>
-        </div>
-      </>
-    );
-  }
-
-  getDateString(date) {
-    const year = String(date.getFullYear());
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  }
-
-  /*
-  Generates manual mode JSX
-  */
-  generateManualModeForm() {
-    const { task, date, startTime, endTime, duration } = this.state.timerEntry;
-    const dateValue = this.getDateString(new Date(date));
-
-    return (
-      <>
-        <input
-          name="task"
-          type="text"
-          className="Timer__task-input"
-          value={task}
-          placeholder="What have you worked on?"
-          autoComplete="off"
-          onChange={this.taskChangeHandler}
-        />
-
-        <div className="Timer__time-input-container">
-          <input
-            name="startTime"
-            type="time"
-            value={startTime.getTimeStringShort()}
-            onChange={this.timeChangeHandler}
-            className="Timer__start-time-input"
-          />
-          <span> - </span>
-          <input
-            name="endTime"
-            type="time"
-            value={endTime.getTimeStringShort()}
-            onChange={this.timeChangeHandler}
-            className="Timer__end-time-input"
-          />
-        </div>
-
-        <div className="Timer__duration">
-          <span>{duration.getTimeString()}</span>
-        </div>
-
-        <input
-          type="date"
-          value={dateValue}
-          onChange={this.dateChangeHandler}
-          className="Timer__date-input"
-        />
-
-        <button onClick={this.saveTimerEntry} className="Timer__add-btn">
-          Add
-        </button>
-
-        <div className="Timer__modes">
-          <button
-            onClick={this.switchToTimerMode}
-            className="Timer__timer-mode-btn"
-          >
-            <i className="fa fa-clock-o" />
-          </button>
-          <button
-            onClick={this.switchToManualMode}
-            className="Timer__manual-mode-btn"
-          >
-            <i className="fa fa-bars" />
-          </button>
-        </div>
-      </>
-    );
-  }
-
   /* 
   Generates timer form based on mode
   */
   generateTimerForm() {
-    return this.state.trackingMode === "timer"
-      ? this.generateTimerModeForm()
-      : this.generateManualModeForm();
+    const { task, startTime, endTime, duration, date } = this.state.timerEntry;
+
+    return this.state.trackingMode === "timer" ? (
+      <TimerModeForm
+        timerEntry={{
+          task: task,
+        }}
+        taskChangeHandler={this.taskChangeHandler}
+        startTracking={this.startTracking}
+        switchToManualMode={this.switchToManualMode}
+        switchToTimerMode={this.switchToTimerMode}
+      />
+    ) : (
+      <ManualModeForm
+        timerEntry={{
+          task: task,
+          startTime: startTime,
+          endTime: endTime,
+          duration: duration,
+          date: date,
+        }}
+        taskChangeHandler={this.taskChangeHandler}
+        timeChangeHandler={this.timeChangeHandler}
+        dateChangeHandler={this.dateChangeHandler}
+        saveTimerEntry={this.saveTimerEntry}
+        switchToManualMode={this.switchToManualMode}
+        switchToTimerMode={this.switchToTimerMode}
+      />
+    );
   }
 
   switchToManualMode() {
@@ -407,7 +318,7 @@ class Timer extends React.Component {
     const { isTracking } = this.state;
 
     return (
-      <div className="Timer" ref={this.timerComponent}>
+      <div className="Timer flex" ref={this.timerComponent}>
         {isTracking ? this.generateTimerRunning() : this.generateTimerForm()}
       </div>
     );

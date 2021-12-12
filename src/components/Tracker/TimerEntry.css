@@ -1,5 +1,8 @@
 .TimerEntry {
   position: relative;
+  width: 100%;
+  gap: 1em;
+  padding: 1em;
   border-bottom: 1px solid silver;
 }
 
@@ -7,27 +10,14 @@
   border-bottom: none;
 }
 
-.TimerEntry__content {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 1em;
-  padding: 1em;
-}
-
 .TimerEntry__title {
   width: 30%;
-  display: flex;
-  align-items: center;
   gap: 1em;
 }
 
 .TimerEntry__duplicates {
   width: 40px;
   height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background-color: rgb(230, 230, 230);
   border: 1px solid silver;
   border-radius: 50%;
@@ -40,8 +30,6 @@
 }
 
 .TimerEntry__time {
-  display: flex;
-  align-items: center;
   gap: 0.25em;
 }
 
@@ -51,8 +39,8 @@
   border: 1px solid rgb(0, 0, 0, 0);
 }
 
-.TimerEntry__content:hover .TimerEntry__task-input,
-.TimerEntry__content:hover .TimerEntry__time input {
+.TimerEntry:hover .TimerEntry__task-input,
+.TimerEntry:hover .TimerEntry__time input {
   border: 1px solid silver;
   transition: border 0.3s ease-in-out;
 }
@@ -88,7 +76,7 @@
   top: 55px;
   right: 0;
   background-color: white;
-  box-shadow: 0 2px 6px 0 #d5d0d7;
+  box-shadow: 2px 2px 6px 0 #d5d0d7;
 }
 
 .TimerEntry__dropdown-options ul {

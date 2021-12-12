@@ -113,6 +113,11 @@ class Time {
     return this.hours * 3600 + this.minutes * 60 + this.seconds;
   }
 
+  getHoursFraction() {
+    const minutes = this.minutes / 60;
+    return (this.hours + minutes).toPrecision(2);
+  }
+
   getTimeString() {
     return `${this.getHourString()}:${this.getMinuteString()}:${this.getSecondString()}`;
   }

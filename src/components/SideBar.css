@@ -1,18 +1,19 @@
 .SideBar {
-  width: 20%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-block: 1em;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20vw;
+  height: 100vh;
+  padding-block: 3em;
   background-color: skyblue;
+}
+
+.SideBar i {
+  color: white;
 }
 
 .SideBar__heading {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   gap: 0.5em;
   padding-bottom: 0.75em;
   color: white;
@@ -20,17 +21,11 @@
 
 .SideBar__links {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   gap: 0.5em;
 }
 
 .SideBar__link {
   width: 90%;
-  display: flex;
-  align-items: center;
   gap: 0.5em;
   padding: 1em 2em;
   font-size: 1rem;

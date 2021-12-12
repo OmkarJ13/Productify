@@ -4,8 +4,10 @@ import { v4 as uuid } from "uuid";
 import "./TimerEntries.css";
 import TimerEntry from "./TimerEntry";
 
-import { calculateDaysPassed, days } from "../helpers/timerHelpers";
-import Time from "../classes/Time";
+import { getDaysPassed } from "../../helpers/getDaysPassed";
+import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
+import { days } from "../../helpers/days";
+import Time from "../../classes/Time";
 
 class TimerEntries extends React.Component {
   constructor(props) {
@@ -40,35 +42,6 @@ class TimerEntries extends React.Component {
     const filteredEntries = this.getDailyEntries(timerEntries);
     const durations = filteredEntries.map((timerEntry) => timerEntry.duration);
     return Time.addTime(...durations);
-  }
-
-  /*
-  Groups timer entries by provided keys,
-  for example, given array of timer entry objects and key as 'task',
-  will return a new array with arrays of timer entries with the same 'task' value.
-  keys is an array. 
-  */
-  groupTimerEntriesBy(timerEntries, keys) {
-    const groupedEntries = [];
-
-    // For each timer entry, checks with every other entry and checks if it has the
-    // same value for 'key' provided in parameter. If so, groups them in an array.
-    timerEntries.forEach((timerEntry, _, self) => {
-      const matches = self.filter((ele) => {
-        return keys.every((key) => {
-          return timerEntry[key] === ele[key];
-        });
-      });
-
-      // Used stringify to find duplicate objects.
-      const includes = groupedEntries.some(
-        (ele) => JSON.stringify(ele) === JSON.stringify(matches)
-      );
-
-      if (!includes) groupedEntries.push(matches);
-    });
-
-    return groupedEntries;
   }
 
   /*
@@ -109,16 +82,16 @@ class TimerEntries extends React.Component {
   */
   getTimerEntries(timerEntries) {
     // Grouped by dates
-    const groupedByDate = this.groupTimerEntriesBy(timerEntries, ["date"]);
+    const groupedByDate = groupTimerEntriesBy(timerEntries, ["date"]);
 
     // Sorted to show latest entry first
     const sortedByDate = groupedByDate.sort(
-      (a, b) => calculateDaysPassed(a[0].date) - calculateDaysPassed(b[0].date)
+      (a, b) => getDaysPassed(a[0].date) - getDaysPassed(b[0].date)
     );
 
     // Grouped by task name if has similar task names for each day
     const groupedByDateAndTask = sortedByDate.map((groupedEntries) =>
-      this.groupTimerEntriesBy(groupedEntries, ["task"])
+      groupTimerEntriesBy(groupedEntries, ["task"])
     );
 
     // Combined duplicate entries to show one instead of multiple
@@ -134,16 +107,16 @@ class TimerEntries extends React.Component {
 
     // Finally, generate JSX
     const JSX = finalTimerEntries.map((timerEntriesGrouped) => {
-      const daysSince = calculateDaysPassed(timerEntriesGrouped[0].date);
+      const daysSince = getDaysPassed(timerEntriesGrouped[0].date);
       const day =
         daysSince < 7 && daysSince > -1
           ? days[daysSince]
           : timerEntriesGrouped[0].date;
 
       return (
-        <div className="TimerEntries-grouped">
+        <div className="TimerEntries-grouped flex-column">
           <h4 className="TimerEntries-grouped__day">{day}</h4>
-          <div className="TimerEntries-grouped__entries">
+          <div className="TimerEntries-grouped__entries flex-column">
             {this.generateTimerEntries(timerEntriesGrouped)}
           </div>
         </div>
@@ -184,14 +157,14 @@ class TimerEntries extends React.Component {
 
   getWeeklyEntries(timerEntries) {
     return timerEntries.filter((timerEntry) => {
-      const daysPassed = calculateDaysPassed(timerEntry.date);
+      const daysPassed = getDaysPassed(timerEntry.date);
       return daysPassed < 7 && daysPassed > -1;
     });
   }
 
   getDailyEntries(timerEntries) {
     return timerEntries.filter((timerEntry) => {
-      const daysPassed = calculateDaysPassed(timerEntry.date);
+      const daysPassed = getDaysPassed(timerEntry.date);
       return daysPassed === 0;
     });
   }
@@ -219,13 +192,13 @@ class TimerEntries extends React.Component {
     const timerEntries = this.getTimerEntries(filteredEntries);
 
     return (
-      <div className="TimerEntries">
-        <div className="TimerEntries__stats">
-          <div className="TimerEntries__stats-total">
-            <h4>
+      <div className="TimerEntries flex-column">
+        <div className="TimerEntries__stats flex justify-spaced">
+          <div className="TimerEntries__stats-total flex">
+            <h4 className="flex">
               Today<span>{dailyTotal.getTimeString()}</span>
             </h4>
-            <h4>
+            <h4 className="flex">
               This Week<span>{weekTotal.getTimeString()}</span>
             </h4>
           </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import "./TimerEntry.css";
-import Time from "../classes/Time";
+import Time from "../../classes/Time";
 
 import { v4 as uuid } from "uuid";
 import "react-datepicker/dist/react-datepicker.css";
@@ -19,9 +19,9 @@ class TimerEntry extends React.Component {
       timerEntry: {
         task: this.props.task,
         date: this.props.date,
-        startTime: new Time(...Object.values(this.props.startTime)),
-        endTime: new Time(...Object.values(this.props.endTime)),
-        duration: new Time(...Object.values(this.props.duration)),
+        startTime: this.props.startTime,
+        endTime: this.props.endTime,
+        duration: this.props.duration,
       },
     };
 
@@ -156,7 +156,7 @@ class TimerEntry extends React.Component {
     };
 
     onTimerEntryEdited(editedTimerEntry);
-    this.taskInput.current.blur();
+    if (this.props.allEntries) this.taskInput.current.blur();
   }
 
   /* 
@@ -225,9 +225,11 @@ class TimerEntry extends React.Component {
   Toggles dropdown menu
   */
   toggleAllEntries(e) {
-    this.setState({
-      showAllEntries: !this.state.showAllEntries,
-    });
+    if (e.target.nodeName !== "BUTTON") {
+      this.setState({
+        showAllEntries: !this.state.showAllEntries,
+      });
+    }
   }
 
   getDateString(date) {
@@ -249,88 +251,89 @@ class TimerEntry extends React.Component {
     return (
       <>
         <div
-          className="TimerEntry"
+          className="TimerEntry flex"
           onClick={isCombined ? this.toggleAllEntries : null}
         >
-          <div className="TimerEntry__content">
-            <div className="TimerEntry__title">
-              {isCombined && (
-                <div className="TimerEntry__duplicates">
-                  {this.props.allEntries.length}
-                </div>
-              )}
+          <div className="TimerEntry__title flex">
+            {isCombined && (
+              <div className="TimerEntry__duplicates flex justify-center">
+                {this.props.allEntries.length}
+              </div>
+            )}
+            <input
+              type="text"
+              name="task"
+              value={task}
+              placeholder="Add Task Name"
+              ref={this.taskInput}
+              readOnly={isCombined}
+              autoComplete="off"
+              onChange={this.taskChangeHandler}
+              className="TimerEntry__task-input"
+            />
+          </div>
+
+          <div className="TimerEntry__time flex">
+            <div className="TimerEntry__start-time">
               <input
-                type="text"
-                name="task"
-                value={task}
-                placeholder="Add Task Name"
-                ref={this.taskInput}
+                type="time"
+                name="startTime"
                 readOnly={isCombined}
-                autoComplete="off"
-                onChange={this.taskChangeHandler}
-                className="TimerEntry__task-input"
+                value={startTime.getTimeStringShort()}
+                onChange={this.timeChangeHandler}
               />
             </div>
-
-            <div className="TimerEntry__time">
-              <div className="TimerEntry__start-time">
-                <input
-                  type="time"
-                  name="startTime"
-                  readOnly={isCombined}
-                  value={startTime.getTimeStringShort()}
-                  onChange={this.timeChangeHandler}
-                />
-              </div>
-              <span>-</span>
-              <div className="TimerEntry__end-time">
-                <input
-                  type="time"
-                  name="endTime"
-                  readOnly={isCombined}
-                  value={endTime.getTimeStringShort()}
-                  onChange={this.timeChangeHandler}
-                />
-              </div>
+            <span>-</span>
+            <div className="TimerEntry__end-time">
+              <input
+                type="time"
+                name="endTime"
+                readOnly={isCombined}
+                value={endTime.getTimeStringShort()}
+                onChange={this.timeChangeHandler}
+              />
             </div>
+          </div>
 
-            <div className="TimerEntry__duration">
-              <span>{duration.getTimeString()}</span>
-            </div>
+          <div className="TimerEntry__duration">
+            <span>{duration.getTimeString()}</span>
+          </div>
 
-            <input
-              type="date"
-              value={dateValue}
-              onChange={this.dateChangeHandler}
-              readOnly={isCombined}
-              className="TimerEntry__date-input"
-            />
+          <input
+            type="date"
+            value={dateValue}
+            onChange={this.dateChangeHandler}
+            readOnly={isCombined}
+            className="TimerEntry__date-input"
+          />
 
-            {/* <button className="TimerEntry__resume-btn">
+          {/* <button className="TimerEntry__resume-btn">
               <i className="fa fa-play" />
             </button> */}
 
-            <div className="TimerEntry__dropdown" ref={this.dropdownOptionsDiv}>
-              <button
-                onClick={this.toggleDropdown}
-                className="TimerEntry__dropdown-btn"
-              >
-                <i className="fa fa-ellipsis-v" />
-              </button>
+          <div
+            className="TimerEntry__dropdown flex-column"
+            ref={this.dropdownOptionsDiv}
+          >
+            <button
+              onClick={this.toggleDropdown}
+              className="TimerEntry__dropdown-btn"
+            >
+              <i className="fa fa-ellipsis-v" />
+            </button>
 
-              {isDropdownOpen && (
-                <div className="TimerEntry__dropdown-options">
-                  <ul>
-                    <li className="TimerEntry__dropdown-item">
-                      <button onClick={this.duplicateEntry}>Duplicate</button>
-                    </li>
-                    <li className="TimerEntry__dropdown-item">
-                      <button onClick={this.deleteEntry}>Delete</button>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
+            {isDropdownOpen && (
+              <div className="TimerEntry__dropdown-options">
+                <ul>
+                  <li className="TimerEntry__dropdown-item">
+                    <button onClick={this.duplicateEntry}>Duplicate</button>
+                  </li>
+                  <li className="TimerEntry__dropdown-item">
+                    <button onClick={this.deleteEntry}>Delete</button>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
         {showAllEntries && this.props.allEntries}

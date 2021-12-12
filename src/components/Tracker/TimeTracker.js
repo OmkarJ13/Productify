@@ -1,7 +1,9 @@
 import React from "react";
 import "./TimeTracker.css";
 
-import Timer from "./Timer";
+import { parseTimerEntriesJSON } from "../../helpers/parseTimerEntriesJSON";
+
+import Timer from "../Timer/Timer";
 import TimerEntries from "./TimerEntries";
 
 class TimeTracker extends React.Component {
@@ -67,7 +69,10 @@ class TimeTracker extends React.Component {
   }
 
   componentDidMount() {
-    const storedTimerEntries = JSON.parse(localStorage.getItem("timerEntries"));
+    const storedTimerEntries = parseTimerEntriesJSON(
+      localStorage.getItem("timerEntries")
+    );
+
     if (storedTimerEntries) {
       this.setState({
         timerEntries: storedTimerEntries,
@@ -84,7 +89,7 @@ class TimeTracker extends React.Component {
 
   render() {
     return (
-      <div className="TimeTracker">
+      <div className="TimeTracker flex-column">
         <Timer onTimerEntryCreated={this.handleTimerEntryCreated} />
         <TimerEntries
           timerEntries={this.state.timerEntries}
