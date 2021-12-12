@@ -1,3 +1,13 @@
+:root {
+  --light-primary: white;
+  --dark-primary: #292929;
+
+  --secondary: #3282b8;
+
+  --light-tertiary: grey;
+  --dark-tertiary: lightgrey;
+}
+
 *,
 *::before,
 *::after {
@@ -40,11 +50,8 @@ span {
 }
 
 body {
-  color: grey;
-}
-
-i {
-  color: grey;
+  background-color: var(--light-primary);
+  color: var(--light-tertiary);
 }
 
 input,
@@ -53,11 +60,20 @@ select {
   border: none;
   outline: none;
   font-family: Montserrat, sans-serif;
+  background-color: inherit;
+  color: inherit;
+}
+
+input::placeholder {
+  color: inherit;
+}
+
+i {
+  color: inherit;
 }
 
 button {
   cursor: pointer;
-  background-color: rgb(0, 0, 0, 0);
 }
 
 .flex {

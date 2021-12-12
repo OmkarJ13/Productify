@@ -7,19 +7,39 @@ import TimeTracker from "./Tracker/TimeTracker";
 import Reports from "./Reports";
 import Settings from "./Settings";
 
-class ProductivityApp extends React.Component {
-  render() {
-    return (
-      <div className="ProductivityApp flex">
-        <SideBar />
+import { ThemeContext } from "../contexts/ThemeContext";
 
-        <Switch>
-          <Route path="/track" exact component={TimeTracker} />
-          <Route path="/reports" exact component={Reports} />
-          <Route path="/settings" exact component={Settings} />
-          <Redirect to="/track" />
-        </Switch>
-      </div>
+class ProductivityApp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      theme: "light",
+      changeTheme: this.changeTheme.bind(this),
+    };
+  }
+
+  changeTheme() {
+    this.setState({
+      theme: this.state.theme === "light" ? "dark" : "light",
+    });
+  }
+
+  render() {
+    const themeClass = this.state.theme === "dark" ? "Productivity-dark" : "";
+
+    return (
+      <ThemeContext.Provider value={this.state}>
+        <div className={`ProductivityApp flex ${themeClass}`}>
+          <SideBar />
+
+          <Switch>
+            <Route path="/track" exact component={TimeTracker} />
+            <Route path="/reports" exact component={Reports} />
+            <Route path="/settings" exact component={Settings} />
+            <Redirect to="/track" />
+          </Switch>
+        </div>
+      </ThemeContext.Provider>
     );
   }
 }

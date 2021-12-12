@@ -3,7 +3,7 @@
   width: 100%;
   gap: 1em;
   padding: 1em;
-  border-bottom: 1px solid silver;
+  border-bottom: 1px solid;
 }
 
 .TimerEntry:last-of-type {
@@ -18,9 +18,10 @@
 .TimerEntry__duplicates {
   width: 40px;
   height: 40px;
-  background-color: rgb(230, 230, 230);
-  border: 1px solid silver;
+  background-color: var(--secondary);
+  color: white;
   border-radius: 50%;
+  border: 1px solid;
 }
 
 .TimerEntry__task-input {
@@ -36,12 +37,12 @@
 .TimerEntry__time input {
   padding: 0.4em 0.2em;
   text-align: center;
-  border: 1px solid rgb(0, 0, 0, 0);
+  border: 1px solid transparent;
 }
 
 .TimerEntry:hover .TimerEntry__task-input,
 .TimerEntry:hover .TimerEntry__time input {
-  border: 1px solid silver;
+  border: 1px solid;
   transition: border 0.3s ease-in-out;
 }
 
@@ -52,8 +53,8 @@
 
 .TimerEntry__duration span {
   padding-inline: 1em;
-  border-left: 1px solid silver;
-  border-right: 1px solid silver;
+  border-left: 1px solid;
+  border-right: 1px solid;
 }
 
 .TimerEntry__date-input {
@@ -63,7 +64,7 @@
 }
 
 .TimerEntry:hover .TimerEntry__date-input {
-  border: 1px solid silver;
+  border: 1px solid;
 }
 
 .TimerEntry__dropdown-btn {
@@ -75,8 +76,8 @@
   z-index: 10;
   top: 55px;
   right: 0;
-  background-color: white;
-  box-shadow: 2px 2px 6px 0 #d5d0d7;
+  background-color: var(--light-primary);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 .TimerEntry__dropdown-options ul {

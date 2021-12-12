@@ -4,11 +4,8 @@
   left: 0;
   width: 20vw;
   height: 100vh;
-  padding-block: 3em;
-  background-color: skyblue;
-}
-
-.SideBar i {
+  padding-block: 2em;
+  background-color: var(--secondary);
   color: white;
 }
 
@@ -16,7 +13,6 @@
   width: 100%;
   gap: 0.5em;
   padding-bottom: 0.75em;
-  color: white;
 }
 
 .SideBar__links {

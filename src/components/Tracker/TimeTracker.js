@@ -5,8 +5,11 @@ import { parseTimerEntriesJSON } from "../../helpers/parseTimerEntriesJSON";
 
 import Timer from "../Timer/Timer";
 import TimerEntries from "./TimerEntries";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 class TimeTracker extends React.Component {
+  static contextType = ThemeContext;
+
   constructor(props) {
     super(props);
     this.state = {

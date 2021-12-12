@@ -1,5 +1,4 @@
 import React from "react";
-import TimerEntries from "./Tracker/TimerEntries";
 import "./Reports.css";
 
 import { Chart as ChartJS } from "chart.js/auto";
@@ -11,8 +10,11 @@ import { groupTimerEntriesBy } from "../helpers/groupTimerEntriesBy";
 import { parseTimerEntriesJSON } from "../helpers/parseTimerEntriesJSON";
 import { getDaysPassed } from "../helpers/getDaysPassed";
 import { colors } from "../helpers/colors";
+import { ThemeContext } from "../contexts/ThemeContext";
 
 class Reports extends React.Component {
+  static contextType = ThemeContext;
+
   getTimerEntryData() {
     const timerEntries = parseTimerEntriesJSON(
       localStorage.getItem("timerEntries")
@@ -96,7 +98,8 @@ class Reports extends React.Component {
                 {
                   label: "Productive Hours",
                   data: daysDurations,
-                  backgroundColor: "skyblue",
+                  backgroundColor: "#3282b8",
+                  borderColor: "#3282b8",
                 },
               ],
             }}
@@ -105,10 +108,6 @@ class Reports extends React.Component {
             }}
           />
         </div>
-
-        {/* <div className="Reports__entries">
-          <TimerEntries timerEntries={timerEntryData} />
-        </div> */}
 
         <div className="Reports__doughnut-container flex-column">
           <h3 className="flex-column">
@@ -122,6 +121,7 @@ class Reports extends React.Component {
                   label: "Task Distribution",
                   data: taskDurations,
                   backgroundColor: colors,
+                  borderColor: colors,
                 },
               ],
             }}

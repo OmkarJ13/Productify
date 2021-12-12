@@ -2,8 +2,8 @@
   width: 100%;
   gap: 1em;
   padding: 1em;
-  border: 1px solid silver;
-  box-shadow: 1px 2px 6px 0 #d5d0d7;
+  border: 1px solid;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 .Timer__task-input {
@@ -18,7 +18,7 @@
 
 .Timer__time-input-container input {
   padding: 0.8em 0.4em;
-  border: 1px solid silver;
+  border: 1px solid;
 }
 
 .Timer__duration {
@@ -28,20 +28,20 @@
 
 .Timer__date-input {
   padding: 0.8em 0.4em;
-  border: 1px solid silver;
+  border: 1px solid;
 }
 
 .Timer__duration span {
   padding-inline: 1em;
-  border-left: 1px solid silver;
-  border-right: 1px solid silver;
+  border-left: 1px solid;
+  border-right: 1px solid;
 }
 
 .Timer__start-btn,
 .Timer__stop-btn,
 .Timer__add-btn {
   padding: 1em;
-  background-color: skyblue;
+  background-color: var(--secondary);
   color: white;
   text-transform: uppercase;
   font-weight: 500;

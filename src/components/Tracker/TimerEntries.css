@@ -24,7 +24,10 @@
 .TimerEntries__view-options {
   padding-inline: 0.5em;
   font-size: 1rem;
-  color: grey;
+}
+
+.TimerEntries__view-options option {
+  color: var(--light-tertiary);
 }
 
 .TimerEntries__empty-msg {
@@ -33,15 +36,16 @@
 
 .TimerEntries-grouped {
   width: 100%;
-  border: 1px solid silver;
+  border: 1px solid;
 }
 
 .TimerEntries-grouped__day {
   width: 100%;
   padding: 1em;
   text-transform: capitalize;
-  background-color: rgb(230, 230, 230);
-  border-bottom: 1px solid silver;
+  background-color: var(--secondary);
+  color: white;
+  border-bottom: 1px solid;
 }
 
 .TimerEntries-grouped__entries {

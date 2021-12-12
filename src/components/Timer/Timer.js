@@ -6,8 +6,11 @@ import ManualModeForm from "./ManualModeForm";
 
 import { v4 as uuid } from "uuid";
 import Time from "../../classes/Time";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 class Timer extends React.Component {
+  static contextType = ThemeContext;
+
   constructor(props) {
     super(props);
 
