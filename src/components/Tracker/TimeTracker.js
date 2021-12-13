@@ -1,15 +1,11 @@
 import React from "react";
-import "./TimeTracker.css";
 
 import { parseTimerEntriesJSON } from "../../helpers/parseTimerEntriesJSON";
 
 import Timer from "../Timer/Timer";
 import TimerEntries from "./TimerEntries";
-import { ThemeContext } from "../../contexts/ThemeContext";
 
 class TimeTracker extends React.Component {
-  static contextType = ThemeContext;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -92,7 +88,7 @@ class TimeTracker extends React.Component {
 
   render() {
     return (
-      <div className="TimeTracker flex-column">
+      <div className="w-4/5 min-h-screen flex flex-col ml-auto p-8 text-gray-600">
         <Timer onTimerEntryCreated={this.handleTimerEntryCreated} />
         <TimerEntries
           timerEntries={this.state.timerEntries}

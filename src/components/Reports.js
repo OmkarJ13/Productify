@@ -1,5 +1,4 @@
 import React from "react";
-import "./Reports.css";
 
 import { Chart as ChartJS } from "chart.js/auto";
 import { Chart } from "react-chartjs-2";
@@ -10,11 +9,8 @@ import { groupTimerEntriesBy } from "../helpers/groupTimerEntriesBy";
 import { parseTimerEntriesJSON } from "../helpers/parseTimerEntriesJSON";
 import { getDaysPassed } from "../helpers/getDaysPassed";
 import { colors } from "../helpers/colors";
-import { ThemeContext } from "../contexts/ThemeContext";
 
 class Reports extends React.Component {
-  static contextType = ThemeContext;
-
   getTimerEntryData() {
     const timerEntries = parseTimerEntriesJSON(
       localStorage.getItem("timerEntries")
@@ -89,8 +85,8 @@ class Reports extends React.Component {
     const totalHours = Time.addTime(...durations);
 
     return (
-      <div className="Reports flex-column justify-center">
-        <div className="Reports__graph-container">
+      <div className="w-4/5 flex flex-col ml-auto text-gray-600">
+        <div className="w-full h-[50vh] p-2 border-b border-gray-300">
           <Bar
             data={{
               labels: days,
@@ -109,10 +105,13 @@ class Reports extends React.Component {
           />
         </div>
 
-        <div className="Reports__doughnut-container flex-column">
-          <h3 className="flex-column">
-            <span>Clocked Hours:</span> {totalHours.getTimeString()}
-          </h3>
+        <div className="w-1/3 flex flex-col items-center gap-2 ml-auto p-2 border-l border-gray-300">
+          <span className="flex items-baseline gap-1">
+            Clocked Hours -
+            <strong className="font-bold text-lg">
+              {totalHours.getTimeString()}
+            </strong>
+          </span>
           <Doughnut
             data={{
               labels: tasks,

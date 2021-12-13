@@ -1,5 +1,4 @@
 import React from "react";
-import "./TimerEntry.css";
 import Time from "../../classes/Time";
 
 import { v4 as uuid } from "uuid";
@@ -251,12 +250,12 @@ class TimerEntry extends React.Component {
     return (
       <>
         <div
-          className="TimerEntry flex"
+          className="group w-full flex items-center gap-4 p-4 border-x border-b border-gray-300"
           onClick={isCombined ? this.toggleAllEntries : null}
         >
-          <div className="TimerEntry__title flex">
+          <div className="w-1/3 flex items-center gap-4">
             {isCombined && (
-              <div className="TimerEntry__duplicates flex justify-center">
+              <div className="flex justify-center items-center px-4 py-2 bg-blue-500 text-white rounded-[50%]">
                 {this.props.allEntries.length}
               </div>
             )}
@@ -269,33 +268,31 @@ class TimerEntry extends React.Component {
               readOnly={isCombined}
               autoComplete="off"
               onChange={this.taskChangeHandler}
-              className="TimerEntry__task-input"
+              className="transition-colors flex-grow p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
             />
           </div>
 
-          <div className="TimerEntry__time flex">
-            <div className="TimerEntry__start-time">
-              <input
-                type="time"
-                name="startTime"
-                readOnly={isCombined}
-                value={startTime.getTimeStringShort()}
-                onChange={this.timeChangeHandler}
-              />
-            </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="time"
+              name="startTime"
+              readOnly={isCombined}
+              value={startTime.getTimeStringShort()}
+              onChange={this.timeChangeHandler}
+              className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
+            />
             <span>-</span>
-            <div className="TimerEntry__end-time">
-              <input
-                type="time"
-                name="endTime"
-                readOnly={isCombined}
-                value={endTime.getTimeStringShort()}
-                onChange={this.timeChangeHandler}
-              />
-            </div>
+            <input
+              type="time"
+              name="endTime"
+              readOnly={isCombined}
+              value={endTime.getTimeStringShort()}
+              onChange={this.timeChangeHandler}
+              className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
+            />
           </div>
 
-          <div className="TimerEntry__duration">
+          <div className="flex-grow text-center border-x border-gray-300">
             <span>{duration.getTimeString()}</span>
           </div>
 
@@ -304,32 +301,30 @@ class TimerEntry extends React.Component {
             value={dateValue}
             onChange={this.dateChangeHandler}
             readOnly={isCombined}
-            className="TimerEntry__date-input"
+            className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
           />
 
           {/* <button className="TimerEntry__resume-btn">
               <i className="fa fa-play" />
             </button> */}
 
-          <div
-            className="TimerEntry__dropdown flex-column"
-            ref={this.dropdownOptionsDiv}
-          >
-            <button
-              onClick={this.toggleDropdown}
-              className="TimerEntry__dropdown-btn"
-            >
+          <div className="relative" ref={this.dropdownOptionsDiv}>
+            <button onClick={this.toggleDropdown}>
               <i className="fa fa-ellipsis-v" />
             </button>
 
             {isDropdownOpen && (
-              <div className="TimerEntry__dropdown-options">
+              <div className="absolute top-8 right-0 z-10 bg-white shadow-lg">
                 <ul>
-                  <li className="TimerEntry__dropdown-item">
-                    <button onClick={this.duplicateEntry}>Duplicate</button>
+                  <li>
+                    <button onClick={this.duplicateEntry} className="px-6 py-2">
+                      Duplicate
+                    </button>
                   </li>
-                  <li className="TimerEntry__dropdown-item">
-                    <button onClick={this.deleteEntry}>Delete</button>
+                  <li>
+                    <button onClick={this.deleteEntry} className="px-6 py-2">
+                      Delete
+                    </button>
                   </li>
                 </ul>
               </div>

@@ -1,7 +1,6 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
 
-import "./TimerEntries.css";
 import TimerEntry from "./TimerEntry";
 
 import { getDaysPassed } from "../../helpers/getDaysPassed";
@@ -114,9 +113,11 @@ class TimerEntries extends React.Component {
           : timerEntriesGrouped[0].date;
 
       return (
-        <div className="TimerEntries-grouped flex-column">
-          <h4 className="TimerEntries-grouped__day">{day}</h4>
-          <div className="TimerEntries-grouped__entries flex-column">
+        <div className="w-full flex flex-col">
+          <h4 className="w-full px-4 py-2 bg-blue-500 text-white uppercase text-lg">
+            {day}
+          </h4>
+          <div className="w-full flex flex-col">
             {this.generateTimerEntries(timerEntriesGrouped)}
           </div>
         </div>
@@ -150,9 +151,7 @@ class TimerEntries extends React.Component {
   }
 
   generateEmptyMessage() {
-    return (
-      <h3 className="TimerEntries__empty-msg">No Tasks Tracked This Week...</h3>
-    );
+    return <h3 className="m-auto text-2xl font-light">No Time Tracked...</h3>;
   }
 
   getWeeklyEntries(timerEntries) {
@@ -192,18 +191,22 @@ class TimerEntries extends React.Component {
     const timerEntries = this.getTimerEntries(filteredEntries);
 
     return (
-      <div className="TimerEntries flex-column">
-        <div className="TimerEntries__stats flex justify-spaced">
-          <div className="TimerEntries__stats-total flex">
-            <h4 className="flex">
-              Today<span>{dailyTotal.getTimeString()}</span>
-            </h4>
-            <h4 className="flex">
-              This Week<span>{weekTotal.getTimeString()}</span>
-            </h4>
+      <div className="w-full min-h-full flex flex-col gap-8 pt-4">
+        <div className="w-full flex justify-between items-center">
+          <div className="flex gap-4">
+            <span className="flex gap-2 font-light">
+              Today
+              <strong className="font-bold">
+                {dailyTotal.getTimeString()}
+              </strong>
+            </span>
+            <span className="flex gap-2 font-light">
+              This Week
+              <strong className="font-bold">{weekTotal.getTimeString()}</strong>
+            </span>
           </div>
           <select
-            className="TimerEntries__view-options"
+            className="font-light focus:outline-none"
             onChange={this.viewChangeHandler}
           >
             <option>Weekly</option>
@@ -211,8 +214,10 @@ class TimerEntries extends React.Component {
             <option>All</option>
           </select>
         </div>
-        {timerEntries.length > 0 && timerEntries}
-        {timerEntries.length === 0 && this.generateEmptyMessage()}
+        <div className="w-full h-full flex flex-col gap-8">
+          {timerEntries.length > 0 && timerEntries}
+          {timerEntries.length === 0 && this.generateEmptyMessage()}
+        </div>
       </div>
     );
   }

@@ -10,27 +10,24 @@ class TimerModeForm extends React.Component {
         <input
           name="task"
           type="text"
-          className="Timer__task-input"
+          className="flex-grow p-2 border focus:outline-none"
           value={task}
           placeholder="What are you working on?"
           autoComplete="off"
           onChange={this.props.taskChangeHandler}
         />
 
-        <button onClick={this.props.startTracking} className="Timer__start-btn">
+        <button
+          onClick={this.props.startTracking}
+          className="px-4 py-2 bg-blue-500 text-white uppercase"
+        >
           Start Tracking
         </button>
-        <div className="Timer__modes flex-column">
-          <button
-            onClick={this.props.switchToManualMode}
-            className="Timer__timer-mode-btn"
-          >
+        <div className="flex flex-col">
+          <button onClick={this.props.switchToManualMode}>
             <i className="fa fa-clock-o" />
           </button>
-          <button
-            onClick={this.props.switchToManualMode}
-            className="Timer__manual-mode-btn"
-          >
+          <button onClick={this.props.switchToManualMode}>
             <i className="fa fa-bars" />
           </button>
         </div>

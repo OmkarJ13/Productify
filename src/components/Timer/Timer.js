@@ -1,16 +1,12 @@
 import React from "react";
-import "./Timer.css";
 
 import TimerModeForm from "./TimerModeForm";
 import ManualModeForm from "./ManualModeForm";
 
 import { v4 as uuid } from "uuid";
 import Time from "../../classes/Time";
-import { ThemeContext } from "../../contexts/ThemeContext";
 
 class Timer extends React.Component {
-  static contextType = ThemeContext;
-
   constructor(props) {
     super(props);
 
@@ -321,7 +317,10 @@ class Timer extends React.Component {
     const { isTracking } = this.state;
 
     return (
-      <div className="Timer flex" ref={this.timerComponent}>
+      <div
+        className="w-full flex items-center gap-4 p-4 shadow"
+        ref={this.timerComponent}
+      >
         {isTracking ? this.generateTimerRunning() : this.generateTimerForm()}
       </div>
     );

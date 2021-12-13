@@ -1,31 +1,30 @@
 import React from "react";
 import { getDateString } from "../../helpers/getDateString";
-import "./ManualModeForm.css";
 
 class ManualModeForm extends React.Component {
   render() {
     const { task, startTime, endTime, duration, date } = this.props.timerEntry;
-    console.log(this.props.timerEntry);
 
     return (
       <>
         <input
           name="task"
           type="text"
-          className="Timer__task-input"
+          className=""
           value={task}
           placeholder="What have you worked on?"
           autoComplete="off"
+          className="flex-grow p-2 border border-gray-300 focus:outline-none"
           onChange={this.props.taskChangeHandler}
         />
 
-        <div className="Timer__time-input-container">
+        <div className="flex items-center gap-2">
           <input
             name="startTime"
             type="time"
             value={startTime.getTimeStringShort()}
             onChange={this.timeChangeHandler}
-            className="Timer__start-time-input"
+            className="p-2 border border-gray-300"
           />
           <span> - </span>
           <input
@@ -33,11 +32,11 @@ class ManualModeForm extends React.Component {
             type="time"
             value={endTime.getTimeStringShort()}
             onChange={this.props.timeChangeHandler}
-            className="Timer__end-time-input"
+            className="p-2 border border-gray-300"
           />
         </div>
 
-        <div className="Timer__duration">
+        <div className="flex-grow flex justify-center border-x border-gray-300">
           <span>{duration.getTimeString()}</span>
         </div>
 
@@ -45,24 +44,21 @@ class ManualModeForm extends React.Component {
           type="date"
           value={getDateString(date)}
           onChange={this.props.dateChangeHandler}
-          className="Timer__date-input"
+          className="p-2 border border-gray-300 focus:outline-none"
         />
 
-        <button onClick={this.props.saveTimerEntry} className="Timer__add-btn">
+        <button
+          onClick={this.props.saveTimerEntry}
+          className="px-4 py-2 bg-blue-500 text-white uppercase"
+        >
           Add
         </button>
 
-        <div className="Timer__modes flex-column">
-          <button
-            onClick={this.props.switchToTimerMode}
-            className="Timer__timer-mode-btn"
-          >
+        <div className="flex flex-col">
+          <button onClick={this.props.switchToTimerMode} className="">
             <i className="fa fa-clock-o" />
           </button>
-          <button
-            onClick={this.props.switchToManualMode}
-            className="Timer__manual-mode-btn"
-          >
+          <button onClick={this.props.switchToManualMode} className="">
             <i className="fa fa-bars" />
           </button>
         </div>
