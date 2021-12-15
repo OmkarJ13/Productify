@@ -10,9 +10,9 @@ class TimerModeForm extends React.Component {
         <input
           name="task"
           type="text"
-          className="flex-grow p-2 border focus:outline-none"
+          className="flex-grow p-2 border border-gray-300 focus:outline-none"
           value={task}
-          placeholder="What are you working on?"
+          placeholder="What are you doing?"
           autoComplete="off"
           onChange={this.props.taskChangeHandler}
         />

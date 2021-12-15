@@ -55,7 +55,7 @@ class Reports extends React.Component {
         (timerEntry) => timerEntry.duration
       );
 
-      durations.push(Time.addTime(...durationsByDay).getHoursFraction());
+      durations.push(Time.addTime(...durationsByDay).toHours());
     }
 
     return [days, durations];
@@ -69,7 +69,7 @@ class Reports extends React.Component {
 
     const durations = timerEntries.map((timerEntry) => {
       const durations = timerEntry.map((timerEntry) => timerEntry.duration);
-      return Time.addTime(...durations).getHoursFraction();
+      return Time.addTime(...durations).toHours();
     });
 
     return [tasks, durations];
@@ -109,7 +109,7 @@ class Reports extends React.Component {
           <span className="flex items-baseline gap-1">
             Clocked Hours -
             <strong className="font-bold text-lg">
-              {totalHours.getTimeString()}
+              {totalHours.toTimeString()}
             </strong>
           </span>
           <Doughnut

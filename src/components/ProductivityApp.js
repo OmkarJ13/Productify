@@ -9,7 +9,7 @@ import Settings from "./Settings";
 class ProductivityApp extends React.Component {
   render() {
     return (
-      <div className="flex">
+      <div className="flex font-inter">
         <SideBar />
 
         <Switch>

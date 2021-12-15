@@ -1,8 +1,8 @@
 import React from "react";
-import Time from "../../classes/Time";
 
+import { toDateString } from "../../helpers/toDateString";
+import Time from "../../classes/Time";
 import { v4 as uuid } from "uuid";
-import "react-datepicker/dist/react-datepicker.css";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -10,6 +10,7 @@ class TimerEntry extends React.Component {
 
     this.saveTimerID = undefined;
     this.taskInput = React.createRef();
+    this.dropdownBtn = React.createRef();
     this.dropdownOptionsDiv = React.createRef();
 
     this.state = {
@@ -32,6 +33,7 @@ class TimerEntry extends React.Component {
     this.toggleAllEntries = this.toggleAllEntries.bind(this);
     this.deleteEntry = this.deleteEntry.bind(this);
     this.duplicateEntry = this.duplicateEntry.bind(this);
+    this.continueTimerEntry = this.continueTimerEntry.bind(this);
   }
 
   componentDidMount() {
@@ -119,7 +121,7 @@ class TimerEntry extends React.Component {
       {
         timerEntry: {
           ...this.state.timerEntry,
-          date: new Date(e.target.value).toDateString(),
+          [e.target.name]: new Date(e.target.value).toDateString(),
         },
       },
       () => {
@@ -155,7 +157,7 @@ class TimerEntry extends React.Component {
     };
 
     onTimerEntryEdited(editedTimerEntry);
-    if (this.props.allEntries) this.taskInput.current.blur();
+    this.taskInput.current.blur();
   }
 
   /* 
@@ -224,19 +226,25 @@ class TimerEntry extends React.Component {
   Toggles dropdown menu
   */
   toggleAllEntries(e) {
-    if (e.target.nodeName !== "BUTTON") {
+    if (!this.dropdownBtn.current.contains(e.target)) {
       this.setState({
         showAllEntries: !this.state.showAllEntries,
       });
     }
   }
 
-  getDateString(date) {
-    const year = String(date.getFullYear());
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+  continueTimerEntry(e) {
+    const currentTimer = {
+      shouldContinue: true,
+      timerEntry: {
+        ...this.state.timerEntry,
+        startTime: new Time(),
+        duration: new Time(0, 0, 0),
+        date: new Date().toDateString(),
+      },
+    };
 
-    return `${year}-${month}-${day}`;
+    this.props.onTimerEntryContinued(currentTimer);
   }
 
   generateTimerEntry() {
@@ -245,7 +253,7 @@ class TimerEntry extends React.Component {
     const { isDropdownOpen, showAllEntries } = this.state;
     const { task, date, startTime, endTime, duration } = this.state.timerEntry;
 
-    const dateValue = this.getDateString(new Date(date));
+    const dateValue = toDateString(date);
 
     return (
       <>
@@ -277,7 +285,7 @@ class TimerEntry extends React.Component {
               type="time"
               name="startTime"
               readOnly={isCombined}
-              value={startTime.getTimeStringShort()}
+              value={startTime.toTimeStringShort()}
               onChange={this.timeChangeHandler}
               className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
             />
@@ -286,43 +294,50 @@ class TimerEntry extends React.Component {
               type="time"
               name="endTime"
               readOnly={isCombined}
-              value={endTime.getTimeStringShort()}
+              value={endTime.toTimeStringShort()}
               onChange={this.timeChangeHandler}
               className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
             />
           </div>
 
-          <div className="flex-grow text-center border-x border-gray-300">
-            <span>{duration.getTimeString()}</span>
+          <div className="flex-grow text-center border-x border-gray-300 font-semibold">
+            <span>{duration.toTimeString()}</span>
           </div>
 
           <input
             type="date"
             value={dateValue}
+            name="date"
             onChange={this.dateChangeHandler}
             readOnly={isCombined}
             className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
           />
 
-          {/* <button className="TimerEntry__resume-btn">
-              <i className="fa fa-play" />
-            </button> */}
+          <button onClick={this.continueTimerEntry}>
+            <i className="fa fa-play" />
+          </button>
 
           <div className="relative" ref={this.dropdownOptionsDiv}>
-            <button onClick={this.toggleDropdown}>
+            <button onClick={this.toggleDropdown} ref={this.dropdownBtn}>
               <i className="fa fa-ellipsis-v" />
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute top-8 right-0 z-10 bg-white shadow-lg">
+              <div className="absolute top-8 right-0 z-10 shadow-xl">
                 <ul>
                   <li>
-                    <button onClick={this.duplicateEntry} className="px-6 py-2">
+                    <button
+                      onClick={this.duplicateEntry}
+                      className="w-full px-6 py-2 bg-gray-100 hover:bg-gray-200 text-left"
+                    >
                       Duplicate
                     </button>
                   </li>
                   <li>
-                    <button onClick={this.deleteEntry} className="px-6 py-2">
+                    <button
+                      onClick={this.deleteEntry}
+                      className="w-full px-6 py-2 bg-gray-100 hover:bg-gray-200 text-left"
+                    >
                       Delete
                     </button>
                   </li>

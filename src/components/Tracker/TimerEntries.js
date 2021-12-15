@@ -145,6 +145,7 @@ class TimerEntries extends React.Component {
           onTimerEntryEdited={this.props.onTimerEntryEdited}
           onTimerEntryDeleted={this.props.onTimerEntryDeleted}
           onTimerEntryDuplicated={this.props.onTimerEntryDuplicated}
+          onTimerEntryContinued={this.props.onTimerEntryContinued}
         />
       );
     });
@@ -196,13 +197,11 @@ class TimerEntries extends React.Component {
           <div className="flex gap-4">
             <span className="flex gap-2 font-light">
               Today
-              <strong className="font-bold">
-                {dailyTotal.getTimeString()}
-              </strong>
+              <strong className="font-bold">{dailyTotal.toTimeString()}</strong>
             </span>
             <span className="flex gap-2 font-light">
               This Week
-              <strong className="font-bold">{weekTotal.getTimeString()}</strong>
+              <strong className="font-bold">{weekTotal.toTimeString()}</strong>
             </span>
           </div>
           <select

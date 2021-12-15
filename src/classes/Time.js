@@ -1,21 +1,29 @@
+import {
+  HOURS_IN_DAY,
+  MINUTES_IN_HOUR,
+  SECONDS_IN_HOUR,
+  SECONDS_IN_MINUTE,
+} from "../constants/timeHelper";
+
 class Time {
-  constructor(hours = 0, minutes = 0, seconds = 0) {
-    this.hours = hours;
-    this.minutes = minutes;
-    this.seconds = seconds;
+  constructor(hours, minutes, seconds) {
+    if (hours !== undefined || minutes !== undefined || seconds !== undefined) {
+      this.hours = hours ? hours : 0;
+      this.minutes = minutes ? minutes : 0;
+      this.seconds = seconds ? seconds : 0;
+    } else {
+      const currentDate = new Date();
+      this.hours = currentDate.getHours();
+      this.minutes = currentDate.getMinutes();
+      this.seconds = currentDate.getSeconds();
+    }
   }
 
-  static fromSeconds(inputSeconds) {
-    const secondsInHour = 3600;
-    const secondsInMinute = 60;
+  static fromSeconds(seconds) {
+    const hours = Math.floor(seconds / SECONDS_IN_HOUR);
+    const minutes = Math.floor(seconds / SECONDS_IN_MINUTE);
 
-    const hours = Math.floor(inputSeconds / secondsInHour);
-    const minutes = Math.floor(
-      (inputSeconds % secondsInHour) / secondsInMinute
-    );
-    const seconds = inputSeconds % secondsInMinute;
-
-    return new Time(hours, minutes, seconds);
+    return new Time(hours, minutes, seconds % SECONDS_IN_MINUTE);
   }
 
   static getMin(...timeArr) {
@@ -62,28 +70,38 @@ class Time {
       let minutes = cur.minutes + acc.minutes;
       let hours = cur.hours + acc.hours;
 
-      if (seconds >= 60) {
+      if (seconds >= SECONDS_IN_MINUTE) {
         minutes++;
-        seconds = seconds % 60;
+        seconds = seconds % SECONDS_IN_MINUTE;
       }
 
-      if (minutes >= 60) {
+      if (minutes >= MINUTES_IN_HOUR) {
         hours++;
-        minutes = minutes % 60;
+        minutes = minutes % MINUTES_IN_HOUR;
       }
 
       acc = new Time(hours, minutes, seconds);
       return acc;
-    }, new Time());
+    }, new Time(0, 0, 0));
   }
 
-  static getCurrentTime() {
-    const curDate = new Date();
-    return new Time(
-      curDate.getHours(),
-      curDate.getMinutes(),
-      curDate.getSeconds()
-    );
+  addTime(time) {
+    let seconds = this.seconds + time.seconds;
+    let minutes = this.minutes + time.minutes;
+    let hours = this.hours + time.hours;
+
+    if (seconds > SECONDS_IN_MINUTE) {
+      minutes++;
+      seconds = seconds % SECONDS_IN_MINUTE;
+    }
+
+    if (minutes > MINUTES_IN_HOUR) {
+      hours++;
+      minutes = minutes % MINUTES_IN_HOUR;
+    }
+
+    const result = new Time(hours, minutes, seconds);
+    return result;
   }
 
   subtractTime(time) {
@@ -93,48 +111,52 @@ class Time {
 
     if (seconds < 0) {
       minutes--;
-      seconds = seconds + 60;
+      seconds = seconds + SECONDS_IN_MINUTE;
     }
 
     if (minutes < 0) {
       hours--;
-      minutes = minutes + 60;
+      minutes = minutes + MINUTES_IN_HOUR;
     }
 
     if (hours < 0) {
-      hours = hours + 24;
+      hours = hours + HOURS_IN_DAY;
     }
 
     const result = new Time(hours, minutes, seconds);
     return result;
   }
 
-  getSeconds() {
-    return this.hours * 3600 + this.minutes * 60 + this.seconds;
+  toSeconds() {
+    return (
+      this.hours * SECONDS_IN_HOUR +
+      this.minutes * SECONDS_IN_MINUTE +
+      this.seconds
+    );
   }
 
-  getHoursFraction() {
-    const minutes = this.minutes / 60;
-    return (this.hours + minutes).toPrecision(2);
+  toHours(precision = 2) {
+    const minutes = this.minutes / MINUTES_IN_HOUR;
+    return (this.hours + minutes).toPrecision(precision);
   }
 
-  getTimeString() {
-    return `${this.getHourString()}:${this.getMinuteString()}:${this.getSecondString()}`;
+  toTimeString() {
+    return `${this.toHourString()}:${this.toMinuteString()}:${this.toSecondString()}`;
   }
 
-  getTimeStringShort() {
-    return `${this.getHourString()}:${this.getMinuteString()}`;
+  toTimeStringShort() {
+    return `${this.toHourString()}:${this.toMinuteString()}`;
   }
 
-  getHourString() {
+  toHourString() {
     return this.hours.toString().padStart(2, "0");
   }
 
-  getMinuteString() {
+  toMinuteString() {
     return this.minutes.toString().padStart(2, "0");
   }
 
-  getSecondString() {
+  toSecondString() {
     return this.seconds.toString().padStart(2, "0");
   }
 }

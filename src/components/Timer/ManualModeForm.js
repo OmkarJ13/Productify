@@ -1,5 +1,5 @@
 import React from "react";
-import { getDateString } from "../../helpers/getDateString";
+import { toDateString } from "../../helpers/toDateString";
 
 class ManualModeForm extends React.Component {
   render() {
@@ -12,7 +12,7 @@ class ManualModeForm extends React.Component {
           type="text"
           className=""
           value={task}
-          placeholder="What have you worked on?"
+          placeholder="What have you done?"
           autoComplete="off"
           className="flex-grow p-2 border border-gray-300 focus:outline-none"
           onChange={this.props.taskChangeHandler}
@@ -22,27 +22,28 @@ class ManualModeForm extends React.Component {
           <input
             name="startTime"
             type="time"
-            value={startTime.getTimeStringShort()}
-            onChange={this.timeChangeHandler}
+            value={startTime.toTimeStringShort()}
+            onChange={this.props.timeChangeHandler}
             className="p-2 border border-gray-300"
           />
           <span> - </span>
           <input
             name="endTime"
             type="time"
-            value={endTime.getTimeStringShort()}
+            value={endTime.toTimeStringShort()}
             onChange={this.props.timeChangeHandler}
             className="p-2 border border-gray-300"
           />
         </div>
 
         <div className="flex-grow flex justify-center border-x border-gray-300">
-          <span>{duration.getTimeString()}</span>
+          <span>{duration.toTimeString()}</span>
         </div>
 
         <input
           type="date"
-          value={getDateString(date)}
+          name="date"
+          value={toDateString(date)}
           onChange={this.props.dateChangeHandler}
           className="p-2 border border-gray-300 focus:outline-none"
         />

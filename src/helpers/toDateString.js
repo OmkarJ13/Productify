@@ -1,4 +1,4 @@
-export const getDateString = (dateInput) => {
+export const toDateString = (dateInput) => {
   const date = new Date(dateInput);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1);

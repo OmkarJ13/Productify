@@ -10,19 +10,18 @@ class Timer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.timerComponent = React.createRef();
     this.secondsPassed = 0;
+    this.timerId = undefined;
 
     this.state = {
       isTracking: false,
       trackingMode: "timer",
-      timerId: undefined,
       timerEntry: {
         task: "",
         date: new Date().toDateString(),
         startTime: new Time(),
         endTime: new Time(),
-        duration: new Time(),
+        duration: new Time(0, 0, 0),
       },
     };
 
@@ -39,6 +38,65 @@ class Timer extends React.Component {
     this.reloadHandler = this.reloadHandler.bind(this);
   }
 
+  render() {
+    const { isTracking } = this.state;
+
+    if (this.timerExists()) {
+      console.log("Restoring timer");
+      this.restoreTimer();
+    }
+
+    return (
+      <div className="w-full flex items-center gap-4 p-4 shadow-md">
+        {isTracking ? this.generateTimerRunning() : this.generateTimerForm()}
+      </div>
+    );
+  }
+
+  componentDidMount() {
+    window.addEventListener("beforeunload", this.reloadHandler);
+  }
+
+  timerExists() {
+    return this.props.currentTimer && !this.state.isTracking;
+  }
+
+  restoreTimer() {
+    const { currentTimer } = this.props;
+
+    if (!currentTimer) {
+      console.error("Tried to restore a timer that did not exist");
+      return;
+    }
+
+    const { timerEntry } = currentTimer;
+
+    this.secondsPassed = (
+      currentTimer.shouldContinue
+        ? timerEntry.duration
+        : new Time().subtractTime(timerEntry.startTime)
+    ).toSeconds();
+
+    this.setState(
+      {
+        isTracking: true,
+        timerEntry: {
+          ...timerEntry,
+          duration: Time.fromSeconds(this.secondsPassed),
+        },
+      },
+      () => {
+        if (!this.timerId) this.timerId = setInterval(this.updateTimer, 1000);
+      }
+    );
+  }
+
+  reloadHandler() {
+    if (this.state.isTracking) {
+      this.storeCurrentTimer();
+    }
+  }
+
   /*
   Handles changes in task name of the timer entry
   */
@@ -51,51 +109,6 @@ class Timer extends React.Component {
     });
   }
 
-  reloadHandler(e) {
-    if (this.state.isTracking) {
-      this.saveTimer();
-    }
-  }
-
-  isMounted() {
-    return this.timerComponent.current != null;
-  }
-
-  componentDidMount() {
-    window.addEventListener("beforeunload", this.reloadHandler);
-    this.checkTimerExists();
-  }
-
-  checkTimerExists() {
-    const timerState = JSON.parse(localStorage.getItem("timerState"));
-
-    if (timerState) {
-      this.restoreTimer(timerState);
-    }
-  }
-
-  restoreTimer(prevState) {
-    const startTime = new Time(
-      ...Object.values(prevState.timerEntry.startTime)
-    );
-    const endTime = new Time(...Object.values(prevState.timerEntry.endTime));
-    const duration = new Time(...Object.values(prevState.timerEntry.duration));
-
-    this.secondsPassed = duration.getSeconds();
-    clearInterval(prevState.timerId);
-
-    this.setState({
-      ...prevState,
-      timerId: setInterval(this.updateTimer, 1000),
-      timerEntry: {
-        ...prevState.timerEntry,
-        startTime,
-        endTime,
-        duration,
-      },
-    });
-  }
-
   /*
   Handles changes in date of the timer entry
   */
@@ -103,7 +116,7 @@ class Timer extends React.Component {
     this.setState({
       timerEntry: {
         ...this.state.timerEntry,
-        date: new Date(e.target.value).toDateString(),
+        [e.target.name]: new Date(e.target.value).toDateString(),
       },
     });
   }
@@ -148,14 +161,30 @@ class Timer extends React.Component {
   Starts tracking time
   */
   startTracking(e) {
-    this.setState({
-      isTracking: true,
-      timerId: setInterval(this.updateTimer, 1000),
+    this.setState(
+      {
+        isTracking: true,
+        timerEntry: {
+          ...this.state.timerEntry,
+          startTime: new Time(),
+        },
+      },
+      () => {
+        this.timerId = setInterval(this.updateTimer, 1000);
+        console.log("Setting timer");
+      }
+    );
+  }
+
+  storeCurrentTimer() {
+    const currentTimer = {
+      shouldContinue: false,
       timerEntry: {
         ...this.state.timerEntry,
-        startTime: Time.getCurrentTime(),
       },
-    });
+    };
+
+    this.props.onTimerInterrupted(currentTimer);
   }
 
   /*
@@ -163,26 +192,24 @@ class Timer extends React.Component {
   */
   updateTimer() {
     this.secondsPassed++;
+    console.log(Time.fromSeconds(this.secondsPassed));
 
-    if (this.isMounted()) {
-      this.setState({
-        timerEntry: {
-          ...this.state.timerEntry,
-          duration: Time.fromSeconds(this.secondsPassed),
-        },
-      });
-    } else {
-      const timerState = JSON.parse(localStorage.getItem("timerState"));
-      timerState.timerEntry.duration = Time.fromSeconds(this.secondsPassed);
-      localStorage.setItem("timerState", JSON.stringify(timerState));
-    }
+    this.setState({
+      timerEntry: {
+        ...this.state.timerEntry,
+        duration: Time.fromSeconds(this.secondsPassed),
+      },
+    });
   }
 
   /*
   Stops tracking time 
   */
   stopTracking(e) {
-    clearInterval(this.state.timerId);
+    clearInterval(this.timerId);
+    this.timerId = undefined;
+
+    console.log("Stopping timer");
 
     this.secondsPassed = 0;
     const { startTime, duration } = this.state.timerEntry;
@@ -198,6 +225,17 @@ class Timer extends React.Component {
         this.saveTimerEntry();
       }
     );
+  }
+
+  componentWillUnmount() {
+    if (this.timerId) clearInterval(this.timerId);
+    console.log("Stopping timer");
+
+    if (this.state.isTracking) {
+      this.storeCurrentTimer();
+    }
+
+    window.removeEventListener("beforeunload", this.reloadHandler);
   }
 
   /* 
@@ -217,22 +255,16 @@ class Timer extends React.Component {
   Resets state as it was initially
   */
   resetState() {
-    this.setState(
-      {
-        isTracking: false,
-        timerId: undefined,
-        timerEntry: {
-          task: "",
-          date: new Date().toDateString(),
-          startTime: new Time(),
-          endTime: new Time(),
-          duration: new Time(),
-        },
+    this.setState({
+      isTracking: false,
+      timerEntry: {
+        task: "",
+        date: new Date().toDateString(),
+        startTime: new Time(),
+        endTime: new Time(),
+        duration: new Time(0, 0, 0),
       },
-      () => {
-        localStorage.removeItem("timerState");
-      }
-    );
+    });
   }
 
   /*
@@ -242,8 +274,13 @@ class Timer extends React.Component {
     const { duration } = this.state.timerEntry;
     return (
       <>
-        <span className="Timer__duration">{duration.getTimeString()}</span>
-        <button onClick={this.stopTracking} className="Timer__stop-btn">
+        <span className="flex-grow text-lg font-bold">
+          {duration.toTimeString()}
+        </span>
+        <button
+          onClick={this.stopTracking}
+          className="px-4 py-2 bg-red-500 text-white uppercase"
+        >
           Stop Tracking
         </button>
       </>
@@ -295,35 +332,6 @@ class Timer extends React.Component {
     this.setState({
       trackingMode: "timer",
     });
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("beforeunload", this.reloadHandler);
-
-    if (this.state.isTracking) {
-      this.saveTimer();
-    }
-  }
-
-  saveTimer() {
-    const timerState = {
-      ...this.state,
-    };
-
-    localStorage.setItem("timerState", JSON.stringify(timerState));
-  }
-
-  render() {
-    const { isTracking } = this.state;
-
-    return (
-      <div
-        className="w-full flex items-center gap-4 p-4 shadow"
-        ref={this.timerComponent}
-      >
-        {isTracking ? this.generateTimerRunning() : this.generateTimerForm()}
-      </div>
-    );
   }
 }
 

@@ -1,6 +1,7 @@
 import React from "react";
 
 import { parseTimerEntriesJSON } from "../../helpers/parseTimerEntriesJSON";
+import { restoreTimerEntry } from "../../helpers/restoreTimerEntry";
 
 import Timer from "../Timer/Timer";
 import TimerEntries from "./TimerEntries";
@@ -9,6 +10,7 @@ class TimeTracker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentTimer: null,
       timerEntries: [],
     };
 
@@ -17,21 +19,79 @@ class TimeTracker extends React.Component {
     this.handleTimerEntryDeleted = this.handleTimerEntryDeleted.bind(this);
     this.handleTimerEntryDuplicated =
       this.handleTimerEntryDuplicated.bind(this);
+    this.handleTimerEntryContinued = this.handleTimerEntryContinued.bind(this);
+  }
+
+  render() {
+    return (
+      <div className="w-4/5 min-h-screen flex flex-col ml-auto p-8 text-gray-600">
+        <Timer
+          currentTimer={this.state.currentTimer}
+          onTimerEntryCreated={this.handleTimerEntryCreated}
+          onTimerInterrupted={this.handleTimerInterrupted}
+        />
+        <TimerEntries
+          timerEntries={this.state.timerEntries}
+          onTimerEntryEdited={this.handleTimerEntryEdited}
+          onTimerEntryDeleted={this.handleTimerEntryDeleted}
+          onTimerEntryDuplicated={this.handleTimerEntryDuplicated}
+          onTimerEntryContinued={this.handleTimerEntryContinued}
+        />
+      </div>
+    );
+  }
+
+  componentDidMount() {
+    const storedTimerEntries = parseTimerEntriesJSON(
+      localStorage.getItem("timerEntries")
+    );
+
+    const currentTimer = JSON.parse(localStorage.getItem("currentTimer"));
+
+    if (storedTimerEntries) {
+      if (currentTimer) {
+        restoreTimerEntry(currentTimer.timerEntry);
+      }
+
+      this.setState({
+        timerEntries: storedTimerEntries,
+        currentTimer: currentTimer,
+      });
+    }
+  }
+
+  storeTimerEntries() {
+    const { timerEntries } = this.state;
+    localStorage.setItem("timerEntries", JSON.stringify(timerEntries));
+  }
+
+  deleteCurrentTimer() {
+    if (localStorage.getItem("currentTimer")) {
+      localStorage.removeItem("currentTimer");
+    }
   }
 
   handleTimerEntryCreated(timerEntry) {
-    this.setState((prevState) => {
-      const timerEntries = prevState.timerEntries.slice();
+    this.setState(
+      (prevState) => {
+        const { timerEntries } = prevState;
 
-      return {
-        timerEntries: [timerEntry, ...timerEntries],
-      };
-    });
+        return {
+          currentTimer: null,
+          timerEntries: [timerEntry, ...timerEntries],
+        };
+      },
+      () => {
+        this.storeTimerEntries();
+        this.deleteCurrentTimer();
+      }
+    );
   }
 
   handleTimerEntryEdited(editedTimerEntry) {
     this.setState((prevState) => {
-      const timerEntries = prevState.timerEntries.slice();
+      const { timerEntries } = prevState;
+
       const editIndex = timerEntries.findIndex(
         (entry) => entry.id === editedTimerEntry.id
       );
@@ -41,7 +101,7 @@ class TimeTracker extends React.Component {
       return {
         timerEntries: timerEntries,
       };
-    });
+    }, this.storeTimerEntries);
   }
 
   handleTimerEntryDeleted(timerEntryId) {
@@ -54,7 +114,7 @@ class TimeTracker extends React.Component {
       return {
         timerEntries: filteredTimerEntries,
       };
-    });
+    }, this.storeTimerEntries);
   }
 
   handleTimerEntryDuplicated(duplicatedTimerEntry) {
@@ -64,40 +124,17 @@ class TimeTracker extends React.Component {
       return {
         timerEntries: [...timerEntries, duplicatedTimerEntry],
       };
+    }, this.storeTimerEntries);
+  }
+
+  handleTimerEntryContinued(timerData) {
+    this.setState({
+      currentTimer: timerData,
     });
   }
 
-  componentDidMount() {
-    const storedTimerEntries = parseTimerEntriesJSON(
-      localStorage.getItem("timerEntries")
-    );
-
-    if (storedTimerEntries) {
-      this.setState({
-        timerEntries: storedTimerEntries,
-      });
-    }
-  }
-
-  componentDidUpdate() {
-    localStorage.setItem(
-      "timerEntries",
-      JSON.stringify(this.state.timerEntries)
-    );
-  }
-
-  render() {
-    return (
-      <div className="w-4/5 min-h-screen flex flex-col ml-auto p-8 text-gray-600">
-        <Timer onTimerEntryCreated={this.handleTimerEntryCreated} />
-        <TimerEntries
-          timerEntries={this.state.timerEntries}
-          onTimerEntryEdited={this.handleTimerEntryEdited}
-          onTimerEntryDeleted={this.handleTimerEntryDeleted}
-          onTimerEntryDuplicated={this.handleTimerEntryDuplicated}
-        />
-      </div>
-    );
+  handleTimerInterrupted(timerData) {
+    localStorage.setItem("currentTimer", JSON.stringify(timerData));
   }
 }
 
