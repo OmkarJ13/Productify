@@ -3,7 +3,7 @@ import "./TimerModeForm";
 
 class TimerModeForm extends React.Component {
   render() {
-    const { task, isProductive } = this.props.timerEntry;
+    const { task, isProductive, isBillable } = this.props.timerEntry;
 
     return (
       <>
@@ -17,13 +17,23 @@ class TimerModeForm extends React.Component {
           onChange={this.props.taskChangeHandler}
         />
 
-        <button onClick={this.props.productiveChangeHandler}>
-          <i
-            className={`fa fa-line-chart ${
-              isProductive && "text-blue-500 font-bold"
-            }`}
-          />
-        </button>
+        <div className="flex items-center">
+          <button onClick={this.props.productiveChangeHandler} className="p-2">
+            <i
+              className={`fa fa-line-chart ${
+                isProductive && "text-blue-500 font-bold"
+              }`}
+            />
+          </button>
+
+          <button onClick={this.props.billableChangeHandler} className="p-2">
+            <i
+              className={`fa fa-dollar ${
+                isBillable && "text-blue-500 font-bold"
+              }`}
+            />
+          </button>
+        </div>
 
         <button
           onClick={this.props.startTracking}

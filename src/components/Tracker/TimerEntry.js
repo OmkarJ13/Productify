@@ -1,8 +1,8 @@
 import React from "react";
 
-import { toDateString } from "../../helpers/toDateString";
 import Time from "../../classes/Time";
 import { v4 as uuid } from "uuid";
+import ReactDatePicker from "react-datepicker";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -123,7 +123,7 @@ class TimerEntry extends React.Component {
       {
         timerEntry: {
           ...this.state.timerEntry,
-          [e.target.name]: new Date(e.target.value).toDateString(),
+          date: new Date(e).toDateString(),
         },
       },
       () => {
@@ -270,7 +270,7 @@ class TimerEntry extends React.Component {
     const { task, date, startTime, endTime, duration, isProductive } =
       this.state.timerEntry;
 
-    const dateValue = toDateString(date);
+    const dateValue = new Date(date);
 
     return (
       <>
@@ -329,16 +329,30 @@ class TimerEntry extends React.Component {
             <span>{duration.toTimeString()}</span>
           </div>
 
-          <input
+          {/* <input
             type="date"
             value={dateValue}
             name="date"
             onChange={this.dateChangeHandler}
             readOnly={isCombined}
             className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
-          />
+          /> */}
 
-          <button onClick={this.continueTimerEntry} className="text-gray-600">
+          <div className="inline-block w-fit">
+            <ReactDatePicker
+              selected={dateValue}
+              name="date"
+              onChange={this.dateChangeHandler}
+              readOnly={isCombined}
+              className="p-1"
+              customInput={<i className="fa fa-calendar" />}
+            />
+          </div>
+
+          <button
+            onClick={this.continueTimerEntry}
+            className="p-1 text-gray-600"
+          >
             <i className="fa fa-play" />
           </button>
 
@@ -346,7 +360,7 @@ class TimerEntry extends React.Component {
             <button
               onClick={this.toggleDropdown}
               ref={this.dropdownBtn}
-              className="text-gray-600"
+              className="p-1 text-gray-600"
             >
               <i className="fa fa-ellipsis-v" />
             </button>

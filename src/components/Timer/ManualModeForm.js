@@ -1,9 +1,10 @@
 import React from "react";
-import { toDateString } from "../../helpers/toDateString";
+import ReactDatePicker from "react-datepicker";
 
 class ManualModeForm extends React.Component {
   render() {
     const { task, startTime, endTime, duration, date } = this.props.timerEntry;
+    const dateValue = new Date(date);
 
     return (
       <>
@@ -40,13 +41,14 @@ class ManualModeForm extends React.Component {
           <span>{duration.toTimeString()}</span>
         </div>
 
-        <input
-          type="date"
-          name="date"
-          value={toDateString(date)}
-          onChange={this.props.dateChangeHandler}
-          className="p-2 border border-gray-300 focus:outline-none"
-        />
+        <div className="inline-block w-fit">
+          <ReactDatePicker
+            selected={dateValue}
+            onChange={this.props.dateChangeHandler}
+            className="p-1"
+            customInput={<i className="fa fa-calendar" />}
+          />
+        </div>
 
         <button
           onClick={this.props.saveTimerEntry}

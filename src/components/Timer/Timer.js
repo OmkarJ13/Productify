@@ -23,6 +23,7 @@ class Timer extends React.Component {
         endTime: new Time(),
         duration: new Time(0, 0, 0),
         isProductive: false,
+        isBillable: false,
       },
     };
 
@@ -30,6 +31,7 @@ class Timer extends React.Component {
     this.dateChangeHandler = this.dateChangeHandler.bind(this);
     this.timeChangeHandler = this.timeChangeHandler.bind(this);
     this.productiveChangeHandler = this.productiveChangeHandler.bind(this);
+    this.billableChangeHandler = this.billableChangeHandler.bind(this);
     this.saveTimerEntry = this.saveTimerEntry.bind(this);
     this.resetState = this.resetState.bind(this);
     this.startTracking = this.startTracking.bind(this);
@@ -117,7 +119,7 @@ class Timer extends React.Component {
     this.setState({
       timerEntry: {
         ...this.state.timerEntry,
-        [e.target.name]: new Date(e.target.value).toDateString(),
+        date: new Date(e).toDateString(),
       },
     });
   }
@@ -163,6 +165,15 @@ class Timer extends React.Component {
       timerEntry: {
         ...this.state.timerEntry,
         isProductive: !this.state.timerEntry.isProductive,
+      },
+    });
+  }
+
+  billableChangeHandler(e) {
+    this.setState({
+      timerEntry: {
+        ...this.state.timerEntry,
+        isBillable: !this.state.timerEntry.isBillable,
       },
     });
   }
@@ -268,6 +279,8 @@ class Timer extends React.Component {
         startTime: new Time(),
         endTime: new Time(),
         duration: new Time(0, 0, 0),
+        isProductive: false,
+        isBillable: false,
       },
     });
   }
@@ -296,8 +309,15 @@ class Timer extends React.Component {
   Generates timer form based on mode
   */
   generateTimerForm() {
-    const { task, startTime, endTime, duration, date, isProductive } =
-      this.state.timerEntry;
+    const {
+      task,
+      startTime,
+      endTime,
+      duration,
+      date,
+      isProductive,
+      isBillable,
+    } = this.state.timerEntry;
 
     return this.state.trackingMode === "timer" ? (
       <TimerModeForm
@@ -305,9 +325,11 @@ class Timer extends React.Component {
         timerEntry={{
           task: task,
           isProductive: isProductive,
+          isBillable: isBillable,
         }}
         taskChangeHandler={this.taskChangeHandler}
         productiveChangeHandler={this.productiveChangeHandler}
+        billableChangeHandler={this.billableChangeHandler}
         startTracking={this.startTracking}
         switchToManualMode={this.switchToManualMode}
         switchToTimerMode={this.switchToTimerMode}
