@@ -22,12 +22,14 @@ class TimerEntry extends React.Component {
         startTime: this.props.startTime,
         endTime: this.props.endTime,
         duration: this.props.duration,
+        isProductive: this.props.isProductive,
       },
     };
 
     this.taskChangeHandler = this.taskChangeHandler.bind(this);
     this.timeChangeHandler = this.timeChangeHandler.bind(this);
     this.dateChangeHandler = this.dateChangeHandler.bind(this);
+    this.productiveChangeHandler = this.productiveChangeHandler.bind(this);
     this.documentClickHandler = this.documentClickHandler.bind(this);
     this.toggleDropdown = this.toggleDropdown.bind(this);
     this.toggleAllEntries = this.toggleAllEntries.bind(this);
@@ -122,6 +124,20 @@ class TimerEntry extends React.Component {
         timerEntry: {
           ...this.state.timerEntry,
           [e.target.name]: new Date(e.target.value).toDateString(),
+        },
+      },
+      () => {
+        this.saveEditedChanges();
+      }
+    );
+  }
+
+  productiveChangeHandler(e) {
+    this.setState(
+      {
+        timerEntry: {
+          ...this.state.timerEntry,
+          isProductive: !this.state.timerEntry.isProductive,
         },
       },
       () => {
@@ -251,14 +267,15 @@ class TimerEntry extends React.Component {
     const isCombined = this.props.allEntries !== undefined;
 
     const { isDropdownOpen, showAllEntries } = this.state;
-    const { task, date, startTime, endTime, duration } = this.state.timerEntry;
+    const { task, date, startTime, endTime, duration, isProductive } =
+      this.state.timerEntry;
 
     const dateValue = toDateString(date);
 
     return (
       <>
         <div
-          className="group w-full flex items-center gap-4 p-4 border-x border-b border-gray-300"
+          className="group w-full flex items-center gap-4 p-4 border-x border-b border-gray-300 text-sm"
           onClick={isCombined ? this.toggleAllEntries : null}
         >
           <div className="w-1/3 flex items-center gap-4">
@@ -279,6 +296,14 @@ class TimerEntry extends React.Component {
               className="transition-colors flex-grow p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
             />
           </div>
+
+          <button onClick={this.productiveChangeHandler}>
+            <i
+              className={`fa fa-line-chart ${
+                isProductive && "text-blue-500 font-bold"
+              }`}
+            />
+          </button>
 
           <div className="flex items-center gap-2">
             <input
@@ -313,12 +338,16 @@ class TimerEntry extends React.Component {
             className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
           />
 
-          <button onClick={this.continueTimerEntry}>
+          <button onClick={this.continueTimerEntry} className="text-gray-600">
             <i className="fa fa-play" />
           </button>
 
           <div className="relative" ref={this.dropdownOptionsDiv}>
-            <button onClick={this.toggleDropdown} ref={this.dropdownBtn}>
+            <button
+              onClick={this.toggleDropdown}
+              ref={this.dropdownBtn}
+              className="text-gray-600"
+            >
               <i className="fa fa-ellipsis-v" />
             </button>
 
@@ -328,7 +357,7 @@ class TimerEntry extends React.Component {
                   <li>
                     <button
                       onClick={this.duplicateEntry}
-                      className="w-full px-6 py-2 bg-gray-100 hover:bg-gray-200 text-left"
+                      className="w-full px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
                     >
                       Duplicate
                     </button>
@@ -336,7 +365,7 @@ class TimerEntry extends React.Component {
                   <li>
                     <button
                       onClick={this.deleteEntry}
-                      className="w-full px-6 py-2 bg-gray-100 hover:bg-gray-200 text-left"
+                      className="w-full px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
                     >
                       Delete
                     </button>

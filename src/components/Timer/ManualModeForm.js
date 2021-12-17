@@ -56,11 +56,20 @@ class ManualModeForm extends React.Component {
         </button>
 
         <div className="flex flex-col">
-          <button onClick={this.props.switchToTimerMode} className="">
-            <i className="fa fa-clock-o" />
+          <button onClick={this.props.switchToTimerMode}>
+            <i
+              className={`fa fa-clock-o ${
+                this.props.trackingMode === "timer" && "text-gray-600 font-bold"
+              }`}
+            />
           </button>
-          <button onClick={this.props.switchToManualMode} className="">
-            <i className="fa fa-bars" />
+          <button onClick={this.props.switchToManualMode}>
+            <i
+              className={`fa fa-bars ${
+                this.props.trackingMode === "manual" &&
+                "text-gray-600 font-bold"
+              }`}
+            />
           </button>
         </div>
       </>

@@ -136,8 +136,10 @@ class Time {
   }
 
   toHours(precision = 2) {
-    const minutes = this.minutes / MINUTES_IN_HOUR;
-    return (this.hours + minutes).toPrecision(precision);
+    const seconds = this.seconds / SECONDS_IN_MINUTE;
+    const minutes = (this.minutes + seconds) / MINUTES_IN_HOUR;
+    const hours = this.hours + minutes;
+    return hours.toPrecision(precision);
   }
 
   toTimeString() {

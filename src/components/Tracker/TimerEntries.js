@@ -69,6 +69,7 @@ class TimerEntries extends React.Component {
       duration: Time.addTime(...allDurations),
       startTime: Time.getMin(...allStartTimes),
       endTime: Time.getMax(...allEndTimes),
+      isProductive: timerEntries[0].isProductive,
       allEntries: this.generateTimerEntries(timerEntries),
     };
 
@@ -112,11 +113,17 @@ class TimerEntries extends React.Component {
           ? days[daysSince]
           : timerEntriesGrouped[0].date;
 
+      const thisDayTotal = Time.addTime(
+        ...timerEntriesGrouped.map((timerEntry) => timerEntry.duration)
+      );
+
       return (
         <div className="w-full flex flex-col">
-          <h4 className="w-full px-4 py-2 bg-blue-500 text-white uppercase text-lg">
-            {day}
-          </h4>
+          <div className="w-full flex justify-between px-4 py-2 bg-blue-500 text-white uppercase text-lg">
+            <h4>{day}</h4>
+            <h4>{thisDayTotal.toTimeString()}</h4>
+          </div>
+
           <div className="w-full flex flex-col">
             {this.generateTimerEntries(timerEntriesGrouped)}
           </div>
@@ -141,6 +148,7 @@ class TimerEntries extends React.Component {
           date={timerEntry.date}
           startTime={timerEntry.startTime}
           endTime={timerEntry.endTime}
+          isProductive={timerEntry.isProductive}
           allEntries={timerEntry.allEntries}
           onTimerEntryEdited={this.props.onTimerEntryEdited}
           onTimerEntryDeleted={this.props.onTimerEntryDeleted}

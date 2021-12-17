@@ -2,13 +2,23 @@ import React from "react";
 
 import { Chart as ChartJS } from "chart.js/auto";
 import { Chart } from "react-chartjs-2";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Line, Bar, Doughnut } from "react-chartjs-2";
 
 import Time from "../classes/Time";
 import { groupTimerEntriesBy } from "../helpers/groupTimerEntriesBy";
 import { parseTimerEntriesJSON } from "../helpers/parseTimerEntriesJSON";
 import { getDaysPassed } from "../helpers/getDaysPassed";
 import { colors } from "../helpers/colors";
+
+const days = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 class Reports extends React.Component {
   getTimerEntryData() {
@@ -23,15 +33,7 @@ class Reports extends React.Component {
   }
 
   getDaysData(timerEntryData) {
-    const days = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ];
+    if (!timerEntryData || timerEntryData.length === 0) return;
 
     const timerEntriesSorted = timerEntryData.sort((a, b) => {
       return getDaysPassed(b.date) - getDaysPassed(a.date);
@@ -58,7 +60,7 @@ class Reports extends React.Component {
       durations.push(Time.addTime(...durationsByDay).toHours());
     }
 
-    return [days, durations];
+    return durations;
   }
 
   getTaskData(timerEntryData) {
@@ -78,14 +80,20 @@ class Reports extends React.Component {
   render() {
     const timerEntryData = this.getTimerEntryData();
 
-    const [days, daysDurations] = this.getDaysData(timerEntryData);
+    const [productive, unproductive] = groupTimerEntriesBy(timerEntryData, [
+      "isProductive",
+    ]);
+
+    const productiveDurations = this.getDaysData(productive);
+    const unproductiveDurations = this.getDaysData(unproductive);
+
     const [tasks, taskDurations] = this.getTaskData(timerEntryData);
 
     const durations = timerEntryData.map((timerEntry) => timerEntry.duration);
     const totalHours = Time.addTime(...durations);
 
     return (
-      <div className="w-4/5 flex flex-col ml-auto text-gray-600">
+      <div className="w-4/5 flex flex-col ml-auto py-2 text-gray-600">
         <div className="w-full h-[50vh] p-2 border-b border-gray-300">
           <Bar
             data={{
@@ -93,9 +101,15 @@ class Reports extends React.Component {
               datasets: [
                 {
                   label: "Productive Hours",
-                  data: daysDurations,
-                  backgroundColor: "#3282b8",
-                  borderColor: "#3282b8",
+                  data: productiveDurations,
+                  backgroundColor: "lightgreen",
+                  borderColor: "lightgreen",
+                },
+                {
+                  label: "Unproductive Hours",
+                  data: unproductiveDurations,
+                  backgroundColor: "salmon",
+                  borderColor: "salmon",
                 },
               ],
             }}
@@ -105,7 +119,7 @@ class Reports extends React.Component {
           />
         </div>
 
-        <div className="w-1/3 flex flex-col items-center gap-2 ml-auto p-2 border-l border-gray-300">
+        <div className="w-1/3 flex flex-col items-center gap-2 p-2 ml-auto border-l border-gray-300">
           <span className="flex items-baseline gap-1">
             Clocked Hours -
             <strong className="font-bold text-lg">

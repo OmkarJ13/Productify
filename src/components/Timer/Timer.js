@@ -22,12 +22,14 @@ class Timer extends React.Component {
         startTime: new Time(),
         endTime: new Time(),
         duration: new Time(0, 0, 0),
+        isProductive: false,
       },
     };
 
     this.taskChangeHandler = this.taskChangeHandler.bind(this);
     this.dateChangeHandler = this.dateChangeHandler.bind(this);
     this.timeChangeHandler = this.timeChangeHandler.bind(this);
+    this.productiveChangeHandler = this.productiveChangeHandler.bind(this);
     this.saveTimerEntry = this.saveTimerEntry.bind(this);
     this.resetState = this.resetState.bind(this);
     this.startTracking = this.startTracking.bind(this);
@@ -42,7 +44,6 @@ class Timer extends React.Component {
     const { isTracking } = this.state;
 
     if (this.timerExists()) {
-      console.log("Restoring timer");
       this.restoreTimer();
     }
 
@@ -157,6 +158,15 @@ class Timer extends React.Component {
     );
   }
 
+  productiveChangeHandler(e) {
+    this.setState({
+      timerEntry: {
+        ...this.state.timerEntry,
+        isProductive: !this.state.timerEntry.isProductive,
+      },
+    });
+  }
+
   /* 
   Starts tracking time
   */
@@ -171,7 +181,6 @@ class Timer extends React.Component {
       },
       () => {
         this.timerId = setInterval(this.updateTimer, 1000);
-        console.log("Setting timer");
       }
     );
   }
@@ -192,7 +201,6 @@ class Timer extends React.Component {
   */
   updateTimer() {
     this.secondsPassed++;
-    console.log(Time.fromSeconds(this.secondsPassed));
 
     this.setState({
       timerEntry: {
@@ -208,8 +216,6 @@ class Timer extends React.Component {
   stopTracking(e) {
     clearInterval(this.timerId);
     this.timerId = undefined;
-
-    console.log("Stopping timer");
 
     this.secondsPassed = 0;
     const { startTime, duration } = this.state.timerEntry;
@@ -229,7 +235,6 @@ class Timer extends React.Component {
 
   componentWillUnmount() {
     if (this.timerId) clearInterval(this.timerId);
-    console.log("Stopping timer");
 
     if (this.state.isTracking) {
       this.storeCurrentTimer();
@@ -291,20 +296,25 @@ class Timer extends React.Component {
   Generates timer form based on mode
   */
   generateTimerForm() {
-    const { task, startTime, endTime, duration, date } = this.state.timerEntry;
+    const { task, startTime, endTime, duration, date, isProductive } =
+      this.state.timerEntry;
 
     return this.state.trackingMode === "timer" ? (
       <TimerModeForm
+        trackingMode={this.state.trackingMode}
         timerEntry={{
           task: task,
+          isProductive: isProductive,
         }}
         taskChangeHandler={this.taskChangeHandler}
+        productiveChangeHandler={this.productiveChangeHandler}
         startTracking={this.startTracking}
         switchToManualMode={this.switchToManualMode}
         switchToTimerMode={this.switchToTimerMode}
       />
     ) : (
       <ManualModeForm
+        trackingMode={this.state.trackingMode}
         timerEntry={{
           task: task,
           startTime: startTime,
