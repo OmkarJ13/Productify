@@ -7,6 +7,7 @@ import { getDaysPassed } from "../../helpers/getDaysPassed";
 import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
 import { days } from "../../helpers/days";
 import Time from "../../classes/Time";
+import { getWeekByDate } from "../../helpers/getWeekByDate";
 
 class TimerEntries extends React.Component {
   constructor(props) {
@@ -190,8 +191,9 @@ class TimerEntries extends React.Component {
 
   getWeeklyEntries(timerEntries) {
     return timerEntries.filter((timerEntry) => {
-      const daysPassed = getDaysPassed(timerEntry.date);
-      return daysPassed < 7 && daysPassed > -1;
+      const [weekStart, weekEnd] = getWeekByDate(new Date(timerEntry.date));
+      const ms = new Date(timerEntry.date);
+      return ms > weekStart.getTime() && ms < weekEnd.getTime();
     });
   }
 

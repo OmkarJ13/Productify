@@ -9,6 +9,8 @@ import { groupTimerEntriesBy } from "../helpers/groupTimerEntriesBy";
 import { parseTimerEntriesJSON } from "../helpers/parseTimerEntriesJSON";
 import { getDaysPassed } from "../helpers/getDaysPassed";
 import { colors } from "../helpers/colors";
+import { getNextDate, getPrevDate } from "../helpers/getDate";
+import { getWeekByDate } from "../helpers/getWeekByDate";
 import {
   HOURS_IN_DAY,
   MILISECONDS_IN_SECOND,
@@ -47,7 +49,7 @@ class Reports extends React.Component {
     super(props);
 
     const today = new Date();
-    const week = this.getWeekByDate(today);
+    const week = getWeekByDate(today);
     const year = today.getFullYear();
 
     this.state = {
@@ -61,22 +63,9 @@ class Reports extends React.Component {
     this.yearChangeHandler = this.yearChangeHandler.bind(this);
   }
 
-  getWeekByDate(date) {
-    const weekStart = this.getPrevDate(date, date.getDay() - 1);
-    const weekEnd = this.getNextDate(weekStart, 6);
-
-    return [weekStart, weekEnd];
-  }
-
-  getDayMiliseconds() {
-    return (
-      HOURS_IN_DAY * MINUTES_IN_HOUR * SECONDS_IN_MINUTE * MILISECONDS_IN_SECOND
-    );
-  }
-
   getDailyTitle(date) {
     const presentDate = new Date();
-    const yesterdayDate = this.getPrevDate(presentDate);
+    const yesterdayDate = getPrevDate(presentDate);
 
     if (date.toLocaleDateString() === presentDate.toLocaleDateString()) {
       return "Today";
@@ -91,10 +80,7 @@ class Reports extends React.Component {
 
   getWeeklyTitle(weekStart, weekEnd) {
     const presentDate = new Date();
-    const lastWeekDate = this.getPrevDate(
-      presentDate,
-      presentDate.getDay() + 1
-    );
+    const lastWeekDate = getPrevDate(presentDate, presentDate.getDay() + 1);
 
     if (
       presentDate.getTime() > weekStart.getTime() &&
@@ -122,22 +108,14 @@ class Reports extends React.Component {
     return year;
   }
 
-  getNextDate(date, days = 1) {
-    return new Date(date.getTime() + days * this.getDayMiliseconds());
-  }
-
-  getPrevDate(date, days = 1) {
-    return new Date(date.getTime() - days * this.getDayMiliseconds());
-  }
-
   dateChangeHandler(e) {
     const btn = e.target.closest("button");
 
     this.setState({
       date:
         btn.name === "plus"
-          ? this.getNextDate(this.state.date)
-          : this.getPrevDate(this.state.date),
+          ? getNextDate(this.state.date)
+          : getPrevDate(this.state.date),
     });
   }
 
@@ -148,12 +126,12 @@ class Reports extends React.Component {
       week:
         btn.name === "plus"
           ? [
-              this.getNextDate(this.state.week[0], 7),
-              this.getNextDate(this.state.week[1], 7),
+              getNextDate(this.state.week[0], 7),
+              getNextDate(this.state.week[1], 7),
             ]
           : [
-              this.getPrevDate(this.state.week[0], 7),
-              this.getPrevDate(this.state.week[1], 7),
+              getPrevDate(this.state.week[0], 7),
+              getPrevDate(this.state.week[1], 7),
             ],
     });
   }
