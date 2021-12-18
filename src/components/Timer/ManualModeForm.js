@@ -3,7 +3,15 @@ import ReactDatePicker from "react-datepicker";
 
 class ManualModeForm extends React.Component {
   render() {
-    const { task, startTime, endTime, duration, date } = this.props.timerEntry;
+    const {
+      task,
+      startTime,
+      endTime,
+      duration,
+      date,
+      isProductive,
+      isBillable,
+    } = this.props.timerEntry;
     const dateValue = new Date(date);
 
     return (
@@ -18,6 +26,24 @@ class ManualModeForm extends React.Component {
           className="flex-grow p-2 border border-gray-300 focus:outline-none"
           onChange={this.props.taskChangeHandler}
         />
+
+        <div className="flex items-center">
+          <button onClick={this.props.productiveChangeHandler} className="px-4">
+            <i
+              className={`fa fa-line-chart ${
+                isProductive && "text-blue-500 font-bold"
+              }`}
+            />
+          </button>
+
+          <button onClick={this.props.billableChangeHandler} className="px-4">
+            <i
+              className={`fa fa-dollar ${
+                isBillable && "text-blue-500 font-bold"
+              }`}
+            />
+          </button>
+        </div>
 
         <div className="flex items-center gap-2">
           <input
@@ -37,10 +63,6 @@ class ManualModeForm extends React.Component {
           />
         </div>
 
-        <div className="flex-grow flex justify-center border-x border-gray-300">
-          <span>{duration.toTimeString()}</span>
-        </div>
-
         <div className="inline-block w-fit">
           <ReactDatePicker
             selected={dateValue}
@@ -50,9 +72,13 @@ class ManualModeForm extends React.Component {
           />
         </div>
 
+        <div className="px-8 text-black border-l border-dotted border-gray-300 text-center">
+          <span>{duration.toTimeString()}</span>
+        </div>
+
         <button
           onClick={this.props.saveTimerEntry}
-          className="px-4 py-2 bg-blue-500 text-white uppercase"
+          className="w-1/12 px-4 py-2 bg-blue-500 text-white uppercase"
         >
           Add
         </button>

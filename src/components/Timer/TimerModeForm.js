@@ -3,7 +3,7 @@ import "./TimerModeForm";
 
 class TimerModeForm extends React.Component {
   render() {
-    const { task, isProductive, isBillable } = this.props.timerEntry;
+    const { task, duration, isProductive, isBillable } = this.props.timerEntry;
 
     return (
       <>
@@ -18,7 +18,7 @@ class TimerModeForm extends React.Component {
         />
 
         <div className="flex items-center">
-          <button onClick={this.props.productiveChangeHandler} className="p-2">
+          <button onClick={this.props.productiveChangeHandler} className="px-4">
             <i
               className={`fa fa-line-chart ${
                 isProductive && "text-blue-500 font-bold"
@@ -26,7 +26,7 @@ class TimerModeForm extends React.Component {
             />
           </button>
 
-          <button onClick={this.props.billableChangeHandler} className="p-2">
+          <button onClick={this.props.billableChangeHandler} className="px-4">
             <i
               className={`fa fa-dollar ${
                 isBillable && "text-blue-500 font-bold"
@@ -35,28 +35,51 @@ class TimerModeForm extends React.Component {
           </button>
         </div>
 
-        <button
-          onClick={this.props.startTracking}
-          className="px-4 py-2 bg-blue-500 text-white uppercase"
-        >
-          Start Tracking
-        </button>
-        <div className="flex flex-col">
-          <button onClick={this.props.switchToTimerMode}>
-            <i
-              className={`fa fa-clock-o ${
-                this.props.trackingMode === "timer" && "text-gray-600 font-bold"
-              }`}
-            />
+        <span className="px-8 text-center text-black border-l border-dotted border-gray-300">
+          {duration.toTimeString()}
+        </span>
+
+        {this.props.isTracking ? (
+          <button
+            onClick={this.props.stopTracking}
+            className="w-1/12 px-4 py-2 bg-red-500 text-white uppercase"
+          >
+            Stop
           </button>
-          <button onClick={this.props.switchToManualMode}>
-            <i
-              className={`fa fa-bars ${
-                this.props.trackingMode === "manual" &&
-                "text-gray-600 font-bold"
-              }`}
-            />
+        ) : (
+          <button
+            onClick={this.props.startTracking}
+            className="w-1/12 px-4 py-2 bg-blue-500 text-white uppercase"
+          >
+            Start
           </button>
+        )}
+
+        <div className="flex flex-col justify-center items-center">
+          {this.props.isTracking ? (
+            <button onClick={this.props.discardTimer}>
+              <i className="fa fa-close" />
+            </button>
+          ) : (
+            <>
+              <button onClick={this.props.switchToTimerMode}>
+                <i
+                  className={`fa fa-clock-o ${
+                    this.props.trackingMode === "timer" &&
+                    "text-gray-600 font-bold"
+                  }`}
+                />
+              </button>
+              <button onClick={this.props.switchToManualMode}>
+                <i
+                  className={`fa fa-bars ${
+                    this.props.trackingMode === "manual" &&
+                    "text-gray-600 font-bold"
+                  }`}
+                />
+              </button>
+            </>
+          )}
         </div>
       </>
     );

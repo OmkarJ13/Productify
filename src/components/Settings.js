@@ -3,7 +3,7 @@ import React from "react";
 class Settings extends React.Component {
   render() {
     return (
-      <div className="">
+      <div className="w-4/5 min-h-screen flex flex-col ml-auto p-8 text-gray-600">
         <h2>Settings</h2>
       </div>
     );

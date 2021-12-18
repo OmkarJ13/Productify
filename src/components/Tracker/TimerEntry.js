@@ -23,6 +23,7 @@ class TimerEntry extends React.Component {
         endTime: this.props.endTime,
         duration: this.props.duration,
         isProductive: this.props.isProductive,
+        isBillable: this.props.isBillable,
       },
     };
 
@@ -30,6 +31,7 @@ class TimerEntry extends React.Component {
     this.timeChangeHandler = this.timeChangeHandler.bind(this);
     this.dateChangeHandler = this.dateChangeHandler.bind(this);
     this.productiveChangeHandler = this.productiveChangeHandler.bind(this);
+    this.billableChangeHandler = this.billableChangeHandler.bind(this);
     this.documentClickHandler = this.documentClickHandler.bind(this);
     this.toggleDropdown = this.toggleDropdown.bind(this);
     this.toggleAllEntries = this.toggleAllEntries.bind(this);
@@ -146,6 +148,20 @@ class TimerEntry extends React.Component {
     );
   }
 
+  billableChangeHandler(e) {
+    this.setState(
+      {
+        timerEntry: {
+          ...this.state.timerEntry,
+          isBillable: !this.state.timerEntry.isBillable,
+        },
+      },
+      () => {
+        this.saveEditedChanges();
+      }
+    );
+  }
+
   /*
     Sets a timer to save the unsaved changes made by the user
     Changes get saved after 1 second.
@@ -193,7 +209,15 @@ class TimerEntry extends React.Component {
 
     if (allEntries) {
       allEntries.forEach((entry) => {
-        const { task, date, startTime, endTime, duration } = entry.props;
+        const {
+          task,
+          date,
+          startTime,
+          endTime,
+          duration,
+          isProductive,
+          isBillable,
+        } = entry.props;
         const duplicatedEntry = {
           id: uuid(),
           task,
@@ -201,6 +225,8 @@ class TimerEntry extends React.Component {
           startTime,
           endTime,
           duration,
+          isProductive,
+          isBillable,
         };
 
         onTimerEntryDuplicated(duplicatedEntry);
@@ -267,8 +293,15 @@ class TimerEntry extends React.Component {
     const isCombined = this.props.allEntries !== undefined;
 
     const { isDropdownOpen, showAllEntries } = this.state;
-    const { task, date, startTime, endTime, duration, isProductive } =
-      this.state.timerEntry;
+    const {
+      task,
+      date,
+      startTime,
+      endTime,
+      duration,
+      isProductive,
+      isBillable,
+    } = this.state.timerEntry;
 
     const dateValue = new Date(date);
 
@@ -297,13 +330,22 @@ class TimerEntry extends React.Component {
             />
           </div>
 
-          <button onClick={this.productiveChangeHandler}>
-            <i
-              className={`fa fa-line-chart ${
-                isProductive && "text-blue-500 font-bold"
-              }`}
-            />
-          </button>
+          <div className="transition-opacity flex items-center opacity-0 group-hover:opacity-100">
+            <button onClick={this.productiveChangeHandler} className="px-4">
+              <i
+                className={`fa fa-line-chart ${
+                  isProductive && "text-blue-500 font-bold"
+                }`}
+              />
+            </button>
+            <button onClick={this.billableChangeHandler} className="px-4">
+              <i
+                className={`fa fa-dollar ${
+                  isBillable && "text-blue-500 font-bold"
+                }`}
+              />
+            </button>
+          </div>
 
           <div className="flex items-center gap-2">
             <input
@@ -325,20 +367,11 @@ class TimerEntry extends React.Component {
             />
           </div>
 
-          <div className="flex-grow text-center border-x border-gray-300 font-semibold">
+          <div className="flex-grow text-center text-black border-x border-gray-300">
             <span>{duration.toTimeString()}</span>
           </div>
 
-          {/* <input
-            type="date"
-            value={dateValue}
-            name="date"
-            onChange={this.dateChangeHandler}
-            readOnly={isCombined}
-            className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
-          /> */}
-
-          <div className="inline-block w-fit">
+          <div className="transition-opacity inline-block w-fit opacity-0 group-hover:opacity-100">
             <ReactDatePicker
               selected={dateValue}
               name="date"
@@ -351,7 +384,7 @@ class TimerEntry extends React.Component {
 
           <button
             onClick={this.continueTimerEntry}
-            className="p-1 text-gray-600"
+            className="transition-opacity p-1 text-gray-600 opacity-0 group-hover:opacity-100"
           >
             <i className="fa fa-play" />
           </button>

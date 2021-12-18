@@ -149,6 +149,7 @@ class TimerEntries extends React.Component {
           startTime={timerEntry.startTime}
           endTime={timerEntry.endTime}
           isProductive={timerEntry.isProductive}
+          isBillable={timerEntry.isBillable}
           allEntries={timerEntry.allEntries}
           onTimerEntryEdited={this.props.onTimerEntryEdited}
           onTimerEntryDeleted={this.props.onTimerEntryDeleted}
