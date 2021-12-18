@@ -192,7 +192,7 @@ class Reports extends React.Component {
       return getDaysPassed(b.date) - getDaysPassed(a.date);
     });
 
-    const durations = [];
+    const weeklyData = [];
     for (let i = 0; i < days.length; i++) {
       const timerEntriesByDay = timerEntriesSorted.filter((timerEntry) => {
         let day = new Date(timerEntry.date).getDay() - 1;
@@ -206,14 +206,10 @@ class Reports extends React.Component {
         return day === i;
       });
 
-      const durationsByDay = timerEntriesByDay.map(
-        (timerEntry) => timerEntry.duration
-      );
-
-      durations.push(Time.addTime(...durationsByDay).toHours());
+      weeklyData.push(timerEntriesByDay);
     }
 
-    return durations;
+    return weeklyData;
   }
 
   // Returns number of hours tracked for given date
@@ -237,20 +233,16 @@ class Reports extends React.Component {
       (a, b) => new Date(a.date).getMonth() - new Date(b.date).getMonth()
     );
 
-    const durations = [];
+    const yearlyData = [];
     for (let i = 0; i < months.length; i++) {
       const filteredByMonth = sortedTimerEntries.filter((timerEntry) => {
         return new Date(timerEntry.date).getMonth() === i;
       });
 
-      const durationsByMonth = filteredByMonth.map(
-        (timerEntry) => timerEntry.duration
-      );
-
-      durations.push(Time.addTime(...durationsByMonth).toHours());
+      yearlyData.push(filteredByMonth);
     }
 
-    return durations;
+    return yearlyData;
   }
 
   render() {
@@ -259,29 +251,61 @@ class Reports extends React.Component {
     const dailyData = this.getDailyData(timerEntryData, this.state.date);
     const dailyTasks = dailyData.map((timerEntry) => timerEntry.task);
     const dailyDurations = dailyData.map((timerEntry) => timerEntry.duration);
+    const totalDailyDuration = Time.addTime(...dailyDurations);
     const dailyHours = dailyDurations.map((dailyDuration) =>
       dailyDuration.toHours()
     );
-    const totalDailyHours = Time.addTime(...dailyDurations);
 
     const weeklyData = this.getWeeklyData(timerEntryData, ...this.state.week);
+    const weeklyDurations = weeklyData.map((timerEntriesByDay) => {
+      const durations = timerEntriesByDay.map(
+        (timerEntry) => timerEntry.duration
+      );
+
+      return Time.addTime(...durations);
+    });
+    const totalWeeklyDuration = Time.addTime(...weeklyDurations);
+    const weeklyHours = weeklyDurations.map((weeklyDuration) =>
+      weeklyDuration.toHours()
+    );
+
     const yearlyData = this.getYearlyData(timerEntryData, this.state.year);
+    const yearlyDurations = yearlyData.map((timerEntriesByMonth) => {
+      const durations = timerEntriesByMonth.map(
+        (timerEntry) => timerEntry.duration
+      );
+
+      return Time.addTime(...durations);
+    });
+    const totalYearlyDuration = Time.addTime(...yearlyDurations);
+    const yearlyHours = yearlyDurations.map((yearlyDuration) =>
+      yearlyDuration.toHours()
+    );
 
     return (
       <div className="w-4/5 min-h-screen flex flex-wrap ml-auto p-8 text-gray-600">
         <div className="w-full flex flex-col gap-4">
-          <div className="flex self-start border border-gray-300 rounded-full">
-            <button name="minus" onClick={this.weekChangeHandler}>
-              <i className="fa fa-arrow-left px-4 py-2  text-gray-600" />
-            </button>
-            <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300">
-              <i className="fa fa-calendar" />
-              {this.getWeeklyTitle(...this.state.week)}
+          <div className="flex justify-between items-center">
+            <div className="flex self-start border border-gray-300 rounded-full">
+              <button name="minus" onClick={this.weekChangeHandler}>
+                <i className="fa fa-arrow-left px-4 py-2  text-gray-600" />
+              </button>
+              <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300">
+                <i className="fa fa-calendar" />
+                {this.getWeeklyTitle(...this.state.week)}
+              </span>
+              <button name="plus" onClick={this.weekChangeHandler}>
+                <i className="fa fa-arrow-right px-4 py-2 text-gray-600" />
+              </button>
+            </div>
+            <span className="flex items-baseline gap-1">
+              Clocked Hours -
+              <strong className="font-bold text-lg">
+                {totalWeeklyDuration.toTimeString()}
+              </strong>
             </span>
-            <button name="plus" onClick={this.weekChangeHandler}>
-              <i className="fa fa-arrow-right px-4 py-2 text-gray-600" />
-            </button>
           </div>
+
           <div className="w-full h-[50vh] p-2 border-b border-gray-300">
             <Bar
               data={{
@@ -289,7 +313,7 @@ class Reports extends React.Component {
                 datasets: [
                   {
                     label: "Hours Tracked",
-                    data: weeklyData,
+                    data: weeklyHours,
                     backgroundColor: "lightgreen",
                     borderColor: "lightgreen",
                   },
@@ -302,36 +326,7 @@ class Reports extends React.Component {
           </div>
         </div>
 
-        <div className="w-2/3 flex flex-col gap-4 p-4">
-          <div className="inline-flex self-end border border-gray-300 rounded-full">
-            <button name="minus" onClick={this.yearChangeHandler}>
-              <i className="fa fa-arrow-left px-4 py-2  text-gray-600" />
-            </button>
-            <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300">
-              <i className="fa fa-calendar" />
-              {this.getYearlyTitle(this.state.year)}
-            </span>
-            <button name="plus" onClick={this.yearChangeHandler}>
-              <i className="fa fa-arrow-right px-4 py-2 text-gray-600" />
-            </button>
-          </div>
-
-          <Line
-            data={{
-              labels: months,
-              datasets: [
-                {
-                  label: "Hours Tracked",
-                  data: yearlyData,
-                  backgroundColor: "skyblue",
-                  borderColor: "skyblue",
-                },
-              ],
-            }}
-          />
-        </div>
-
-        <div className="w-1/3 flex flex-col items-center gap-4 p-4 border-l border-gray-300">
+        <div className="w-1/3 flex flex-col items-center gap-4 p-4 border-r border-gray-300">
           <div className="inline-flex border border-gray-300 rounded-full">
             <button name="minus" onClick={this.dateChangeHandler}>
               <i className="fa fa-arrow-left px-4 py-2  text-gray-600" />
@@ -362,9 +357,47 @@ class Reports extends React.Component {
           <span className="flex items-baseline gap-1">
             Clocked Hours -
             <strong className="font-bold text-lg">
-              {totalDailyHours.toTimeString()}
+              {totalDailyDuration.toTimeString()}
             </strong>
           </span>
+        </div>
+
+        <div className="w-2/3 flex flex-col gap-4 p-4">
+          <div className="flex justify-between items-center">
+            <div className="inline-flex self-end border border-gray-300 rounded-full">
+              <button name="minus" onClick={this.yearChangeHandler}>
+                <i className="fa fa-arrow-left px-4 py-2  text-gray-600" />
+              </button>
+              <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300">
+                <i className="fa fa-calendar" />
+                {this.getYearlyTitle(this.state.year)}
+              </span>
+              <button name="plus" onClick={this.yearChangeHandler}>
+                <i className="fa fa-arrow-right px-4 py-2 text-gray-600" />
+              </button>
+            </div>
+
+            <span className="flex items-baseline gap-1">
+              Clocked Hours -
+              <strong className="font-bold text-lg">
+                {totalYearlyDuration.toTimeString()}
+              </strong>
+            </span>
+          </div>
+
+          <Line
+            data={{
+              labels: months,
+              datasets: [
+                {
+                  label: "Hours Tracked",
+                  data: yearlyHours,
+                  backgroundColor: "skyblue",
+                  borderColor: "skyblue",
+                },
+              ],
+            }}
+          />
         </div>
       </div>
     );

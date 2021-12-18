@@ -13,9 +13,13 @@ class TimerEntries extends React.Component {
     super(props);
     this.state = {
       view: "weekly",
+      duration: undefined,
+      time: "descending",
     };
 
     this.viewChangeHandler = this.viewChangeHandler.bind(this);
+    this.sortDuration = this.sortDuration.bind(this);
+    this.sortTime = this.sortTime.bind(this);
   }
 
   viewChangeHandler(e) {
@@ -85,12 +89,32 @@ class TimerEntries extends React.Component {
     const groupedByDate = groupTimerEntriesBy(timerEntries, ["date"]);
 
     // Sorted to show latest entry first
-    const sortedByDate = groupedByDate.sort(
-      (a, b) => getDaysPassed(a[0].date) - getDaysPassed(b[0].date)
-    );
+    let sorted = [];
+    if (this.state.time) {
+      sorted = groupedByDate.sort((a, b) => {
+        return this.state.time === "descending"
+          ? getDaysPassed(a[0].date) - getDaysPassed(b[0].date)
+          : getDaysPassed(b[0].date) - getDaysPassed(a[0].date);
+      });
+    }
+
+    if (this.state.duration) {
+      sorted = groupedByDate.sort((a, b) => {
+        const durationsA = Time.addTime(
+          ...a.map((timerEntry) => timerEntry.duration)
+        );
+        const durationsB = Time.addTime(
+          ...b.map((timerEntry) => timerEntry.duration)
+        );
+
+        return this.state.duration === "descending"
+          ? durationsB.toSeconds() - durationsA.toSeconds()
+          : durationsA.toSeconds() - durationsB.toSeconds();
+      });
+    }
 
     // Grouped by task name if has similar task names for each day
-    const groupedByDateAndTask = sortedByDate.map((groupedEntries) =>
+    const groupedByDateAndTask = sorted.map((groupedEntries) =>
       groupTimerEntriesBy(groupedEntries, ["task"])
     );
 
@@ -192,6 +216,21 @@ class TimerEntries extends React.Component {
     }
   }
 
+  sortDuration(e) {
+    this.setState({
+      duration:
+        this.state.duration === "descending" ? "ascending" : "descending",
+      time: undefined,
+    });
+  }
+
+  sortTime(e) {
+    this.setState({
+      time: this.state.time === "descending" ? "ascending" : "descending",
+      duration: undefined,
+    });
+  }
+
   render() {
     const filteredEntries = this.getFilteredEntries(this.props.timerEntries);
 
@@ -213,14 +252,49 @@ class TimerEntries extends React.Component {
               <strong className="font-bold">{weekTotal.toTimeString()}</strong>
             </span>
           </div>
-          <select
-            className="font-light focus:outline-none"
-            onChange={this.viewChangeHandler}
-          >
-            <option>Weekly</option>
-            <option>Daily</option>
-            <option>All</option>
-          </select>
+
+          <div className="flex gap-8 text-black">
+            <button
+              onClick={this.sortTime}
+              className="flex justify-center items-center gap-2 text-black font-light"
+            >
+              <i
+                className={`fa ${
+                  this.state.time === "descending"
+                    ? "fa-arrow-down"
+                    : this.state.time === "ascending"
+                    ? "fa-arrow-up"
+                    : "fa-sort"
+                }`}
+              />
+              Recent
+            </button>
+
+            <button
+              onClick={this.sortDuration}
+              className="flex justify-center items-center gap-2 text-black font-light"
+            >
+              <i
+                className={`fa ${
+                  this.state.duration === "descending"
+                    ? "fa-arrow-down"
+                    : this.state.duration === "ascending"
+                    ? "fa-arrow-up"
+                    : "fa-sort"
+                }`}
+              />
+              Duration
+            </button>
+
+            <select
+              className="font-light focus:outline-none"
+              onChange={this.viewChangeHandler}
+            >
+              <option>Weekly</option>
+              <option>Daily</option>
+              <option>All</option>
+            </select>
+          </div>
         </div>
         <div className="w-full h-full flex flex-col gap-8">
           {timerEntries.length > 0 && timerEntries}
