@@ -18,6 +18,7 @@ import {
   SECONDS_IN_HOUR,
   SECONDS_IN_MINUTE,
 } from "../constants/timeHelper";
+import { mod } from "../helpers/mod";
 
 const days = [
   "Monday",
@@ -80,7 +81,10 @@ class Reports extends React.Component {
 
   getWeeklyTitle(weekStart, weekEnd) {
     const presentDate = new Date();
-    const lastWeekDate = getPrevDate(presentDate, presentDate.getDay() + 1);
+    const lastWeekDate = getPrevDate(
+      presentDate,
+      mod(presentDate.getDay() - 1, 7) + 1
+    );
 
     if (
       presentDate.getTime() > weekStart.getTime() &&
@@ -154,11 +158,7 @@ class Reports extends React.Component {
   }
 
   // Returns the number of hours tracked for each day in a given week
-  getWeeklyData(
-    timerEntries,
-    weekStart = this.getPrevDate(new Date(), 6),
-    weekEnd = new Date()
-  ) {
+  getWeeklyData(timerEntries, weekStart, weekEnd) {
     if (!timerEntries) return [];
 
     const timerEntriesFiltered = timerEntries.filter((timerEntry) => {
@@ -175,12 +175,7 @@ class Reports extends React.Component {
       const timerEntriesByDay = timerEntriesSorted.filter((timerEntry) => {
         let day = new Date(timerEntry.date).getDay() - 1;
 
-        if (day < 0) {
-          day = (day % days.length) + days.length;
-        } else {
-          day = day % days.length;
-        }
-
+        day = mod(day, days.length);
         return day === i;
       });
 
@@ -234,17 +229,40 @@ class Reports extends React.Component {
       dailyDuration.toHours()
     );
 
-    const weeklyData = this.getWeeklyData(timerEntryData, ...this.state.week);
-    const weeklyDurations = weeklyData.map((timerEntriesByDay) => {
+    const [unproductive, productive] = groupTimerEntriesBy(timerEntryData, [
+      "isProductive",
+    ]);
+
+    const productiveData = this.getWeeklyData(productive, ...this.state.week);
+    const productiveDurations = productiveData.map((timerEntriesByDay) => {
       const durations = timerEntriesByDay.map(
         (timerEntry) => timerEntry.duration
       );
 
       return Time.addTime(...durations);
     });
-    const totalWeeklyDuration = Time.addTime(...weeklyDurations);
-    const weeklyHours = weeklyDurations.map((weeklyDuration) =>
+    const productiveHours = productiveDurations.map((weeklyDuration) =>
       weeklyDuration.toHours()
+    );
+
+    const unproductiveData = this.getWeeklyData(
+      unproductive,
+      ...this.state.week
+    );
+    const unproductiveDurations = unproductiveData.map((timerEntriesByDay) => {
+      const durations = timerEntriesByDay.map(
+        (timerEntry) => timerEntry.duration
+      );
+
+      return Time.addTime(...durations);
+    });
+    const unproductiveHours = unproductiveDurations.map((weeklyDuration) =>
+      weeklyDuration.toHours()
+    );
+
+    const totalWeeklyDuration = Time.addTime(
+      ...productiveDurations,
+      ...unproductiveDurations
     );
 
     const yearlyData = this.getYearlyData(timerEntryData, this.state.year);
@@ -290,10 +308,16 @@ class Reports extends React.Component {
                 labels: days,
                 datasets: [
                   {
-                    label: "Hours Tracked",
-                    data: weeklyHours,
+                    label: "Productive Hours",
+                    data: productiveHours,
                     backgroundColor: "lightgreen",
                     borderColor: "lightgreen",
+                  },
+                  {
+                    label: "Unproductive Hours",
+                    data: unproductiveHours,
+                    backgroundColor: "salmon",
+                    borderColor: "salmon",
                   },
                 ],
               }}

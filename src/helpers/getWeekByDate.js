@@ -1,8 +1,9 @@
 import { getPrevDate, getNextDate } from "./getDate";
+import { mod } from "./mod";
 
 export const getWeekByDate = (date) => {
-  const weekStart = getPrevDate(date, date.getDay() - 1);
-  const weekEnd = getNextDate(weekStart, 6);
+  const weekStart = getPrevDate(date, mod(date.getDay() - 1, 7));
+  const weekEnd = getNextDate(weekStart, 7);
 
   return [weekStart, weekEnd];
 };

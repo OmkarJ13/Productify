@@ -191,9 +191,9 @@ class TimerEntries extends React.Component {
 
   getWeeklyEntries(timerEntries) {
     return timerEntries.filter((timerEntry) => {
-      const [weekStart, weekEnd] = getWeekByDate(new Date(timerEntry.date));
+      const [weekStart, weekEnd] = getWeekByDate(new Date());
       const ms = new Date(timerEntry.date);
-      return ms > weekStart.getTime() && ms < weekEnd.getTime();
+      return ms >= weekStart.getTime() && ms <= weekEnd.getTime();
     });
   }
 
