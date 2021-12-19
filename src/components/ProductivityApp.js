@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from "react-router";
 
 import SideBar from "./SideBar";
 import TimeTracker from "./Tracker/TimeTracker";
-import Reports from "./Reports";
+import Reports from "./Reports/Reports";
 import Settings from "./Settings";
 
 class ProductivityApp extends React.Component {

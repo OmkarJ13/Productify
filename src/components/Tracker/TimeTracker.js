@@ -42,6 +42,8 @@ class TimeTracker extends React.Component {
   }
 
   componentDidMount() {
+    document.title = "Track | Productify";
+
     const storedTimerEntries = parseTimerEntriesJSON(
       localStorage.getItem("timerEntries")
     );
