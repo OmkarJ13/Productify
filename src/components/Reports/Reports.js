@@ -4,6 +4,8 @@ import { parseTimerEntriesJSON } from "../../helpers/parseTimerEntriesJSON";
 import { getWeekByDate } from "../../helpers/getWeekByDate";
 import { getNextDate, getPrevDate } from "../../helpers/getDate";
 
+import { Chart as ChartJS } from "chart.js/auto";
+import { Chart } from "react-chartjs-2";
 import DailyDistributionChart from "./DailyDistributionChart";
 import WeeklyGraph from "./WeeklyGraph";
 import YearlyGraph from "./YearlyGraph";
