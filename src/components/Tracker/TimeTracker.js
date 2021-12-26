@@ -44,20 +44,21 @@ class TimeTracker extends React.Component {
   componentDidMount() {
     document.title = "Track | Productify";
 
-    const storedTimerEntries = parseTimerEntriesJSON(
-      localStorage.getItem("timerEntries")
-    );
-
-    const currentTimer = JSON.parse(localStorage.getItem("currentTimer"));
-
-    if (storedTimerEntries) {
-      if (currentTimer) {
-        restoreTimerEntry(currentTimer.timerEntry);
-      }
+    if ("timerEntries" in localStorage) {
+      const storedTimerEntries = localStorage.getItem("timerEntries");
+      const restoredTimerEntries = parseTimerEntriesJSON(storedTimerEntries);
 
       this.setState({
-        timerEntries: storedTimerEntries,
-        currentTimer: currentTimer,
+        timerEntries: restoredTimerEntries,
+      });
+    }
+
+    if ("currentTimer" in localStorage) {
+      const storedTimer = JSON.parse(localStorage.getItem("currentTimer"));
+      restoreTimerEntry(storedTimer.timerEntry);
+
+      this.setState({
+        currentTimer: storedTimer,
       });
     }
   }

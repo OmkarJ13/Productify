@@ -1,8 +1,8 @@
 import React from "react";
 
-import Time from "../../classes/Time";
 import { v4 as uuid } from "uuid";
 import ReactDatePicker from "react-datepicker";
+import { DateTime } from "luxon";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -48,9 +48,6 @@ class TimerEntry extends React.Component {
     document.removeEventListener("mousedown", this.documentClickHandler);
   }
 
-  /* 
-  Handles click events on the whole document
-  */
   documentClickHandler(e) {
     if (!this.dropdownOptionsDiv.current.contains(e.target)) {
       if (this.state.isDropdownOpen) {
@@ -59,9 +56,6 @@ class TimerEntry extends React.Component {
     }
   }
 
-  /*
-  Handles changes in task name of the timer entry
-  */
   taskChangeHandler(e) {
     this.setState(
       {
@@ -76,19 +70,8 @@ class TimerEntry extends React.Component {
     );
   }
 
-  /* 
-  Handles the changes made in start and end time of the timer entry
-  */
   timeChangeHandler(e) {
-    // Gets the type of time that is changes, e.g. starting time or ending time
-    const type = this.state.timerEntry[e.target.name];
-
-    // Get hours, minutes by splitting the input string and converting it to numbers
-    const timeArrayString = e.target.value.split(":");
-    const timeArrayNumber = timeArrayString.map((time) => Number(time));
-
-    // Creates Time object
-    const time = new Time(...timeArrayNumber, type.seconds);
+    const time = DateTime.fromFormat(e.target.value, "hh:mm");
 
     this.setState(
       {
@@ -98,10 +81,13 @@ class TimerEntry extends React.Component {
         },
       },
       () => {
-        // After setting state,
-        // Updates duration based on changed start or end time
         const { startTime, endTime } = this.state.timerEntry;
-        const changedDuration = endTime.subtractTime(startTime);
+
+        const zeroedStartTime = startTime.set({ second: 0, millisecond: 0 });
+        const zeroedEndTime = endTime.set({ second: 0, millisecond: 0 });
+
+        const changedDuration = zeroedEndTime.diff(zeroedStartTime);
+
         this.setState(
           {
             timerEntry: {
@@ -117,15 +103,12 @@ class TimerEntry extends React.Component {
     );
   }
 
-  /*
-  Handles changes made in the date of the timer entry
-  */
   dateChangeHandler(e) {
     this.setState(
       {
         timerEntry: {
           ...this.state.timerEntry,
-          date: new Date(e).toDateString(),
+          date: DateTime.fromJSDate(new Date(e)),
         },
       },
       () => {
@@ -162,11 +145,6 @@ class TimerEntry extends React.Component {
     );
   }
 
-  /*
-    Sets a timer to save the unsaved changes made by the user
-    Changes get saved after 1 second.
-    However, if called when a timer is active, resets that timer and sets a new one
-  */
   setSaveTimer() {
     if (this.saveTimerID !== undefined) {
       clearTimeout(this.saveTimerID);
@@ -177,9 +155,6 @@ class TimerEntry extends React.Component {
     }, 1000);
   }
 
-  /*
-  Saves the changes made by the user
-  */
   saveEditedChanges() {
     const { id, onTimerEntryEdited } = this.props;
 
@@ -192,18 +167,12 @@ class TimerEntry extends React.Component {
     this.taskInput.current.blur();
   }
 
-  /* 
-  Toggles dropdown menu
-  */
   toggleDropdown(e) {
     this.setState({
       isDropdownOpen: !this.state.isDropdownOpen,
     });
   }
 
-  /* 
-  Duplicates the entry, if this entry is a combined entry, duplicates all the entries
-  */
   duplicateEntry(e) {
     const { allEntries, onTimerEntryDuplicated } = this.props;
 
@@ -246,9 +215,6 @@ class TimerEntry extends React.Component {
     });
   }
 
-  /*
-  Deletes the entry, if this entry is a combined entry, deletes all the entries
-  */
   deleteEntry(e) {
     const { id, allEntries, onTimerEntryDeleted } = this.props;
 
@@ -264,9 +230,6 @@ class TimerEntry extends React.Component {
     });
   }
 
-  /*
-  Toggles dropdown menu
-  */
   toggleAllEntries(e) {
     if (!this.dropdownBtn.current.contains(e.target)) {
       this.setState({
@@ -280,9 +243,6 @@ class TimerEntry extends React.Component {
       shouldContinue: true,
       timerEntry: {
         ...this.state.timerEntry,
-        startTime: new Time(),
-        duration: new Time(0, 0, 0),
-        date: new Date().toDateString(),
       },
     };
 
@@ -302,8 +262,6 @@ class TimerEntry extends React.Component {
       isProductive,
       isBillable,
     } = this.state.timerEntry;
-
-    const dateValue = new Date(date);
 
     return (
       <>
@@ -352,7 +310,7 @@ class TimerEntry extends React.Component {
               type="time"
               name="startTime"
               readOnly={isCombined}
-              value={startTime.toTimeStringShort()}
+              value={startTime.toLocaleString(DateTime.TIME_SIMPLE)}
               onChange={this.timeChangeHandler}
               className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
             />
@@ -361,19 +319,19 @@ class TimerEntry extends React.Component {
               type="time"
               name="endTime"
               readOnly={isCombined}
-              value={endTime.toTimeStringShort()}
+              value={endTime.toLocaleString(DateTime.TIME_SIMPLE)}
               onChange={this.timeChangeHandler}
               className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
             />
           </div>
 
           <div className="flex-grow text-center text-black border-x border-gray-300">
-            <span>{duration.toTimeString()}</span>
+            <span>{duration.toFormat("hh:mm:ss")}</span>
           </div>
 
           <div className="transition-opacity inline-block w-fit opacity-0 group-hover:opacity-100">
             <ReactDatePicker
-              selected={dateValue}
+              selected={date.toJSDate()}
               name="date"
               onChange={this.dateChangeHandler}
               readOnly={isCombined}

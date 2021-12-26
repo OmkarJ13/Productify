@@ -1,45 +1,38 @@
+import { Duration } from "luxon";
+import { DateTime } from "luxon";
 import React from "react";
-
 import { Doughnut } from "react-chartjs-2";
 
-import Time from "../../classes/Time";
-import { getNextDate, getPrevDate } from "../../helpers/getDate";
 import { colors } from "../../helpers/colors";
 
 class DailyDistributionChart extends React.Component {
-  // Returns number of hours tracked for given date
-  getDailyData(timerEntries, date = new Date()) {
+  getDailyData(timerEntries, date) {
     if (!timerEntries) return [];
 
     return timerEntries.filter((timerEntry) => {
-      return timerEntry.date === date.toDateString();
+      return timerEntry.date.toString() === date.toString();
     });
   }
 
   getDailyTitle(date) {
-    const presentDate = new Date();
-    const yesterdayDate = getPrevDate(presentDate);
-
-    if (date.toLocaleDateString() === presentDate.toLocaleDateString()) {
-      return "Today";
-    } else if (
-      date.toLocaleDateString() === yesterdayDate.toLocaleDateString()
-    ) {
-      return "Yesterday";
-    }
-
-    return date.toLocaleDateString();
+    return date.toRelativeCalendar({ unit: "days" });
   }
 
   render() {
     const { timerEntryData, date } = this.props;
 
     const dailyData = this.getDailyData(timerEntryData, date);
+
     const dailyTasks = dailyData.map((timerEntry) => timerEntry.task);
+
     const dailyDurations = dailyData.map((timerEntry) => timerEntry.duration);
-    const totalDailyDuration = Time.addTime(...dailyDurations);
+
+    const totalDailyDuration = dailyDurations.reduce((acc, cur) => {
+      return acc.plus(cur);
+    }, Duration.fromMillis(0));
+
     const dailyHours = dailyDurations.map((dailyDuration) =>
-      dailyDuration.toHours()
+      dailyDuration.as("hours")
     );
 
     return (
@@ -48,7 +41,7 @@ class DailyDistributionChart extends React.Component {
           <button name="minus" onClick={this.props.dateChangeHandler}>
             <i className="fa fa-arrow-left px-4 py-2  text-gray-600" />
           </button>
-          <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300">
+          <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300 capitalize">
             <i className="fa fa-calendar" />
             {this.getDailyTitle(date)}
           </span>
@@ -74,7 +67,7 @@ class DailyDistributionChart extends React.Component {
         <span className="flex items-baseline gap-1">
           Clocked Hours -
           <strong className="font-bold text-lg">
-            {totalDailyDuration.toTimeString()}
+            {totalDailyDuration.toFormat("hh:mm:ss")}
           </strong>
         </span>
       </div>

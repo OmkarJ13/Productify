@@ -1,13 +1,13 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
+import { Duration } from "luxon";
+import { DateTime } from "luxon";
+import { Interval } from "luxon";
 
 import TimerEntry from "./TimerEntry";
 
 import { getDaysPassed } from "../../helpers/getDaysPassed";
 import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
-import { days } from "../../helpers/days";
-import Time from "../../classes/Time";
-import { getWeekByDate } from "../../helpers/getWeekByDate";
 
 class TimerEntries extends React.Component {
   constructor(props) {
@@ -30,66 +30,50 @@ class TimerEntries extends React.Component {
     });
   }
 
-  /*
-  Returns total duration of timer entries tracked by the user for this week
-  */
   getWeeklyTotal(timerEntries) {
     const filteredEntries = this.getWeeklyEntries(timerEntries);
-    const durations = filteredEntries.map((timerEntry) => timerEntry.duration);
-    return Time.addTime(...durations);
+    return filteredEntries.reduce((acc, cur) => {
+      return acc.plus(cur.duration);
+    }, Duration.fromMillis(0));
   }
 
-  /*
-  Returns total duration of timer entries tracked by the user for today
-  */
   getDailyTotal(timerEntries) {
     const filteredEntries = this.getDailyEntries(timerEntries);
-    const durations = filteredEntries.map((timerEntry) => timerEntry.duration);
-    return Time.addTime(...durations);
+    return filteredEntries.reduce((acc, cur) => {
+      return acc.plus(cur.duration);
+    }, Duration.fromMillis(0));
   }
 
-  /*
-  Combines timer entries with the same task name and date
-  */
   getCombinedTimerEntry(timerEntries) {
-    // Get all the start times
-    const allStartTimes = timerEntries.map(
-      (timerEntry) => timerEntry.startTime
-    );
+    const allStartTimes = timerEntries.map((cur) => cur.startTime);
+    const minStartTime = DateTime.min(...allStartTimes);
 
-    // Get all the end times
-    const allEndTimes = timerEntries.map((timerEntry) => timerEntry.endTime);
+    const allEndTimes = timerEntries.map((cur) => cur.endTime);
+    const maxEndTime = DateTime.max(...allEndTimes);
 
     // Get all the durations
-    const allDurations = timerEntries.map((timerEntry) => timerEntry.duration);
+    const totalDuration = timerEntries.reduce((acc, cur) => {
+      return acc.plus(cur.duration);
+    }, Duration.fromMillis(0));
 
-    // Find earliest start time and set it as this entry's start time,
-    // find latest end time and set it as this entry's end time.
-    // Add all the durations for the duration for this entry
-    // Set allEntries property and generate JSX for it so if the user clicks on this entry, all entries can be shown.
     const combinedTimerEntry = {
       id: uuid(),
       task: timerEntries[0].task,
       date: timerEntries[0].date,
-      duration: Time.addTime(...allDurations),
-      startTime: Time.getMin(...allStartTimes),
-      endTime: Time.getMax(...allEndTimes),
+      duration: totalDuration,
+      startTime: minStartTime,
+      endTime: maxEndTime,
       isProductive: timerEntries[0].isProductive,
+      isBillable: timerEntries[0].isBillable,
       allEntries: this.generateTimerEntries(timerEntries),
     };
 
     return combinedTimerEntry;
   }
 
-  /*
-  From all the timer entries that exist, 
-  returns only those which are relevant to the user in a processed way.
-  */
   getTimerEntries(timerEntries) {
-    // Grouped by dates
     const groupedByDate = groupTimerEntriesBy(timerEntries, ["date"]);
 
-    // Sorted to show latest entry first
     let sorted = [];
     if (this.state.time) {
       sorted = groupedByDate.sort((a, b) => {
@@ -101,25 +85,24 @@ class TimerEntries extends React.Component {
 
     if (this.state.duration) {
       sorted = groupedByDate.sort((a, b) => {
-        const durationsA = Time.addTime(
-          ...a.map((timerEntry) => timerEntry.duration)
-        );
-        const durationsB = Time.addTime(
-          ...b.map((timerEntry) => timerEntry.duration)
-        );
+        const durationsA = a.reduce((acc, cur) => {
+          return acc.plus(cur.duration);
+        }, Duration.fromMillis(0));
+
+        const durationsB = b.reduce((acc, cur) => {
+          return acc.plus(cur.duration);
+        }, Duration.fromMillis(0));
 
         return this.state.duration === "descending"
-          ? durationsB.toSeconds() - durationsA.toSeconds()
-          : durationsA.toSeconds() - durationsB.toSeconds();
+          ? durationsB.toMillis() - durationsA.toMillis()
+          : durationsA.toMillis() - durationsB.toMillis();
       });
     }
 
-    // Grouped by task name if has similar task names for each day
     const groupedByDateAndTask = sorted.map((groupedEntries) =>
       groupTimerEntriesBy(groupedEntries, ["task"])
     );
 
-    // Combined duplicate entries to show one instead of multiple
     const finalTimerEntries = groupedByDateAndTask.map((groupedByDate) => {
       return groupedByDate.map((groupedByTask) => {
         if (groupedByTask.length === 1) {
@@ -130,23 +113,18 @@ class TimerEntries extends React.Component {
       });
     });
 
-    // Finally, generate JSX
     const JSX = finalTimerEntries.map((timerEntriesGrouped) => {
-      const daysSince = getDaysPassed(timerEntriesGrouped[0].date);
-      const day =
-        daysSince < 7 && daysSince > -1
-          ? days[daysSince]
-          : timerEntriesGrouped[0].date;
+      const day = timerEntriesGrouped[0].date.toRelativeCalendar();
 
-      const thisDayTotal = Time.addTime(
-        ...timerEntriesGrouped.map((timerEntry) => timerEntry.duration)
-      );
+      const thisDayTotal = timerEntriesGrouped.reduce((acc, cur) => {
+        return acc.plus(cur.duration);
+      }, Duration.fromMillis(0));
 
       return (
         <div className="w-full flex flex-col">
           <div className="w-full flex justify-between px-4 py-2 bg-blue-500 text-white uppercase text-lg">
             <h4>{day}</h4>
-            <h4>{thisDayTotal.toTimeString()}</h4>
+            <h4>{thisDayTotal.toFormat("hh:mm:ss")}</h4>
           </div>
 
           <div className="w-full flex flex-col">
@@ -159,9 +137,6 @@ class TimerEntries extends React.Component {
     return JSX;
   }
 
-  /*
-  Generates TimerEntry components from array of timer entries
-  */
   generateTimerEntries(timerEntries) {
     return timerEntries.map((timerEntry) => {
       return (
@@ -191,16 +166,20 @@ class TimerEntries extends React.Component {
 
   getWeeklyEntries(timerEntries) {
     return timerEntries.filter((timerEntry) => {
-      const [weekStart, weekEnd] = getWeekByDate(new Date());
-      const ms = new Date(timerEntry.date);
-      return ms >= weekStart.getTime() && ms <= weekEnd.getTime();
+      const today = DateTime.now();
+
+      const thisWeek = Interval.fromDateTimes(
+        today.startOf("week"),
+        today.endOf("week")
+      );
+
+      return thisWeek.contains(timerEntry.date);
     });
   }
 
   getDailyEntries(timerEntries) {
     return timerEntries.filter((timerEntry) => {
-      const daysPassed = getDaysPassed(timerEntry.date);
-      return daysPassed === 0;
+      return getDaysPassed(timerEntry.date) === 0;
     });
   }
 
@@ -247,11 +226,15 @@ class TimerEntries extends React.Component {
           <div className="flex gap-4">
             <span className="flex gap-2 font-light">
               Today
-              <strong className="font-bold">{dailyTotal.toTimeString()}</strong>
+              <strong className="font-bold">
+                {dailyTotal.toFormat("hh:mm:ss")}
+              </strong>
             </span>
             <span className="flex gap-2 font-light">
               This Week
-              <strong className="font-bold">{weekTotal.toTimeString()}</strong>
+              <strong className="font-bold">
+                {weekTotal.toFormat("hh:mm:ss")}
+              </strong>
             </span>
           </div>
 

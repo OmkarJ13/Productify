@@ -36,7 +36,7 @@ class TimerModeForm extends React.Component {
         </div>
 
         <span className="px-8 text-center text-black border-l border-dotted border-gray-300">
-          {duration.toTimeString()}
+          {duration.toFormat("hh:mm:ss")}
         </span>
 
         {this.props.isTracking ? (

@@ -4,13 +4,13 @@ import TimerModeForm from "./TimerModeForm";
 import ManualModeForm from "./ManualModeForm";
 
 import { v4 as uuid } from "uuid";
-import Time from "../../classes/Time";
+import { Duration } from "luxon";
+import { DateTime } from "luxon";
 
 class Timer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.secondsPassed = 0;
     this.timerId = undefined;
 
     this.state = {
@@ -18,10 +18,15 @@ class Timer extends React.Component {
       trackingMode: "timer",
       timerEntry: {
         task: "",
-        date: new Date().toDateString(),
-        startTime: new Time(),
-        endTime: new Time(),
-        duration: new Time(0, 0, 0),
+        date: DateTime.fromObject({
+          hour: 0,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+        }),
+        startTime: DateTime.fromObject({ second: 0, millisecond: 0 }),
+        endTime: DateTime.fromObject({ second: 0, millisecond: 0 }),
+        duration: Duration.fromMillis(0),
         isProductive: false,
         isBillable: false,
       },
@@ -44,10 +49,6 @@ class Timer extends React.Component {
   }
 
   render() {
-    if (this.timerExists()) {
-      this.restoreTimer();
-    }
-
     return (
       <div className="w-full flex items-center gap-4 p-4 shadow-md border border-gray-300">
         {this.generateTimerForm()}
@@ -57,6 +58,12 @@ class Timer extends React.Component {
 
   componentDidMount() {
     window.addEventListener("beforeunload", this.reloadHandler);
+  }
+
+  componentDidUpdate() {
+    if (this.timerExists()) {
+      this.restoreTimer();
+    }
   }
 
   timerExists() {
@@ -73,18 +80,32 @@ class Timer extends React.Component {
 
     const { timerEntry } = currentTimer;
 
-    this.secondsPassed = (
-      currentTimer.shouldContinue
-        ? timerEntry.duration
-        : new Time().subtractTime(timerEntry.startTime)
-    ).toSeconds();
+    console.log("Start Time " + timerEntry.startTime.toFormat("hh:mm:ss"));
+    console.log("End Time " + timerEntry.endTime.toFormat("hh:mm:ss"));
+
+    timerEntry.duration = currentTimer.shouldContinue
+      ? timerEntry.duration
+      : DateTime.now().diff(timerEntry.startTime);
 
     this.setState(
       {
         isTracking: true,
         timerEntry: {
           ...timerEntry,
-          duration: Time.fromSeconds(this.secondsPassed),
+          date: currentTimer.shouldContinue
+            ? DateTime.fromObject({
+                hour: 0,
+                minute: 0,
+                second: 0,
+                millisecond: 0,
+              })
+            : timerEntry.date,
+          startTime: currentTimer.shouldContinue
+            ? DateTime.now()
+            : timerEntry.startTime,
+          duration: currentTimer.shouldContinue
+            ? Duration.fromMillis(0)
+            : DateTime.now().diff(timerEntry.startTime),
         },
       },
       () => {
@@ -115,10 +136,11 @@ class Timer extends React.Component {
   Handles changes in date of the timer entry
   */
   dateChangeHandler(e) {
+    console.log(DateTime.fromJSDate(new Date(e)));
     this.setState({
       timerEntry: {
         ...this.state.timerEntry,
-        date: new Date(e).toDateString(),
+        date: DateTime.fromJSDate(new Date(e)),
       },
     });
   }
@@ -127,15 +149,7 @@ class Timer extends React.Component {
   Handles changes in start and end times of the timer entry
   */
   timeChangeHandler(e) {
-    // Gets the type of time that is changes, e.g. starting time or ending time
-    const type = this.state.timerEntry[e.target.name];
-
-    // Get hours, minutes by splitting the input string and converting it to numbers
-    const timeArrayString = e.target.value.split(":");
-    const timeArrayNumber = timeArrayString.map((time) => Number(time));
-
-    // Creates Time object
-    const time = new Time(...timeArrayNumber, type.seconds);
+    const time = DateTime.fromFormat(e.target.value, "hh:mm");
 
     this.setState(
       {
@@ -145,10 +159,9 @@ class Timer extends React.Component {
         },
       },
       () => {
-        // After setting state,
-        // Updates duration based on changed start or end time
         const { startTime, endTime } = this.state.timerEntry;
-        const changedDuration = endTime.subtractTime(startTime);
+        const changedDuration = endTime.diff(startTime);
+
         this.setState({
           timerEntry: {
             ...this.state.timerEntry,
@@ -186,7 +199,7 @@ class Timer extends React.Component {
         isTracking: true,
         timerEntry: {
           ...this.state.timerEntry,
-          startTime: new Time(),
+          startTime: DateTime.now(),
         },
       },
       () => {
@@ -200,6 +213,7 @@ class Timer extends React.Component {
       shouldContinue: false,
       timerEntry: {
         ...this.state.timerEntry,
+        endTime: DateTime.now(),
       },
     };
 
@@ -210,13 +224,16 @@ class Timer extends React.Component {
   Updates the timer by one second
   */
   updateTimer() {
-    this.secondsPassed++;
+    this.setState((prevState) => {
+      const prevDuration = prevState.timerEntry.duration;
+      const newDuration = prevDuration.plus(Duration.fromMillis(1000));
 
-    this.setState({
-      timerEntry: {
-        ...this.state.timerEntry,
-        duration: Time.fromSeconds(this.secondsPassed),
-      },
+      return {
+        timerEntry: {
+          ...this.state.timerEntry,
+          duration: newDuration,
+        },
+      };
     });
   }
 
@@ -227,14 +244,11 @@ class Timer extends React.Component {
     clearInterval(this.timerId);
     this.timerId = undefined;
 
-    this.secondsPassed = 0;
-    const { startTime, duration } = this.state.timerEntry;
-
     this.setState(
       {
         timerEntry: {
           ...this.state.timerEntry,
-          endTime: Time.addTime(startTime, duration),
+          endTime: DateTime.now(),
         },
       },
       () => {
@@ -246,8 +260,6 @@ class Timer extends React.Component {
   discardTimer(e) {
     clearInterval(this.timerId);
     this.timerId = undefined;
-
-    this.secondsPassed = 0;
 
     this.resetState();
   }
@@ -283,10 +295,15 @@ class Timer extends React.Component {
       isTracking: false,
       timerEntry: {
         task: "",
-        date: new Date().toDateString(),
-        startTime: new Time(),
-        endTime: new Time(),
-        duration: new Time(0, 0, 0),
+        date: DateTime.fromObject({
+          hour: 0,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+        }),
+        startTime: DateTime.fromObject({ second: 0, millisecond: 0 }),
+        endTime: DateTime.fromObject({ second: 0, millisecond: 0 }),
+        duration: Duration.fromMillis(0),
         isProductive: false,
         isBillable: false,
       },

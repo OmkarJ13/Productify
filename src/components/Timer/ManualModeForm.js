@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import React from "react";
 import ReactDatePicker from "react-datepicker";
 
@@ -12,7 +13,6 @@ class ManualModeForm extends React.Component {
       isProductive,
       isBillable,
     } = this.props.timerEntry;
-    const dateValue = new Date(date);
 
     return (
       <>
@@ -49,7 +49,7 @@ class ManualModeForm extends React.Component {
           <input
             name="startTime"
             type="time"
-            value={startTime.toTimeStringShort()}
+            value={startTime.toLocaleString(DateTime.TIME_SIMPLE)}
             onChange={this.props.timeChangeHandler}
             className="p-2 border border-gray-300"
           />
@@ -57,7 +57,7 @@ class ManualModeForm extends React.Component {
           <input
             name="endTime"
             type="time"
-            value={endTime.toTimeStringShort()}
+            value={endTime.toLocaleString(DateTime.TIME_SIMPLE)}
             onChange={this.props.timeChangeHandler}
             className="p-2 border border-gray-300"
           />
@@ -65,7 +65,7 @@ class ManualModeForm extends React.Component {
 
         <div className="inline-block w-fit">
           <ReactDatePicker
-            selected={dateValue}
+            selected={date.toJSDate()}
             onChange={this.props.dateChangeHandler}
             className="p-1"
             customInput={<i className="fa fa-calendar" />}
@@ -73,7 +73,7 @@ class ManualModeForm extends React.Component {
         </div>
 
         <div className="px-8 text-black border-l border-dotted border-gray-300 text-center">
-          <span>{duration.toTimeString()}</span>
+          <span>{duration.toFormat("hh:mm:ss")}</span>
         </div>
 
         <button

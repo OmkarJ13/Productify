@@ -1,40 +1,25 @@
 import React from "react";
-
-import Time from "../../classes/Time";
 import { Line } from "react-chartjs-2";
-
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+import { Info } from "luxon";
+import { Duration } from "luxon";
+import { DateTime } from "luxon";
 
 class YearlyGraph extends React.Component {
-  // Returns number of hours tracked for each month in a given year.
-  getYearlyData(timerEntries, year = new Date().toFullYear()) {
+  getYearlyData(timerEntries, year) {
     if (!timerEntries) return [];
 
     const filteredTimerEntries = timerEntries.filter((timerEntry) => {
-      return new Date(timerEntry.date).getFullYear() === year;
+      return timerEntry.date.year === year;
     });
 
     const sortedTimerEntries = filteredTimerEntries.sort(
-      (a, b) => new Date(a.date).getMonth() - new Date(b.date).getMonth()
+      (a, b) => a.date.month - b.date.month
     );
 
     const yearlyData = [];
-    for (let i = 0; i < months.length; i++) {
+    for (let i = 1; i <= Info.months().length; i++) {
       const filteredByMonth = sortedTimerEntries.filter((timerEntry) => {
-        return new Date(timerEntry.date).getMonth() === i;
+        return timerEntry.date.month === i;
       });
 
       yearlyData.push(filteredByMonth);
@@ -44,31 +29,27 @@ class YearlyGraph extends React.Component {
   }
 
   getYearlyTitle(year) {
-    const presentYear = new Date().getFullYear();
-
-    if (year === presentYear) {
-      return "This Year";
-    } else if (year === presentYear - 1) {
-      return "Last Year";
-    }
-
-    return year;
+    const date = DateTime.fromObject({ year: year });
+    return date.toRelativeCalendar({ unit: "years" });
   }
 
   render() {
     const { timerEntryData, year } = this.props;
 
     const yearlyData = this.getYearlyData(timerEntryData, year);
-    const yearlyDurations = yearlyData.map((timerEntriesByMonth) => {
-      const durations = timerEntriesByMonth.map(
-        (timerEntry) => timerEntry.duration
-      );
 
-      return Time.addTime(...durations);
+    const yearlyDurations = yearlyData.map((timerEntriesByMonth) => {
+      return timerEntriesByMonth.reduce((acc, cur) => {
+        return acc.plus(cur.duration);
+      }, Duration.fromMillis(0));
     });
-    const totalYearlyDuration = Time.addTime(...yearlyDurations);
+
+    const totalYearlyDuration = yearlyDurations.reduce((acc, cur) => {
+      return acc.plus(cur);
+    }, Duration.fromMillis(0));
+
     const yearlyHours = yearlyDurations.map((yearlyDuration) =>
-      yearlyDuration.toHours()
+      yearlyDuration.as("hours")
     );
 
     return (
@@ -78,7 +59,7 @@ class YearlyGraph extends React.Component {
             <button name="minus" onClick={this.props.yearChangeHandler}>
               <i className="fa fa-arrow-left px-4 py-2  text-gray-600" />
             </button>
-            <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300">
+            <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300 capitalize">
               <i className="fa fa-calendar" />
               {this.getYearlyTitle(year)}
             </span>
@@ -90,14 +71,14 @@ class YearlyGraph extends React.Component {
           <span className="flex items-baseline gap-1">
             Clocked Hours -
             <strong className="font-bold text-lg">
-              {totalYearlyDuration.toTimeString()}
+              {totalYearlyDuration.toFormat("hh:mm:ss")}
             </strong>
           </span>
         </div>
 
         <Line
           data={{
-            labels: months,
+            labels: Info.months(),
             datasets: [
               {
                 label: "Hours Tracked",
@@ -107,20 +88,6 @@ class YearlyGraph extends React.Component {
                 borderWidth: 1.5,
               },
             ],
-          }}
-          options={{
-            elements: {
-              point: {
-                radius: 0,
-              },
-            },
-            scales: {
-              x: {
-                ticks: {
-                  maxTicksLimit: 12,
-                },
-              },
-            },
           }}
         />
       </div>

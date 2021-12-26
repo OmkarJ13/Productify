@@ -1,11 +1,11 @@
 import React from "react";
-
-import { parseTimerEntriesJSON } from "../../helpers/parseTimerEntriesJSON";
-import { getWeekByDate } from "../../helpers/getWeekByDate";
-import { getNextDate, getPrevDate } from "../../helpers/getDate";
-
 import { Chart as ChartJS } from "chart.js/auto";
 import { Chart } from "react-chartjs-2";
+import { DateTime } from "luxon";
+import { Interval } from "luxon";
+
+import { parseTimerEntriesJSON } from "../../helpers/parseTimerEntriesJSON";
+
 import DailyDistributionChart from "./DailyDistributionChart";
 import WeeklyGraph from "./WeeklyGraph";
 import YearlyGraph from "./YearlyGraph";
@@ -14,14 +14,18 @@ class Reports extends React.Component {
   constructor(props) {
     super(props);
 
-    const today = new Date();
-    const week = getWeekByDate(today);
-    const year = today.getFullYear();
-
     this.state = {
-      date: today,
-      week: week,
-      year: year,
+      date: DateTime.fromObject({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      }),
+      week: Interval.fromDateTimes(
+        DateTime.now().startOf("week"),
+        DateTime.now().endOf("week")
+      ),
+      year: DateTime.now().year,
     };
 
     this.dateChangeHandler = this.dateChangeHandler.bind(this);
@@ -39,8 +43,8 @@ class Reports extends React.Component {
     this.setState({
       date:
         btn.name === "plus"
-          ? getNextDate(this.state.date)
-          : getPrevDate(this.state.date),
+          ? this.state.date.plus({ days: 1 })
+          : this.state.date.minus({ days: 1 }),
     });
   }
 
@@ -50,14 +54,12 @@ class Reports extends React.Component {
     this.setState({
       week:
         btn.name === "plus"
-          ? [
-              getNextDate(this.state.week[0], 7),
-              getNextDate(this.state.week[1], 7),
-            ]
-          : [
-              getPrevDate(this.state.week[0], 7),
-              getPrevDate(this.state.week[1], 7),
-            ],
+          ? this.state.week.mapEndpoints((endPoint) =>
+              endPoint.plus({ week: 1 })
+            )
+          : this.state.week.mapEndpoints((endPoint) =>
+              endPoint.minus({ week: 1 })
+            ),
     });
   }
 
@@ -71,11 +73,9 @@ class Reports extends React.Component {
 
   // Fetches and parses timer entries data from local storage
   getTimerEntryData() {
-    const timerEntries = parseTimerEntriesJSON(
-      localStorage.getItem("timerEntries")
-    );
-
-    return timerEntries;
+    return "timerEntries" in localStorage
+      ? parseTimerEntriesJSON(localStorage.getItem("timerEntries"))
+      : [];
   }
 
   render() {
