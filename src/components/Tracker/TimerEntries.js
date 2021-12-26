@@ -2,7 +2,6 @@ import React from "react";
 import { v4 as uuid } from "uuid";
 import { Duration } from "luxon";
 import { DateTime } from "luxon";
-import { Interval } from "luxon";
 
 import TimerEntry from "./TimerEntry";
 
@@ -78,8 +77,8 @@ class TimerEntries extends React.Component {
     if (this.state.time) {
       sorted = groupedByDate.sort((a, b) => {
         return this.state.time === "descending"
-          ? getDaysPassed(a[0].date) - getDaysPassed(b[0].date)
-          : getDaysPassed(b[0].date) - getDaysPassed(a[0].date);
+          ? getDaysPassed(b[0].date) - getDaysPassed(a[0].date)
+          : getDaysPassed(a[0].date) - getDaysPassed(b[0].date);
       });
     }
 
@@ -166,20 +165,15 @@ class TimerEntries extends React.Component {
 
   getWeeklyEntries(timerEntries) {
     return timerEntries.filter((timerEntry) => {
-      const today = DateTime.now();
-
-      const thisWeek = Interval.fromDateTimes(
-        today.startOf("week"),
-        today.endOf("week")
+      return (
+        timerEntry.date.toRelativeCalendar({ unit: "weeks" }) === "this week"
       );
-
-      return thisWeek.contains(timerEntry.date);
     });
   }
 
   getDailyEntries(timerEntries) {
     return timerEntries.filter((timerEntry) => {
-      return getDaysPassed(timerEntry.date) === 0;
+      return timerEntry.date.toRelativeCalendar({ unit: "days" }) === "today";
     });
   }
 

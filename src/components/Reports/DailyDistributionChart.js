@@ -1,5 +1,4 @@
 import { Duration } from "luxon";
-import { DateTime } from "luxon";
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
 
@@ -31,7 +30,7 @@ class DailyDistributionChart extends React.Component {
       return acc.plus(cur);
     }, Duration.fromMillis(0));
 
-    const dailyHours = dailyDurations.map((dailyDuration) =>
+    const dailyHours = dailyDurations.flatMap((dailyDuration) =>
       dailyDuration.as("hours")
     );
 
