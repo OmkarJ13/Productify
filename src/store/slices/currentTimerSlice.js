@@ -3,34 +3,30 @@ import { restoreTimerEntry } from "../../helpers/restoreTimerEntry";
 
 const parseCurrentTimer = (currentTimerJSON) => {
   const currentTimer = JSON.parse(currentTimerJSON);
-  restoreTimerEntry(currentTimer.timerEntry);
+  restoreTimerEntry(currentTimer);
 
   return currentTimer;
 };
 
-const initialState = {
+const defaultState = {
   currentTimer: null,
 };
 
 const state =
   "currentTimer" in localStorage
-    ? parseCurrentTimer(localStorage.getItem("currentTimer"))
-    : initialState;
+    ? { currentTimer: parseCurrentTimer(localStorage.getItem("currentTimer")) }
+    : defaultState;
 
 const currentTimerSlice = createSlice({
   name: "currentTimer",
   initialState: state,
   reducers: {
     start(_, action) {
-      return {
-        currentTimer: action.payload,
-      };
+      return { currentTimer: action.payload };
     },
 
     stop() {
-      return {
-        currentTimer: null,
-      };
+      return { currentTimer: null };
     },
   },
 });

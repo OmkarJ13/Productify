@@ -7,7 +7,11 @@ const defaultState = {
 
 const state =
   "timerEntries" in localStorage
-    ? parseTimerEntriesJSON(localStorage.getItem("timerEntries"))
+    ? {
+        timerEntries: parseTimerEntriesJSON(
+          localStorage.getItem("timerEntries")
+        ),
+      }
     : defaultState;
 
 const timerEntrySlice = createSlice({
@@ -16,9 +20,7 @@ const timerEntrySlice = createSlice({
   reducers: {
     create(state, action) {
       const { timerEntries } = state;
-      return {
-        timerEntries: [action.payload, ...timerEntries],
-      };
+      return { timerEntries: [action.payload, ...timerEntries] };
     },
 
     update(state, action) {
@@ -31,9 +33,7 @@ const timerEntrySlice = createSlice({
         return cur;
       });
 
-      return {
-        timerEntries: editedTimerEntries,
-      };
+      return { timerEntries: editedTimerEntries };
     },
 
     delete(state, action) {
@@ -42,9 +42,7 @@ const timerEntrySlice = createSlice({
         return cur.id !== action.payload.id;
       });
 
-      return {
-        timerEntries: filteredTimerEntries,
-      };
+      return { timerEntries: filteredTimerEntries };
     },
   },
 });

@@ -7,13 +7,14 @@ import TimerEntry from "./TimerEntry";
 
 import { getDaysPassed } from "../../helpers/getDaysPassed";
 import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
+import { connect } from "react-redux";
 
 class TimerEntries extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       view: "weekly",
-      duration: undefined,
+      duration: "unsorted",
       time: "descending",
     };
 
@@ -74,7 +75,7 @@ class TimerEntries extends React.Component {
     const groupedByDate = groupTimerEntriesBy(timerEntries, ["date"]);
 
     let sorted = [];
-    if (this.state.time) {
+    if (this.state.time !== "unsorted") {
       sorted = groupedByDate.sort((a, b) => {
         return this.state.time === "descending"
           ? getDaysPassed(b[0].date) - getDaysPassed(a[0].date)
@@ -82,7 +83,7 @@ class TimerEntries extends React.Component {
       });
     }
 
-    if (this.state.duration) {
+    if (this.state.duration !== "unsorted") {
       sorted = groupedByDate.sort((a, b) => {
         const durationsA = a.reduce((acc, cur) => {
           return acc.plus(cur.duration);
@@ -113,7 +114,9 @@ class TimerEntries extends React.Component {
     });
 
     const JSX = finalTimerEntries.map((timerEntriesGrouped) => {
-      const day = timerEntriesGrouped[0].date.toRelativeCalendar();
+      const day = timerEntriesGrouped[0].date.toRelativeCalendar({
+        unit: "days",
+      });
 
       const thisDayTotal = timerEntriesGrouped.reduce((acc, cur) => {
         return acc.plus(cur.duration);
@@ -141,19 +144,17 @@ class TimerEntries extends React.Component {
       return (
         <TimerEntry
           key={timerEntry.id}
-          id={timerEntry.id}
-          task={timerEntry.task}
-          duration={timerEntry.duration}
-          date={timerEntry.date}
-          startTime={timerEntry.startTime}
-          endTime={timerEntry.endTime}
-          isProductive={timerEntry.isProductive}
-          isBillable={timerEntry.isBillable}
-          allEntries={timerEntry.allEntries}
-          onTimerEntryEdited={this.props.onTimerEntryEdited}
-          onTimerEntryDeleted={this.props.onTimerEntryDeleted}
-          onTimerEntryDuplicated={this.props.onTimerEntryDuplicated}
-          onTimerEntryContinued={this.props.onTimerEntryContinued}
+          timerEntry={{
+            id: timerEntry.id,
+            task: timerEntry.task,
+            duration: timerEntry.duration,
+            date: timerEntry.date,
+            startTime: timerEntry.startTime,
+            endTime: timerEntry.endTime,
+            isProductive: timerEntry.isProductive,
+            isBillable: timerEntry.isBillable,
+            allEntries: timerEntry.allEntries,
+          }}
         />
       );
     });
@@ -195,14 +196,14 @@ class TimerEntries extends React.Component {
     this.setState({
       duration:
         this.state.duration === "descending" ? "ascending" : "descending",
-      time: undefined,
+      time: "unsorted",
     });
   }
 
   sortTime(e) {
     this.setState({
       time: this.state.time === "descending" ? "ascending" : "descending",
-      duration: undefined,
+      duration: "unsorted",
     });
   }
 
@@ -282,6 +283,25 @@ class TimerEntries extends React.Component {
       </div>
     );
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.timerEntries.length != this.props.length) {
+      this.storeTimerEntries();
+    }
+  }
+
+  storeTimerEntries() {
+    localStorage.setItem(
+      "timerEntries",
+      JSON.stringify(this.props.timerEntries)
+    );
+  }
 }
 
-export default TimerEntries;
+const mapStateToProps = (state) => {
+  return {
+    timerEntries: state.timerEntryReducer.timerEntries,
+  };
+};
+
+export default connect(mapStateToProps)(TimerEntries);

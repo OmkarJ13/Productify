@@ -39,7 +39,7 @@ class TimerModeForm extends React.Component {
           {duration.toFormat("hh:mm:ss")}
         </span>
 
-        {this.props.isTracking ? (
+        {this.props.currentTimer !== null ? (
           <button
             onClick={this.props.stopTracking}
             className="w-1/12 px-4 py-2 bg-red-500 text-white uppercase"
@@ -56,7 +56,7 @@ class TimerModeForm extends React.Component {
         )}
 
         <div className="flex flex-col justify-center items-center">
-          {this.props.isTracking ? (
+          {this.props.currentTimer !== null ? (
             <button onClick={this.props.discardTimer}>
               <i className="fa fa-close" />
             </button>

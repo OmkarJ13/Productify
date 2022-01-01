@@ -7,6 +7,10 @@ const store = configureStore({
     currentTimerReducer,
     timerEntryReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;

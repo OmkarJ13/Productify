@@ -6,6 +6,10 @@ import ManualModeForm from "./ManualModeForm";
 import { v4 as uuid } from "uuid";
 import { Duration } from "luxon";
 import { DateTime } from "luxon";
+import { connect } from "react-redux";
+
+import { currentTimerActions } from "../../store/slices/currentTimerSlice";
+import { timerEntryActions } from "../../store/slices/timerEntrySlice";
 
 class Timer extends React.Component {
   constructor(props) {
@@ -14,7 +18,6 @@ class Timer extends React.Component {
     this.timerId = undefined;
 
     this.state = {
-      isTracking: false,
       trackingMode: "timer",
       timerEntry: {
         task: "",
@@ -37,7 +40,6 @@ class Timer extends React.Component {
     this.timeChangeHandler = this.timeChangeHandler.bind(this);
     this.productiveChangeHandler = this.productiveChangeHandler.bind(this);
     this.billableChangeHandler = this.billableChangeHandler.bind(this);
-    this.saveTimerEntry = this.saveTimerEntry.bind(this);
     this.resetState = this.resetState.bind(this);
     this.startTracking = this.startTracking.bind(this);
     this.stopTracking = this.stopTracking.bind(this);
@@ -46,6 +48,7 @@ class Timer extends React.Component {
     this.switchToTimerMode = this.switchToTimerMode.bind(this);
     this.switchToManualMode = this.switchToManualMode.bind(this);
     this.reloadHandler = this.reloadHandler.bind(this);
+    this.saveTimerEntry = this.saveTimerEntry.bind(this);
   }
 
   render() {
@@ -58,71 +61,51 @@ class Timer extends React.Component {
 
   componentDidMount() {
     window.addEventListener("beforeunload", this.reloadHandler);
+
+    if (this.shouldRestore()) {
+      this.restoreTimer();
+    }
   }
 
   componentDidUpdate() {
-    if (this.timerExists()) {
+    if (this.shouldRestore()) {
       this.restoreTimer();
     }
   }
 
   timerExists() {
-    return this.props.currentTimer && !this.state.isTracking;
+    return this.timerId !== undefined;
+  }
+
+  shouldRestore() {
+    return this.props.currentTimer !== null && this.timerId === undefined;
   }
 
   restoreTimer() {
     const { currentTimer } = this.props;
 
-    if (!currentTimer) {
+    if (currentTimer === null) {
       console.error("Tried to restore a timer that did not exist");
       return;
     }
 
-    const { timerEntry } = currentTimer;
+    this.timerId = setInterval(this.updateTimer, 1000);
 
-    console.log("Start Time " + timerEntry.startTime.toFormat("hh:mm:ss"));
-    console.log("End Time " + timerEntry.endTime.toFormat("hh:mm:ss"));
-
-    timerEntry.duration = currentTimer.shouldContinue
-      ? timerEntry.duration
-      : DateTime.now().diff(timerEntry.startTime);
-
-    this.setState(
-      {
-        isTracking: true,
-        timerEntry: {
-          ...timerEntry,
-          date: currentTimer.shouldContinue
-            ? DateTime.fromObject({
-                hour: 0,
-                minute: 0,
-                second: 0,
-                millisecond: 0,
-              })
-            : timerEntry.date,
-          startTime: currentTimer.shouldContinue
-            ? DateTime.now()
-            : timerEntry.startTime,
-          duration: currentTimer.shouldContinue
-            ? Duration.fromMillis(0)
-            : DateTime.now().diff(timerEntry.startTime),
-        },
+    this.setState({
+      timerEntry: {
+        ...currentTimer,
+        duration: DateTime.now().diff(currentTimer.startTime),
       },
-      () => {
-        if (!this.timerId) this.timerId = setInterval(this.updateTimer, 1000);
-      }
-    );
+    });
   }
 
   reloadHandler() {
-    if (this.state.isTracking) {
+    if (this.timerExists()) {
+      this.resetTimer();
       this.storeCurrentTimer();
     }
   }
 
-  /*
-  Handles changes in task name of the timer entry
-  */
   taskChangeHandler(e) {
     this.setState({
       timerEntry: {
@@ -132,11 +115,7 @@ class Timer extends React.Component {
     });
   }
 
-  /*
-  Handles changes in date of the timer entry
-  */
   dateChangeHandler(e) {
-    console.log(DateTime.fromJSDate(new Date(e)));
     this.setState({
       timerEntry: {
         ...this.state.timerEntry,
@@ -145,9 +124,15 @@ class Timer extends React.Component {
     });
   }
 
-  /*
-  Handles changes in start and end times of the timer entry
-  */
+  saveTimerEntry() {
+    const timerEntry = {
+      id: uuid(),
+      ...this.state.timerEntry,
+    };
+
+    this.props.saveTimerEntry(timerEntry);
+  }
+
   timeChangeHandler(e) {
     const time = DateTime.fromFormat(e.target.value, "hh:mm");
 
@@ -190,42 +175,30 @@ class Timer extends React.Component {
     });
   }
 
-  /* 
-  Starts tracking time
-  */
   startTracking(e) {
-    this.setState(
-      {
-        isTracking: true,
-        timerEntry: {
-          ...this.state.timerEntry,
-          startTime: DateTime.now(),
-        },
-      },
-      () => {
-        this.timerId = setInterval(this.updateTimer, 1000);
-      }
-    );
+    const timer = {
+      ...this.state.timerEntry,
+      startTime: DateTime.now(),
+    };
+
+    this.props.startTimer(timer);
+    this.timerId = setInterval(this.updateTimer, 1000);
   }
 
   storeCurrentTimer() {
-    const currentTimer = {
-      shouldContinue: false,
-      timerEntry: {
-        ...this.state.timerEntry,
-        endTime: DateTime.now(),
-      },
+    const { timerEntry } = this.state;
+
+    const timer = {
+      ...timerEntry,
     };
 
-    this.props.onTimerInterrupted(currentTimer);
+    localStorage.setItem("currentTimer", JSON.stringify(timer));
   }
 
-  /*
-  Updates the timer by one second
-  */
   updateTimer() {
     this.setState((prevState) => {
-      const prevDuration = prevState.timerEntry.duration;
+      const { timerEntry } = prevState;
+      const prevDuration = timerEntry.duration;
       const newDuration = prevDuration.plus(Duration.fromMillis(1000));
 
       return {
@@ -237,62 +210,44 @@ class Timer extends React.Component {
     });
   }
 
-  /*
-  Stops tracking time 
-  */
   stopTracking(e) {
-    clearInterval(this.timerId);
-    this.timerId = undefined;
+    this.resetTimer();
 
-    this.setState(
-      {
-        timerEntry: {
-          ...this.state.timerEntry,
-          endTime: DateTime.now(),
-        },
-      },
-      () => {
-        this.saveTimerEntry();
-      }
-    );
+    const timerEntry = {
+      ...this.state.timerEntry,
+      id: uuid(),
+      endTime: DateTime.now(),
+    };
+
+    this.props.stopTimer(timerEntry);
+    this.resetState();
+
+    "currentTimer" in localStorage && localStorage.removeItem("currentTimer");
   }
 
   discardTimer(e) {
-    clearInterval(this.timerId);
-    this.timerId = undefined;
+    this.props.discardTimer();
 
+    this.resetTimer();
     this.resetState();
   }
 
-  componentWillUnmount() {
-    if (this.timerId) clearInterval(this.timerId);
+  resetTimer() {
+    clearInterval(this.timerId);
+    this.timerId = undefined;
+  }
 
-    if (this.state.isTracking) {
+  componentWillUnmount() {
+    if (this.timerExists()) {
+      this.resetTimer();
       this.storeCurrentTimer();
     }
 
     window.removeEventListener("beforeunload", this.reloadHandler);
   }
 
-  /* 
-  Saves the timer entry
-  */
-  saveTimerEntry() {
-    const timerEntry = {
-      id: uuid(),
-      ...this.state.timerEntry,
-    };
-
-    this.props.onTimerEntryCreated(timerEntry);
-    this.resetState();
-  }
-
-  /*
-  Resets state as it was initially
-  */
   resetState() {
     this.setState({
-      isTracking: false,
       timerEntry: {
         task: "",
         date: DateTime.fromObject({
@@ -310,21 +265,13 @@ class Timer extends React.Component {
     });
   }
 
-  /* 
-  Generates timer form based on mode
-  */
   generateTimerForm() {
-    const { task, duration, isProductive, isBillable } = this.state.timerEntry;
-
     return this.state.trackingMode === "timer" ? (
       <TimerModeForm
-        isTracking={this.state.isTracking}
+        currentTimer={this.props.currentTimer}
         trackingMode={this.state.trackingMode}
         timerEntry={{
-          task: task,
-          duration: duration,
-          isProductive: isProductive,
-          isBillable: isBillable,
+          ...this.state.timerEntry,
         }}
         taskChangeHandler={this.taskChangeHandler}
         productiveChangeHandler={this.productiveChangeHandler}
@@ -337,6 +284,7 @@ class Timer extends React.Component {
       />
     ) : (
       <ManualModeForm
+        currentTimer={this.props.currentTimer}
         trackingMode={this.state.trackingMode}
         timerEntry={{
           ...this.state.timerEntry,
@@ -346,9 +294,9 @@ class Timer extends React.Component {
         dateChangeHandler={this.dateChangeHandler}
         productiveChangeHandler={this.productiveChangeHandler}
         billableChangeHandler={this.billableChangeHandler}
-        saveTimerEntry={this.saveTimerEntry}
         switchToManualMode={this.switchToManualMode}
         switchToTimerMode={this.switchToTimerMode}
+        saveTimerEntry={this.saveTimerEntry}
       />
     );
   }
@@ -366,4 +314,28 @@ class Timer extends React.Component {
   }
 }
 
-export default Timer;
+const mapStateToProps = (state) => {
+  return {
+    currentTimer: state.currentTimerReducer.currentTimer,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    startTimer: (timer) => {
+      dispatch(currentTimerActions.start(timer));
+    },
+    stopTimer: (timer) => {
+      dispatch(currentTimerActions.stop());
+      dispatch(timerEntryActions.create(timer));
+    },
+    discardTimer: () => {
+      dispatch(currentTimerActions.stop());
+    },
+    saveTimerEntry: (timerEntry) => {
+      dispatch(timerEntryActions.create(timerEntry));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Timer);

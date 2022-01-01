@@ -4,11 +4,10 @@ import { Chart } from "react-chartjs-2";
 import { DateTime } from "luxon";
 import { Interval } from "luxon";
 
-import { parseTimerEntriesJSON } from "../../helpers/parseTimerEntriesJSON";
-
 import DailyDistributionChart from "./DailyDistributionChart";
 import WeeklyGraph from "./WeeklyGraph";
 import YearlyGraph from "./YearlyGraph";
+import { connect } from "react-redux";
 
 class Reports extends React.Component {
   constructor(props) {
@@ -71,15 +70,8 @@ class Reports extends React.Component {
     });
   }
 
-  // Fetches and parses timer entries data from local storage
-  getTimerEntryData() {
-    return "timerEntries" in localStorage
-      ? parseTimerEntriesJSON(localStorage.getItem("timerEntries"))
-      : [];
-  }
-
   render() {
-    const timerEntryData = this.getTimerEntryData();
+    const timerEntryData = this.props.timerEntries;
 
     return (
       <div className="w-4/5 min-h-screen flex flex-wrap ml-auto text-gray-600">
@@ -103,4 +95,10 @@ class Reports extends React.Component {
   }
 }
 
-export default Reports;
+const mapStateToProps = (state) => {
+  return {
+    timerEntries: state.timerEntryReducer.timerEntries,
+  };
+};
+
+export default connect(mapStateToProps)(Reports);

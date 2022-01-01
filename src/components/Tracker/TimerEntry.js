@@ -3,6 +3,9 @@ import React from "react";
 import { v4 as uuid } from "uuid";
 import ReactDatePicker from "react-datepicker";
 import { DateTime } from "luxon";
+import { timerEntryActions } from "../../store/slices/timerEntrySlice";
+import { currentTimerActions } from "../../store/slices/currentTimerSlice";
+import { connect } from "react-redux";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -17,13 +20,7 @@ class TimerEntry extends React.Component {
       isDropdownOpen: false,
       showAllEntries: false,
       timerEntry: {
-        task: this.props.task,
-        date: this.props.date,
-        startTime: this.props.startTime,
-        endTime: this.props.endTime,
-        duration: this.props.duration,
-        isProductive: this.props.isProductive,
-        isBillable: this.props.isBillable,
+        ...this.props.timerEntry,
       },
     };
 
@@ -156,14 +153,7 @@ class TimerEntry extends React.Component {
   }
 
   saveEditedChanges() {
-    const { id, onTimerEntryEdited } = this.props;
-
-    const editedTimerEntry = {
-      id,
-      ...this.state.timerEntry,
-    };
-
-    onTimerEntryEdited(editedTimerEntry);
+    this.props.updateTimerEntry(this.state.timerEntry);
     this.taskInput.current.blur();
   }
 
@@ -174,57 +164,38 @@ class TimerEntry extends React.Component {
   }
 
   duplicateEntry(e) {
-    const { allEntries, onTimerEntryDuplicated } = this.props;
-
-    if (allEntries) {
-      allEntries.forEach((entry) => {
-        const {
-          task,
-          date,
-          startTime,
-          endTime,
-          duration,
-          isProductive,
-          isBillable,
-        } = entry.props;
-        const duplicatedEntry = {
+    const { timerEntry } = this.state;
+    if (timerEntry.allEntries) {
+      timerEntry.allEntries.forEach((entry) => {
+        const duplicatedTimerEntry = {
+          ...entry.props.timerEntry,
           id: uuid(),
-          task,
-          date,
-          startTime,
-          endTime,
-          duration,
-          isProductive,
-          isBillable,
         };
-
-        onTimerEntryDuplicated(duplicatedEntry);
+        this.props.duplicateTimerEntry(duplicatedTimerEntry);
       });
     } else {
-      const duplicatedEntry = {
+      const duplicatedTimerEntry = {
+        ...timerEntry,
         id: uuid(),
-        ...this.state.timerEntry,
       };
-
-      onTimerEntryDuplicated(duplicatedEntry);
+      this.props.duplicateTimerEntry(duplicatedTimerEntry);
     }
 
-    // Closes the dropdown menu after duplication
     this.setState({
       isDropdownOpen: false,
     });
   }
 
   deleteEntry(e) {
-    const { id, allEntries, onTimerEntryDeleted } = this.props;
-
-    if (allEntries) {
-      allEntries.forEach((entry) => onTimerEntryDeleted(entry.props.id));
+    const { timerEntry } = this.state;
+    if (timerEntry.allEntries) {
+      timerEntry.allEntries.forEach((entry) =>
+        this.props.deleteTimerEntry(entry.props.timerEntry)
+      );
     } else {
-      onTimerEntryDeleted(id);
+      this.props.deleteTimerEntry(timerEntry);
     }
 
-    // Closes the dropdown menu after deletion
     this.setState({
       isDropdownOpen: false,
     });
@@ -239,18 +210,23 @@ class TimerEntry extends React.Component {
   }
 
   continueTimerEntry(e) {
-    const currentTimer = {
-      shouldContinue: true,
-      timerEntry: {
-        ...this.state.timerEntry,
-      },
+    const timer = {
+      ...this.state.timerEntry,
+      startTime: DateTime.now(),
+      date: DateTime.fromObject({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      }),
     };
 
-    this.props.onTimerEntryContinued(currentTimer);
+    this.props.continueTimerEntry(timer);
   }
 
   generateTimerEntry() {
-    const isCombined = this.props.allEntries !== undefined;
+    const { timerEntry } = this.state;
+    const isCombined = timerEntry.allEntries !== undefined;
 
     const { isDropdownOpen, showAllEntries } = this.state;
     const {
@@ -272,7 +248,7 @@ class TimerEntry extends React.Component {
           <div className="w-1/3 flex items-center gap-4">
             {isCombined && (
               <div className="flex justify-center items-center px-4 py-2 bg-blue-500 text-white rounded-[50%]">
-                {this.props.allEntries.length}
+                {timerEntry.allEntries.length}
               </div>
             )}
             <input
@@ -380,7 +356,7 @@ class TimerEntry extends React.Component {
             )}
           </div>
         </div>
-        {showAllEntries && this.props.allEntries}
+        {showAllEntries && timerEntry.allEntries}
       </>
     );
   }
@@ -390,4 +366,21 @@ class TimerEntry extends React.Component {
   }
 }
 
-export default TimerEntry;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateTimerEntry: (timerEntry) => {
+      dispatch(timerEntryActions.update(timerEntry));
+    },
+    deleteTimerEntry: (timerEntry) => {
+      dispatch(timerEntryActions.delete(timerEntry));
+    },
+    duplicateTimerEntry: (timerEntry) => {
+      dispatch(timerEntryActions.create(timerEntry));
+    },
+    continueTimerEntry: (timer) => {
+      dispatch(currentTimerActions.start(timer));
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(TimerEntry);
