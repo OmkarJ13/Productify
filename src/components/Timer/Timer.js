@@ -131,6 +131,7 @@ class Timer extends React.Component {
     };
 
     this.props.saveTimerEntry(timerEntry);
+    this.resetState();
   }
 
   timeChangeHandler(e) {

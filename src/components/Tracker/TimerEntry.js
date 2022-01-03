@@ -10,15 +10,14 @@ import {
   AttachMoney,
   CalendarToday,
   ContentCopy,
-  ControlPointDuplicate,
   Delete,
   LocalOffer,
   MoreVert,
-  PlayArrow,
-  PlayArrowRounded,
   PlayCircle,
+  Save,
   TrendingUp,
 } from "@mui/icons-material";
+import { ToastContainer, toast } from "react-toastify";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -168,6 +167,14 @@ class TimerEntry extends React.Component {
   saveEditedChanges() {
     this.props.updateTimerEntry(this.state.timerEntry);
     this.taskInput.current.blur();
+
+    toast(() => {
+      return (
+        <div className="flex items-center gap-2 text-sm">
+          <Save /> Successfully Updated Timer Entry
+        </div>
+      );
+    });
   }
 
   toggleDropdown(e) {
@@ -178,6 +185,7 @@ class TimerEntry extends React.Component {
 
   duplicateEntry(e) {
     const { timerEntry } = this.state;
+
     if (timerEntry.allEntries) {
       timerEntry.allEntries.forEach((entry) => {
         const duplicatedTimerEntry = {
@@ -254,6 +262,13 @@ class TimerEntry extends React.Component {
 
     return (
       <>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={3000}
+          bodyClassName={"bg-white text-gray-600 font-inter"}
+          hideProgressBar={true}
+        />
+
         <div
           className="group w-full flex items-center gap-5 p-4 border-x border-b border-gray-300 text-sm"
           onClick={isCombined ? this.toggleAllEntries : null}
