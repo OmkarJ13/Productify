@@ -56,22 +56,22 @@ class YearlyGraph extends React.Component {
     return (
       <div className="w-full flex flex-col gap-4 p-4">
         <div className="flex justify-between items-center">
-          <div className="inline-flex self-end border border-gray-300 rounded-full">
+          <div className="inline-flex self-end">
             <button
               name="minus"
               onClick={this.props.yearChangeHandler}
-              className="px-2"
+              className="px-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-l-full"
             >
               <ArrowBack />
             </button>
-            <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300 capitalize">
+            <span className="flex items-center gap-2 px-4 py-2 border-y border-gray-300 capitalize">
               <Today />
               {this.getYearlyTitle(year)}
             </span>
             <button
               name="plus"
               onClick={this.props.yearChangeHandler}
-              className="px-2"
+              className="px-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-r-full"
             >
               <ArrowForward />
             </button>

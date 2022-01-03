@@ -92,7 +92,7 @@ class ManualModeForm extends React.Component {
 
         <button
           onClick={this.props.saveTimerEntry}
-          className="w-1/12 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-400 text-white uppercase"
+          className="w-1/12 px-4 py-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase"
         >
           Add
         </button>

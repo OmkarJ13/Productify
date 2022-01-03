@@ -129,7 +129,7 @@ class TimerEntries extends React.Component {
 
       return (
         <div className="w-full flex flex-col">
-          <div className="w-full flex justify-between px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-400 text-white uppercase text-lg">
+          <div className="w-full flex justify-between px-4 py-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase text-lg">
             <h4>{day}</h4>
             <h4>{thisDayTotal.toFormat("hh:mm:ss")}</h4>
           </div>

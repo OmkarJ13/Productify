@@ -55,14 +55,14 @@ class TimerModeForm extends React.Component {
         {this.props.currentTimer !== null ? (
           <button
             onClick={this.props.stopTracking}
-            className="w-1/12 p-2 bg-gradient-to-r from-red-500 to-red-400 text-white uppercase"
+            className="w-1/12 p-2 bg-gradient-to-br from-red-500 to-red-400 text-white uppercase"
           >
             Stop
           </button>
         ) : (
           <button
             onClick={this.props.startTracking}
-            className="w-1/12 p-2 bg-gradient-to-r from-blue-500 to-blue-400 text-white uppercase"
+            className="w-1/12 p-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase"
           >
             Start
           </button>

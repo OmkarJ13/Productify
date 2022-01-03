@@ -90,22 +90,22 @@ class WeeklyGraph extends React.Component {
             </strong>
           </span>
 
-          <div className="flex self-start border border-gray-300 rounded-full">
+          <div className="flex self-start">
             <button
               name="minus"
               onClick={this.props.weekChangeHandler}
-              className="px-2"
+              className="px-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-l-full"
             >
               <ArrowBack />
             </button>
-            <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300 capitalize">
+            <span className="flex items-center gap-2 px-4 py-2 border-y border-gray-300 capitalize">
               <Today />
               {this.getWeeklyTitle(week)}
             </span>
             <button
               name="plus"
               onClick={this.props.weekChangeHandler}
-              className="px-2"
+              className="px-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-r-full"
             >
               <ArrowForward />
             </button>
