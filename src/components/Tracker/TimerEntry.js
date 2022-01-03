@@ -6,6 +6,19 @@ import { DateTime } from "luxon";
 import { timerEntryActions } from "../../store/slices/timerEntrySlice";
 import { currentTimerActions } from "../../store/slices/currentTimerSlice";
 import { connect } from "react-redux";
+import {
+  AttachMoney,
+  CalendarToday,
+  ContentCopy,
+  ControlPointDuplicate,
+  Delete,
+  LocalOffer,
+  MoreVert,
+  PlayArrow,
+  PlayArrowRounded,
+  PlayCircle,
+  TrendingUp,
+} from "@mui/icons-material";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -242,12 +255,12 @@ class TimerEntry extends React.Component {
     return (
       <>
         <div
-          className="group w-full flex items-center gap-4 p-4 border-x border-b border-gray-300 text-sm"
+          className="group w-full flex items-center gap-5 p-4 border-x border-b border-gray-300 text-sm"
           onClick={isCombined ? this.toggleAllEntries : null}
         >
           <div className="w-1/3 flex items-center gap-4">
             {isCombined && (
-              <div className="flex justify-center items-center px-4 py-2 bg-blue-500 text-white rounded-[50%]">
+              <div className="w-[35px] h-[35px] flex justify-center items-center bg-blue-500 text-white rounded-[50%]">
                 {timerEntry.allEntries.length}
               </div>
             )}
@@ -264,20 +277,26 @@ class TimerEntry extends React.Component {
             />
           </div>
 
-          <div className="transition-opacity flex items-center opacity-0 group-hover:opacity-100">
-            <button onClick={this.productiveChangeHandler} className="px-4">
-              <i
-                className={`fa fa-line-chart ${
-                  isProductive && "text-blue-500 font-bold"
-                }`}
-              />
+          <button className="transition-opacity flex items-center gap-2 opacity-0 group-hover:opacity-100 uppercase">
+            <LocalOffer />
+          </button>
+
+          <div className="transition-opacity h-full flex items-center opacity-0 group-hover:opacity-100">
+            <button
+              onClick={this.productiveChangeHandler}
+              className={`h-full px-4 border-x border-dotted border-gray-300 ${
+                isProductive ? "text-blue-500" : "text-gray-400"
+              }`}
+            >
+              <TrendingUp />
             </button>
-            <button onClick={this.billableChangeHandler} className="px-4">
-              <i
-                className={`fa fa-dollar ${
-                  isBillable && "text-blue-500 font-bold"
-                }`}
-              />
+            <button
+              onClick={this.billableChangeHandler}
+              className={`h-full px-4 border-r border-dotted border-gray-300 ${
+                isBillable ? "text-blue-500" : "text-gray-400"
+              }`}
+            >
+              <AttachMoney />
             </button>
           </div>
 
@@ -301,35 +320,30 @@ class TimerEntry extends React.Component {
             />
           </div>
 
-          <div className="flex-grow text-center text-black border-x border-gray-300">
-            <span>{duration.toFormat("hh:mm:ss")}</span>
-          </div>
-
           <div className="transition-opacity inline-block w-fit opacity-0 group-hover:opacity-100">
             <ReactDatePicker
               selected={date.toJSDate()}
               name="date"
               onChange={this.dateChangeHandler}
               readOnly={isCombined}
-              className="p-1"
-              customInput={<i className="fa fa-calendar" />}
+              customInput={<CalendarToday />}
             />
+          </div>
+
+          <div className="flex-grow h-full flex justify-center items-center text-base">
+            <span>{duration.toFormat("hh:mm:ss")}</span>
           </div>
 
           <button
             onClick={this.continueTimerEntry}
-            className="transition-opacity p-1 text-gray-600 opacity-0 group-hover:opacity-100"
+            className="transition-opacity opacity-0 group-hover:opacity-100"
           >
-            <i className="fa fa-play" />
+            <PlayCircle />
           </button>
 
           <div className="relative" ref={this.dropdownOptionsDiv}>
-            <button
-              onClick={this.toggleDropdown}
-              ref={this.dropdownBtn}
-              className="p-1 text-gray-600"
-            >
-              <i className="fa fa-ellipsis-v" />
+            <button onClick={this.toggleDropdown} ref={this.dropdownBtn}>
+              <MoreVert />
             </button>
 
             {isDropdownOpen && (
@@ -338,16 +352,18 @@ class TimerEntry extends React.Component {
                   <li>
                     <button
                       onClick={this.duplicateEntry}
-                      className="w-full px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
+                      className="w-full flex items-center gap-2 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
                     >
+                      <ContentCopy fontSize="small" />
                       Duplicate
                     </button>
                   </li>
                   <li>
                     <button
                       onClick={this.deleteEntry}
-                      className="w-full px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
+                      className="w-full flex items-center gap-2 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
                     >
+                      <Delete fontSize="small" />
                       Delete
                     </button>
                   </li>

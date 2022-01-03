@@ -1,5 +1,12 @@
+import {
+  AttachMoney,
+  Close,
+  LocalOffer,
+  Menu,
+  Schedule,
+  TrendingUp,
+} from "@mui/icons-material";
 import React from "react";
-import "./TimerModeForm";
 
 class TimerModeForm extends React.Component {
   render() {
@@ -17,66 +24,72 @@ class TimerModeForm extends React.Component {
           onChange={this.props.taskChangeHandler}
         />
 
-        <div className="flex items-center">
-          <button onClick={this.props.productiveChangeHandler} className="px-4">
-            <i
-              className={`fa fa-line-chart ${
-                isProductive && "text-blue-500 font-bold"
-              }`}
-            />
+        <button className="px-4">
+          <LocalOffer />
+        </button>
+
+        <div className="h-full flex items-center">
+          <button
+            onClick={this.props.productiveChangeHandler}
+            className={`h-full px-4 border-x border-dotted border-gray-300 ${
+              isProductive ? "text-blue-500" : "text-gray-400"
+            }`}
+          >
+            <TrendingUp />
           </button>
 
-          <button onClick={this.props.billableChangeHandler} className="px-4">
-            <i
-              className={`fa fa-dollar ${
-                isBillable && "text-blue-500 font-bold"
-              }`}
-            />
+          <button
+            onClick={this.props.billableChangeHandler}
+            className={`h-full px-4 border-x border-dotted border-gray-300 ${
+              isBillable ? "text-blue-500" : "text-gray-400"
+            }`}
+          >
+            <AttachMoney />
           </button>
         </div>
 
-        <span className="px-8 text-center text-black border-l border-dotted border-gray-300">
+        <span className="h-full flex items-center px-8 text-center text-base">
           {duration.toFormat("hh:mm:ss")}
         </span>
 
         {this.props.currentTimer !== null ? (
           <button
             onClick={this.props.stopTracking}
-            className="w-1/12 px-4 py-2 bg-red-500 text-white uppercase"
+            className="w-1/12 p-2 bg-gradient-to-r from-red-500 to-red-400 text-white uppercase"
           >
             Stop
           </button>
         ) : (
           <button
             onClick={this.props.startTracking}
-            className="w-1/12 px-4 py-2 bg-blue-500 text-white uppercase"
+            className="w-1/12 p-2 bg-gradient-to-r from-blue-500 to-blue-400 text-white uppercase"
           >
             Start
           </button>
         )}
 
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center pl-4">
           {this.props.currentTimer !== null ? (
             <button onClick={this.props.discardTimer}>
-              <i className="fa fa-close" />
+              <Close fontSize="small" />
             </button>
           ) : (
             <>
-              <button onClick={this.props.switchToTimerMode}>
-                <i
-                  className={`fa fa-clock-o ${
-                    this.props.trackingMode === "timer" &&
-                    "text-gray-600 font-bold"
-                  }`}
-                />
+              <button
+                onClick={this.props.switchToTimerMode}
+                className={`${
+                  this.props.trackingMode === "timer"
+                    ? "text-gray-600"
+                    : "text-gray-400"
+                }`}
+              >
+                <Schedule fontSize="small" />
               </button>
-              <button onClick={this.props.switchToManualMode}>
-                <i
-                  className={`fa fa-bars ${
-                    this.props.trackingMode === "manual" &&
-                    "text-gray-600 font-bold"
-                  }`}
-                />
+              <button
+                onClick={this.props.switchToManualMode}
+                className="text-gray-400"
+              >
+                <Menu fontSize="small" />
               </button>
             </>
           )}

@@ -7,6 +7,7 @@ import { DateTime } from "luxon";
 import { getDaysPassed } from "../../helpers/getDaysPassed";
 import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
 import { Interval } from "luxon";
+import { ArrowBack, ArrowForward, Today } from "@mui/icons-material";
 
 class WeeklyGraph extends React.Component {
   getWeeklyData(timerEntries, week) {
@@ -80,7 +81,7 @@ class WeeklyGraph extends React.Component {
     }, Duration.fromMillis(0));
 
     return (
-      <div className="w-2/3 flex flex-col justify-between gap-4 p-4 border-b border-gray-300">
+      <div className="w-2/3 h-[75vh] flex flex-col justify-between gap-4 p-4 border-b border-gray-300">
         <div className="flex justify-between items-center">
           <span className="flex items-baseline gap-1">
             Clocked Hours -
@@ -90,15 +91,23 @@ class WeeklyGraph extends React.Component {
           </span>
 
           <div className="flex self-start border border-gray-300 rounded-full">
-            <button name="minus" onClick={this.props.weekChangeHandler}>
-              <i className="fa fa-arrow-left px-4 py-2  text-gray-600" />
+            <button
+              name="minus"
+              onClick={this.props.weekChangeHandler}
+              className="px-2"
+            >
+              <ArrowBack />
             </button>
             <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300 capitalize">
-              <i className="fa fa-calendar" />
+              <Today />
               {this.getWeeklyTitle(week)}
             </span>
-            <button name="plus" onClick={this.props.weekChangeHandler}>
-              <i className="fa fa-arrow-right px-4 py-2 text-gray-600" />
+            <button
+              name="plus"
+              onClick={this.props.weekChangeHandler}
+              className="px-2"
+            >
+              <ArrowForward />
             </button>
           </div>
         </div>
@@ -124,6 +133,12 @@ class WeeklyGraph extends React.Component {
             }}
             options={{
               maintainAspectRatio: false,
+              scales: {
+                y: {
+                  suggestedMin: 0,
+                  suggestedMax: 10,
+                },
+              },
             }}
           />
         </div>

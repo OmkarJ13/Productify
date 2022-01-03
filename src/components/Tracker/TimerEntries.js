@@ -8,6 +8,11 @@ import TimerEntry from "./TimerEntry";
 import { getDaysPassed } from "../../helpers/getDaysPassed";
 import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
 import { connect } from "react-redux";
+import {
+  ArrowCircleDown,
+  ArrowCircleUp,
+  SwapVerticalCircleOutlined,
+} from "@mui/icons-material";
 
 class TimerEntries extends React.Component {
   constructor(props) {
@@ -124,7 +129,7 @@ class TimerEntries extends React.Component {
 
       return (
         <div className="w-full flex flex-col">
-          <div className="w-full flex justify-between px-4 py-2 bg-blue-500 text-white uppercase text-lg">
+          <div className="w-full flex justify-between px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-400 text-white uppercase text-lg">
             <h4>{day}</h4>
             <h4>{thisDayTotal.toFormat("hh:mm:ss")}</h4>
           </div>
@@ -233,36 +238,32 @@ class TimerEntries extends React.Component {
             </span>
           </div>
 
-          <div className="flex gap-8 text-black">
+          <div className="flex gap-8">
             <button
               onClick={this.sortTime}
-              className="flex justify-center items-center gap-2 text-black font-light"
+              className="flex justify-center items-center gap-2 font-light text-gray-600"
             >
-              <i
-                className={`fa ${
-                  this.state.time === "descending"
-                    ? "fa-arrow-down"
-                    : this.state.time === "ascending"
-                    ? "fa-arrow-up"
-                    : "fa-sort"
-                }`}
-              />
+              {this.state.time === "descending" ? (
+                <ArrowCircleDown />
+              ) : this.state.time === "ascending" ? (
+                <ArrowCircleUp />
+              ) : (
+                <SwapVerticalCircleOutlined />
+              )}
               Recent
             </button>
 
             <button
               onClick={this.sortDuration}
-              className="flex justify-center items-center gap-2 text-black font-light"
+              className="flex justify-center items-center gap-2 font-light text-gray-600"
             >
-              <i
-                className={`fa ${
-                  this.state.duration === "descending"
-                    ? "fa-arrow-down"
-                    : this.state.duration === "ascending"
-                    ? "fa-arrow-up"
-                    : "fa-sort"
-                }`}
-              />
+              {this.state.duration === "descending" ? (
+                <ArrowCircleDown />
+              ) : this.state.duration === "ascending" ? (
+                <ArrowCircleUp />
+              ) : (
+                <SwapVerticalCircleOutlined />
+              )}
               Duration
             </button>
 

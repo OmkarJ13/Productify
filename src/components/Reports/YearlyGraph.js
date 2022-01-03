@@ -3,6 +3,7 @@ import { Line } from "react-chartjs-2";
 import { Info } from "luxon";
 import { Duration } from "luxon";
 import { DateTime } from "luxon";
+import { ArrowBack, ArrowForward, Today } from "@mui/icons-material";
 
 class YearlyGraph extends React.Component {
   getYearlyData(timerEntries, year) {
@@ -56,15 +57,23 @@ class YearlyGraph extends React.Component {
       <div className="w-full flex flex-col gap-4 p-4">
         <div className="flex justify-between items-center">
           <div className="inline-flex self-end border border-gray-300 rounded-full">
-            <button name="minus" onClick={this.props.yearChangeHandler}>
-              <i className="fa fa-arrow-left px-4 py-2  text-gray-600" />
+            <button
+              name="minus"
+              onClick={this.props.yearChangeHandler}
+              className="px-2"
+            >
+              <ArrowBack />
             </button>
             <span className="flex items-center gap-2 px-4 py-2 border-x border-gray-300 capitalize">
-              <i className="fa fa-calendar" />
+              <Today />
               {this.getYearlyTitle(year)}
             </span>
-            <button name="plus" onClick={this.props.yearChangeHandler}>
-              <i className="fa fa-arrow-right px-4 py-2 text-gray-600" />
+            <button
+              name="plus"
+              onClick={this.props.yearChangeHandler}
+              className="px-2"
+            >
+              <ArrowForward />
             </button>
           </div>
 
@@ -88,6 +97,14 @@ class YearlyGraph extends React.Component {
                 borderWidth: 1.5,
               },
             ],
+          }}
+          options={{
+            scales: {
+              y: {
+                suggestedMin: 0,
+                suggestedMax: 300,
+              },
+            },
           }}
         />
       </div>

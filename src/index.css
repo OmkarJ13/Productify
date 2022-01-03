@@ -7,7 +7,3 @@
 html {
   @apply overflow-y-scroll;
 }
-
-button {
-  @apply text-gray-400;
-}

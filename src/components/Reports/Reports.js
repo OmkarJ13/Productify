@@ -74,7 +74,7 @@ class Reports extends React.Component {
     const timerEntryData = this.props.timerEntries;
 
     return (
-      <div className="w-4/5 min-h-screen flex flex-wrap ml-auto text-gray-600">
+      <div className="w-10/12 min-h-screen flex flex-wrap ml-auto text-gray-600">
         <DailyDistributionChart
           timerEntryData={timerEntryData}
           date={this.state.date}

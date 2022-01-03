@@ -1,3 +1,11 @@
+import {
+  AttachMoney,
+  CalendarToday,
+  LocalOffer,
+  Menu,
+  Schedule,
+  TrendingUp,
+} from "@mui/icons-material";
 import { DateTime } from "luxon";
 import React from "react";
 import ReactDatePicker from "react-datepicker";
@@ -27,31 +35,37 @@ class ManualModeForm extends React.Component {
           onChange={this.props.taskChangeHandler}
         />
 
-        <div className="flex items-center">
-          <button onClick={this.props.productiveChangeHandler} className="px-4">
-            <i
-              className={`fa fa-line-chart ${
-                isProductive && "text-blue-500 font-bold"
-              }`}
-            />
+        <button className="px-4">
+          <LocalOffer />
+        </button>
+
+        <div className="h-full flex items-center">
+          <button
+            onClick={this.props.productiveChangeHandler}
+            className={`h-full px-4 border-x border-dotted border-gray-300 ${
+              isProductive ? "text-blue-500" : "text-gray-400"
+            }`}
+          >
+            <TrendingUp />
           </button>
 
-          <button onClick={this.props.billableChangeHandler} className="px-4">
-            <i
-              className={`fa fa-dollar ${
-                isBillable && "text-blue-500 font-bold"
-              }`}
-            />
+          <button
+            onClick={this.props.billableChangeHandler}
+            className={`h-full px-4 border-x border-dotted border-gray-300 ${
+              isBillable ? "text-blue-500" : "text-gray-400"
+            }`}
+          >
+            <AttachMoney />
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 px-4">
           <input
             name="startTime"
             type="time"
             value={startTime.toLocaleString(DateTime.TIME_SIMPLE)}
             onChange={this.props.timeChangeHandler}
-            className="p-2 border border-gray-300"
+            className="p-1 border border-gray-300"
           />
           <span> - </span>
           <input
@@ -59,45 +73,46 @@ class ManualModeForm extends React.Component {
             type="time"
             value={endTime.toLocaleString(DateTime.TIME_SIMPLE)}
             onChange={this.props.timeChangeHandler}
-            className="p-2 border border-gray-300"
+            className="p-1 border border-gray-300"
           />
         </div>
 
-        <div className="inline-block w-fit">
+        <div className="inline-block w-fit pr-4">
           <ReactDatePicker
             selected={date.toJSDate()}
             onChange={this.props.dateChangeHandler}
-            className="p-1"
-            customInput={<i className="fa fa-calendar" />}
+            className=""
+            customInput={<CalendarToday />}
           />
         </div>
 
-        <div className="px-8 text-black border-l border-dotted border-gray-300 text-center">
+        <div className="h-full flex items-center px-8 text-center text-base border-l border-dotted border-gray-300">
           <span>{duration.toFormat("hh:mm:ss")}</span>
         </div>
 
         <button
           onClick={this.props.saveTimerEntry}
-          className="w-1/12 px-4 py-2 bg-blue-500 text-white uppercase"
+          className="w-1/12 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-400 text-white uppercase"
         >
           Add
         </button>
 
-        <div className="flex flex-col">
-          <button onClick={this.props.switchToTimerMode}>
-            <i
-              className={`fa fa-clock-o ${
-                this.props.trackingMode === "timer" && "text-gray-600 font-bold"
-              }`}
-            />
+        <div className="flex flex-col pl-4">
+          <button
+            onClick={this.props.switchToTimerMode}
+            className="text-gray-400"
+          >
+            <Schedule fontSize="small" />
           </button>
-          <button onClick={this.props.switchToManualMode}>
-            <i
-              className={`fa fa-bars ${
-                this.props.trackingMode === "manual" &&
-                "text-gray-600 font-bold"
-              }`}
-            />
+          <button
+            onClick={this.props.switchToManualMode}
+            className={`${
+              this.props.trackingMode === "manual"
+                ? "text-gray-600"
+                : "text-gray-400"
+            }`}
+          >
+            <Menu fontSize="small" />
           </button>
         </div>
       </>
