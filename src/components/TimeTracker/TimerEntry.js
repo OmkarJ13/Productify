@@ -1,11 +1,3 @@
-import React from "react";
-
-import { v4 as uuid } from "uuid";
-import ReactDatePicker from "react-datepicker";
-import { DateTime } from "luxon";
-import { timerEntryActions } from "../../store/slices/timerEntrySlice";
-import { currentTimerActions } from "../../store/slices/currentTimerSlice";
-import { connect } from "react-redux";
 import {
   AttachMoney,
   CalendarToday,
@@ -17,7 +9,17 @@ import {
   Save,
   TrendingUp,
 } from "@mui/icons-material";
+
+import React from "react";
+
+import ReactDatePicker from "react-datepicker";
 import { ToastContainer, toast } from "react-toastify";
+import { v4 as uuid } from "uuid";
+import { DateTime } from "luxon";
+import { connect } from "react-redux";
+
+import { timerEntryActions } from "../../store/slices/timerEntrySlice";
+import { currentTimerActions } from "../../store/slices/currentTimerSlice";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -31,16 +33,8 @@ class TimerEntry extends React.Component {
     this.state = {
       isDropdownOpen: false,
       showAllEntries: false,
-      timerEntry: {
-        ...this.props.timerEntry,
-      },
     };
 
-    this.taskChangeHandler = this.taskChangeHandler.bind(this);
-    this.timeChangeHandler = this.timeChangeHandler.bind(this);
-    this.dateChangeHandler = this.dateChangeHandler.bind(this);
-    this.productiveChangeHandler = this.productiveChangeHandler.bind(this);
-    this.billableChangeHandler = this.billableChangeHandler.bind(this);
     this.documentClickHandler = this.documentClickHandler.bind(this);
     this.toggleDropdown = this.toggleDropdown.bind(this);
     this.toggleAllEntries = this.toggleAllEntries.bind(this);
@@ -65,95 +59,6 @@ class TimerEntry extends React.Component {
     }
   }
 
-  taskChangeHandler(e) {
-    this.setState(
-      {
-        timerEntry: {
-          ...this.state.timerEntry,
-          [e.target.name]: e.target.value,
-        },
-      },
-      () => {
-        this.setSaveTimer();
-      }
-    );
-  }
-
-  timeChangeHandler(e) {
-    const time = DateTime.fromFormat(e.target.value, "hh:mm");
-
-    this.setState(
-      {
-        timerEntry: {
-          ...this.state.timerEntry,
-          [e.target.name]: time,
-        },
-      },
-      () => {
-        const { startTime, endTime } = this.state.timerEntry;
-
-        const zeroedStartTime = startTime.set({ second: 0, millisecond: 0 });
-        const zeroedEndTime = endTime.set({ second: 0, millisecond: 0 });
-
-        const changedDuration = zeroedEndTime.diff(zeroedStartTime);
-
-        this.setState(
-          {
-            timerEntry: {
-              ...this.state.timerEntry,
-              duration: changedDuration,
-            },
-          },
-          () => {
-            this.saveEditedChanges();
-          }
-        );
-      }
-    );
-  }
-
-  dateChangeHandler(e) {
-    this.setState(
-      {
-        timerEntry: {
-          ...this.state.timerEntry,
-          date: DateTime.fromJSDate(new Date(e)),
-        },
-      },
-      () => {
-        this.saveEditedChanges();
-      }
-    );
-  }
-
-  productiveChangeHandler(e) {
-    this.setState(
-      {
-        timerEntry: {
-          ...this.state.timerEntry,
-          isProductive: !this.state.timerEntry.isProductive,
-        },
-      },
-      () => {
-        this.saveEditedChanges();
-      }
-    );
-  }
-
-  billableChangeHandler(e) {
-    this.setState(
-      {
-        timerEntry: {
-          ...this.state.timerEntry,
-          isBillable: !this.state.timerEntry.isBillable,
-        },
-      },
-      () => {
-        this.saveEditedChanges();
-      }
-    );
-  }
-
   setSaveTimer() {
     if (this.saveTimerID !== undefined) {
       clearTimeout(this.saveTimerID);
@@ -165,13 +70,13 @@ class TimerEntry extends React.Component {
   }
 
   saveEditedChanges() {
-    this.props.updateTimerEntry(this.state.timerEntry);
-    this.taskInput.current.blur();
+    this.props.updateTimerEntry(this.props.timerEntry);
+    this.taskInput.current?.blur();
 
     toast(() => {
       return (
         <div className="flex items-center gap-2 text-sm">
-          <Save /> Successfully Updated Timer Entry
+          <Save /> Updated Timer Entry
         </div>
       );
     });
@@ -184,7 +89,7 @@ class TimerEntry extends React.Component {
   }
 
   duplicateEntry(e) {
-    const { timerEntry } = this.state;
+    const { timerEntry } = this.props;
 
     if (timerEntry.allEntries) {
       timerEntry.allEntries.forEach((entry) => {
@@ -208,7 +113,7 @@ class TimerEntry extends React.Component {
   }
 
   deleteEntry(e) {
-    const { timerEntry } = this.state;
+    const { timerEntry } = this.props;
     if (timerEntry.allEntries) {
       timerEntry.allEntries.forEach((entry) =>
         this.props.deleteTimerEntry(entry.props.timerEntry)
@@ -232,7 +137,7 @@ class TimerEntry extends React.Component {
 
   continueTimerEntry(e) {
     const timer = {
-      ...this.state.timerEntry,
+      ...this.props.timerEntry,
       startTime: DateTime.now(),
       date: DateTime.fromObject({
         hour: 0,
@@ -245,10 +150,20 @@ class TimerEntry extends React.Component {
     this.props.continueTimerEntry(timer);
   }
 
-  generateTimerEntry() {
-    const { timerEntry } = this.state;
-    const isCombined = timerEntry.allEntries !== undefined;
+  hasMadeChanges(prevProps) {
+    return (
+      JSON.stringify(prevProps.timerEntry) !==
+      JSON.stringify(this.props.timerEntry)
+    );
+  }
 
+  componentDidUpdate(prevProps) {
+    if (this.hasMadeChanges(prevProps)) {
+      this.setSaveTimer();
+    }
+  }
+
+  render() {
     const { isDropdownOpen, showAllEntries } = this.state;
     const {
       task,
@@ -258,7 +173,9 @@ class TimerEntry extends React.Component {
       duration,
       isProductive,
       isBillable,
-    } = this.state.timerEntry;
+    } = this.props.timerEntry;
+
+    const isCombined = this.props.allEntries !== undefined;
 
     return (
       <>
@@ -276,7 +193,7 @@ class TimerEntry extends React.Component {
           <div className="w-1/3 flex items-center gap-4">
             {isCombined && (
               <div className="w-[35px] h-[35px] flex justify-center items-center bg-blue-500 text-white rounded-[50%]">
-                {timerEntry.allEntries.length}
+                {this.props.allEntries.length}
               </div>
             )}
             <input
@@ -287,7 +204,7 @@ class TimerEntry extends React.Component {
               ref={this.taskInput}
               readOnly={isCombined}
               autoComplete="off"
-              onChange={this.taskChangeHandler}
+              onChange={this.props.onTaskChanged}
               className="transition-colors flex-grow p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
             />
           </div>
@@ -295,6 +212,7 @@ class TimerEntry extends React.Component {
           <button
             title="Select Tag"
             className="transition-opacity flex items-center gap-2 opacity-0 group-hover:opacity-100 uppercase"
+            onClick={this.props.onTagClicked}
           >
             <LocalOffer />
           </button>
@@ -302,7 +220,7 @@ class TimerEntry extends React.Component {
           <div className="transition-opacity h-full flex items-center opacity-0 group-hover:opacity-100">
             <button
               title="Is Productive?"
-              onClick={this.productiveChangeHandler}
+              onClick={this.props.onProductiveChanged}
               className={`h-full px-4 border-x border-dotted border-gray-300 ${
                 isProductive ? "text-blue-500" : "text-gray-400"
               }`}
@@ -311,7 +229,7 @@ class TimerEntry extends React.Component {
             </button>
             <button
               title="Is Billable?"
-              onClick={this.billableChangeHandler}
+              onClick={this.props.onBillableChanged}
               className={`h-full px-4 border-r border-dotted border-gray-300 ${
                 isBillable ? "text-blue-500" : "text-gray-400"
               }`}
@@ -326,7 +244,7 @@ class TimerEntry extends React.Component {
               name="startTime"
               readOnly={isCombined}
               value={startTime.toLocaleString(DateTime.TIME_SIMPLE)}
-              onChange={this.timeChangeHandler}
+              onChange={this.props.onTimeChanged}
               className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
             />
             <span>-</span>
@@ -335,7 +253,7 @@ class TimerEntry extends React.Component {
               name="endTime"
               readOnly={isCombined}
               value={endTime.toLocaleString(DateTime.TIME_SIMPLE)}
-              onChange={this.timeChangeHandler}
+              onChange={this.props.onTimeChanged}
               className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
             />
           </div>
@@ -345,7 +263,7 @@ class TimerEntry extends React.Component {
               title="Change Date"
               selected={date.toJSDate()}
               name="date"
-              onChange={this.dateChangeHandler}
+              onChange={this.props.onDateChanged}
               readOnly={isCombined}
               customInput={<CalendarToday />}
             />
@@ -394,13 +312,9 @@ class TimerEntry extends React.Component {
             )}
           </div>
         </div>
-        {showAllEntries && timerEntry.allEntries}
+        {showAllEntries && this.props.allEntries}
       </>
     );
-  }
-
-  render() {
-    return this.generateTimerEntry();
   }
 }
 

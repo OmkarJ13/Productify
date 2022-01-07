@@ -13,6 +13,7 @@ import {
   ArrowCircleUp,
   SwapVerticalCircleOutlined,
 } from "@mui/icons-material";
+import TimerForm from "./TimerForm";
 
 class TimerEntries extends React.Component {
   constructor(props) {
@@ -147,7 +148,7 @@ class TimerEntries extends React.Component {
   generateTimerEntries(timerEntries) {
     return timerEntries.map((timerEntry) => {
       return (
-        <TimerEntry
+        <TimerForm
           key={timerEntry.id}
           timerEntry={{
             id: timerEntry.id,
@@ -158,7 +159,11 @@ class TimerEntries extends React.Component {
             endTime: timerEntry.endTime,
             isProductive: timerEntry.isProductive,
             isBillable: timerEntry.isBillable,
-            allEntries: timerEntry.allEntries,
+          }}
+          UI={(otherProps) => {
+            return (
+              <TimerEntry allEntries={timerEntry.allEntries} {...otherProps} />
+            );
           }}
         />
       );
@@ -194,6 +199,9 @@ class TimerEntries extends React.Component {
 
       case "all":
         return timerEntries;
+
+      default:
+        return [];
     }
   }
 
@@ -286,7 +294,7 @@ class TimerEntries extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.timerEntries.length != this.props.length) {
+    if (prevProps.timerEntries.length !== this.props.length) {
       this.storeTimerEntries();
     }
   }
