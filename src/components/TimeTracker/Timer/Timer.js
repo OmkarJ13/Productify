@@ -8,8 +8,8 @@ import { Duration } from "luxon";
 import { DateTime } from "luxon";
 import { connect } from "react-redux";
 
-import { currentTimerActions } from "../../store/slices/currentTimerSlice";
-import { timerEntryActions } from "../../store/slices/timerEntrySlice";
+import { currentTimerActions } from "../../../store/slices/currentTimerSlice";
+import { timerEntryActions } from "../../../store/slices/timerEntrySlice";
 
 class Timer extends React.Component {
   constructor(props) {
@@ -40,6 +40,7 @@ class Timer extends React.Component {
     this.timeChangeHandler = this.timeChangeHandler.bind(this);
     this.productiveChangeHandler = this.productiveChangeHandler.bind(this);
     this.billableChangeHandler = this.billableChangeHandler.bind(this);
+    this.handleTagClicked = this.handleTagClicked.bind(this);
     this.resetState = this.resetState.bind(this);
     this.startTracking = this.startTracking.bind(this);
     this.stopTracking = this.stopTracking.bind(this);
@@ -53,9 +54,11 @@ class Timer extends React.Component {
 
   render() {
     return (
-      <div className="w-full flex items-center p-4 shadow-md border border-gray-300 text-sm">
-        {this.generateTimerForm()}
-      </div>
+      <>
+        <div className="w-full flex items-center p-4 shadow-md border border-gray-300 text-sm">
+          {this.generateTimerForm()}
+        </div>
+      </>
     );
   }
 
@@ -176,6 +179,12 @@ class Timer extends React.Component {
     });
   }
 
+  handleTagClicked(e) {
+    this.setState({
+      creatingTag: true,
+    });
+  }
+
   startTracking(e) {
     const timer = {
       ...this.state.timerEntry,
@@ -277,6 +286,7 @@ class Timer extends React.Component {
         taskChangeHandler={this.taskChangeHandler}
         productiveChangeHandler={this.productiveChangeHandler}
         billableChangeHandler={this.billableChangeHandler}
+        onTagClicked={this.handleTagClicked}
         startTracking={this.startTracking}
         stopTracking={this.stopTracking}
         discardTimer={this.discardTimer}

@@ -292,12 +292,16 @@ class TimerEntry extends React.Component {
             />
           </div>
 
-          <button className="transition-opacity flex items-center gap-2 opacity-0 group-hover:opacity-100 uppercase">
+          <button
+            title="Select Tag"
+            className="transition-opacity flex items-center gap-2 opacity-0 group-hover:opacity-100 uppercase"
+          >
             <LocalOffer />
           </button>
 
           <div className="transition-opacity h-full flex items-center opacity-0 group-hover:opacity-100">
             <button
+              title="Is Productive?"
               onClick={this.productiveChangeHandler}
               className={`h-full px-4 border-x border-dotted border-gray-300 ${
                 isProductive ? "text-blue-500" : "text-gray-400"
@@ -306,6 +310,7 @@ class TimerEntry extends React.Component {
               <TrendingUp />
             </button>
             <button
+              title="Is Billable?"
               onClick={this.billableChangeHandler}
               className={`h-full px-4 border-r border-dotted border-gray-300 ${
                 isBillable ? "text-blue-500" : "text-gray-400"
@@ -337,6 +342,7 @@ class TimerEntry extends React.Component {
 
           <div className="transition-opacity inline-block w-fit opacity-0 group-hover:opacity-100">
             <ReactDatePicker
+              title="Change Date"
               selected={date.toJSDate()}
               name="date"
               onChange={this.dateChangeHandler}
@@ -350,6 +356,7 @@ class TimerEntry extends React.Component {
           </div>
 
           <button
+            title="Continue Timer Entry"
             onClick={this.continueTimerEntry}
             className="transition-opacity opacity-0 group-hover:opacity-100"
           >

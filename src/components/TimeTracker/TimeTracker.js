@@ -1,6 +1,6 @@
 import React from "react";
 
-import Timer from "../Timer/Timer";
+import Timer from "./Timer/Timer";
 import TimerEntries from "./TimerEntries";
 
 class TimeTracker extends React.Component {

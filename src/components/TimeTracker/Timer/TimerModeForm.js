@@ -6,6 +6,7 @@ import {
   Schedule,
   TrendingUp,
 } from "@mui/icons-material";
+
 import React from "react";
 
 class TimerModeForm extends React.Component {
@@ -24,12 +25,17 @@ class TimerModeForm extends React.Component {
           onChange={this.props.taskChangeHandler}
         />
 
-        <button className="px-4">
+        <button
+          title="Select Tag"
+          className="px-4"
+          onClick={this.props.onTagClicked}
+        >
           <LocalOffer />
         </button>
 
         <div className="h-full flex items-center">
           <button
+            title="Is Productive?"
             onClick={this.props.productiveChangeHandler}
             className={`h-full px-4 border-x border-dotted border-gray-300 ${
               isProductive ? "text-blue-500" : "text-gray-400"
@@ -39,6 +45,7 @@ class TimerModeForm extends React.Component {
           </button>
 
           <button
+            title="Is Billable?"
             onClick={this.props.billableChangeHandler}
             className={`h-full px-4 border-x border-dotted border-gray-300 ${
               isBillable ? "text-blue-500" : "text-gray-400"
@@ -70,12 +77,13 @@ class TimerModeForm extends React.Component {
 
         <div className="flex flex-col justify-center items-center pl-4">
           {this.props.currentTimer !== null ? (
-            <button onClick={this.props.discardTimer}>
+            <button title="Discard Timer" onClick={this.props.discardTimer}>
               <Close fontSize="small" />
             </button>
           ) : (
             <>
               <button
+                title="Timer Mode"
                 onClick={this.props.switchToTimerMode}
                 className={`${
                   this.props.trackingMode === "timer"
@@ -86,6 +94,7 @@ class TimerModeForm extends React.Component {
                 <Schedule fontSize="small" />
               </button>
               <button
+                title="Manual Mode"
                 onClick={this.props.switchToManualMode}
                 className="text-gray-400"
               >

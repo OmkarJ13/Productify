@@ -1,7 +1,15 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { AlarmOn, Analytics, Settings, Timer } from "@mui/icons-material";
+import {
+  AccountCircle,
+  AlarmOn,
+  Analytics,
+  LocalOffer,
+  Settings,
+  StickyNote2,
+  Timer,
+} from "@mui/icons-material";
 
 class SideBar extends React.Component {
   render() {
@@ -22,13 +30,37 @@ class SideBar extends React.Component {
             Time Tracker
           </NavLink>
           <NavLink
+            to="/todo"
+            exact
+            className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
+            activeClassName="bg-blue-400"
+          >
+            <StickyNote2 />
+            Todo
+          </NavLink>
+          <span className="self-start px-4 mt-4 text-xs font-light uppercase">
+            Analyze
+          </span>
+          <NavLink
             to="/reports"
             exact
             className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
             activeClassName="bg-blue-400"
           >
             <Analytics />
-            Reports
+            Analytics
+          </NavLink>
+          <span className="self-start px-4 mt-4 text-xs font-light uppercase">
+            Manage
+          </span>
+          <NavLink
+            to="/tags"
+            exact
+            className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
+            activeClassName="bg-blue-400"
+          >
+            <LocalOffer />
+            Tags
           </NavLink>
           <NavLink
             to="/settings"
@@ -38,6 +70,15 @@ class SideBar extends React.Component {
           >
             <Settings />
             Settings
+          </NavLink>
+          <NavLink
+            to="/settings"
+            exact
+            className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
+            activeClassName="bg-blue-400"
+          >
+            <AccountCircle />
+            Account
           </NavLink>
         </div>
       </div>

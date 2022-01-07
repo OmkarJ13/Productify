@@ -224,15 +224,15 @@ class TimerEntries extends React.Component {
       <div className="w-full min-h-full flex flex-col gap-8 pt-4">
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-4">
-            <span className="flex gap-2 font-light">
+            <span className="flex items-baseline gap-2 font-light">
               Today
-              <strong className="font-bold">
+              <strong className="text-lg">
                 {dailyTotal.toFormat("hh:mm:ss")}
               </strong>
             </span>
-            <span className="flex gap-2 font-light">
+            <span className="flex items-baseline gap-2 font-light">
               This Week
-              <strong className="font-bold">
+              <strong className="text-lg">
                 {weekTotal.toFormat("hh:mm:ss")}
               </strong>
             </span>

@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 
 import SideBar from "./SideBar";
-import TimeTracker from "./Tracker/TimeTracker";
+import TimeTracker from "./TimeTracker/TimeTracker";
 import Reports from "./Reports/Reports";
 import Settings from "./Settings";
 

@@ -35,12 +35,13 @@ class ManualModeForm extends React.Component {
           onChange={this.props.taskChangeHandler}
         />
 
-        <button className="px-4">
+        <button title="Select Tag" className="px-4">
           <LocalOffer />
         </button>
 
         <div className="h-full flex items-center">
           <button
+            title="Is Productive?"
             onClick={this.props.productiveChangeHandler}
             className={`h-full px-4 border-x border-dotted border-gray-300 ${
               isProductive ? "text-blue-500" : "text-gray-400"
@@ -50,6 +51,7 @@ class ManualModeForm extends React.Component {
           </button>
 
           <button
+            title="Is Billable?"
             onClick={this.props.billableChangeHandler}
             className={`h-full px-4 border-x border-dotted border-gray-300 ${
               isBillable ? "text-blue-500" : "text-gray-400"
@@ -79,6 +81,7 @@ class ManualModeForm extends React.Component {
 
         <div className="inline-block w-fit pr-4">
           <ReactDatePicker
+            title="Select Date"
             selected={date.toJSDate()}
             onChange={this.props.dateChangeHandler}
             className=""
@@ -99,12 +102,14 @@ class ManualModeForm extends React.Component {
 
         <div className="flex flex-col pl-4">
           <button
+            title="Timer Mode"
             onClick={this.props.switchToTimerMode}
             className="text-gray-400"
           >
             <Schedule fontSize="small" />
           </button>
           <button
+            title="Manual Mode"
             onClick={this.props.switchToManualMode}
             className={`${
               this.props.trackingMode === "manual"
