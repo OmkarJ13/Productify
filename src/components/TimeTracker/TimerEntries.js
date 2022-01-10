@@ -69,6 +69,7 @@ class TimerEntries extends React.Component {
       duration: totalDuration,
       startTime: minStartTime,
       endTime: maxEndTime,
+      tag: timerEntries[0].tag,
       isProductive: timerEntries[0].isProductive,
       isBillable: timerEntries[0].isBillable,
       allEntries: this.generateTimerEntries(timerEntries),
@@ -153,6 +154,7 @@ class TimerEntries extends React.Component {
           timerEntry={{
             id: timerEntry.id,
             task: timerEntry.task,
+            tag: timerEntry.tag,
             duration: timerEntry.duration,
             date: timerEntry.date,
             startTime: timerEntry.startTime,
@@ -293,10 +295,8 @@ class TimerEntries extends React.Component {
     );
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.timerEntries.length !== this.props.length) {
-      this.storeTimerEntries();
-    }
+  componentDidUpdate() {
+    this.storeTimerEntries();
   }
 
   storeTimerEntries() {

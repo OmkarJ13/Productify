@@ -1,5 +1,4 @@
-import { DateTime } from "luxon";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 
 export const restoreTimerEntry = (timerEntry) => {
   timerEntry.date = DateTime.fromISO(timerEntry.date);

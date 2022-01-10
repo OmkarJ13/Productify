@@ -1,8 +1,8 @@
-import { LocalOffer, Done } from "@mui/icons-material";
 import React from "react";
+import { LocalOffer, Done } from "@mui/icons-material";
 
-import ModalWindow from "./UI/ModalWindow";
-import { colors } from "../helpers/colors";
+import ModalWindow from "../UI/ModalWindow";
+import { colors } from "../../helpers/colors";
 
 class TagCreator extends React.Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class TagCreator extends React.Component {
             <LocalOffer /> Create Tag
           </>
         )}
-        onCancel={this.props.onCancel}
+        onClose={this.props.onClose}
         onConfirm={this.tagCreatedHandler}
       >
         <div className="flex flex-col gap-2">

@@ -1,18 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { parseTimerEntriesJSON } from "../../helpers/parseTimerEntriesJSON";
+import { restoreTimerEntry } from "../../helpers/restoreTimerEntry";
 
-const defaultState = {
-  timerEntries: [],
-};
-
-const state =
-  "timerEntries" in localStorage
-    ? {
-        timerEntries: parseTimerEntriesJSON(
-          localStorage.getItem("timerEntries")
-        ),
-      }
-    : defaultState;
+let state = {};
+const timerEntries = JSON.parse(localStorage.getItem("timerEntries"));
+if (timerEntries) {
+  timerEntries.forEach((timerEntry) => restoreTimerEntry(timerEntry));
+  state = { timerEntries };
+} else {
+  localStorage.setItem("timerEntries", JSON.stringify([]));
+  state = { timerEntries: [] };
+}
 
 const timerEntrySlice = createSlice({
   name: "timerEntry",

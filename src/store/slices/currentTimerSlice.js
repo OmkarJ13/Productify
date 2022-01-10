@@ -1,21 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { restoreTimerEntry } from "../../helpers/restoreTimerEntry";
 
-const parseCurrentTimer = (currentTimerJSON) => {
-  const currentTimer = JSON.parse(currentTimerJSON);
+let state = {};
+const currentTimer = JSON.parse(localStorage.getItem("currentTimer"));
+if (currentTimer) {
   restoreTimerEntry(currentTimer);
-
-  return currentTimer;
-};
-
-const defaultState = {
-  currentTimer: null,
-};
-
-const state =
-  "currentTimer" in localStorage
-    ? { currentTimer: parseCurrentTimer(localStorage.getItem("currentTimer")) }
-    : defaultState;
+  state = { currentTimer };
+} else {
+  localStorage.setItem("currentTimer", JSON.stringify(null));
+  state = { currentTimer: null };
+}
 
 const currentTimerSlice = createSlice({
   name: "currentTimer",

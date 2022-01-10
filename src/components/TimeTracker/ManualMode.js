@@ -6,7 +6,6 @@ import {
   Schedule,
   TrendingUp,
 } from "@mui/icons-material";
-
 import React from "react";
 
 import ReactDatePicker from "react-datepicker";
@@ -15,6 +14,8 @@ import { connect } from "react-redux";
 import { v4 as uuid } from "uuid";
 
 import { timerEntryActions } from "../../store/slices/timerEntrySlice";
+import TagSelector from "../../components/Tag/TagSelector";
+import TimePicker from "../UI/TimePicker";
 
 class ManualMode extends React.Component {
   constructor(props) {
@@ -37,6 +38,7 @@ class ManualMode extends React.Component {
       task,
       isProductive,
       isBillable,
+      tag,
       startTime,
       endTime,
       date,
@@ -44,104 +46,120 @@ class ManualMode extends React.Component {
     } = this.props.timerEntry;
 
     return (
-      <>
-        <input
-          name="task"
-          type="text"
-          className=""
-          value={task}
-          placeholder="What have you done?"
-          autoComplete="off"
-          className="flex-grow p-2 border border-gray-300 focus:outline-none"
-          onChange={this.props.onTaskChanged}
-        />
-
-        <button title="Select Tag" className="px-4">
-          <LocalOffer />
-        </button>
-
-        <div className="h-full flex items-center">
-          <button
-            title="Is Productive?"
-            onClick={this.props.onProductiveChanged}
-            className={`h-full px-4 border-x border-dotted border-gray-300 ${
-              isProductive ? "text-blue-500" : "text-gray-400"
-            }`}
-          >
-            <TrendingUp />
-          </button>
+      <div className="w-full flex items-center gap-4 p-4 shadow-md border border-gray-200 text-sm">
+        <div className="w-[75%] h-full flex items-center gap-4 border-r border-dotted border-gray-300">
+          <input
+            name="task"
+            type="text"
+            value={task}
+            placeholder="What have you done?"
+            autoComplete="off"
+            className="flex-grow p-2 border border-gray-300 focus:outline-none"
+            onChange={this.props.onTaskChanged}
+          />
 
           <button
-            title="Is Billable?"
-            onClick={this.props.onBillableChanged}
-            className={`h-full px-4 border-x border-dotted border-gray-300 ${
-              isBillable ? "text-blue-500" : "text-gray-400"
-            }`}
+            title="Select Tag"
+            className="relative w-[15%] h-full"
+            onClick={this.props.onTagClicked}
           >
-            <AttachMoney />
+            {this.props.selectingTag && (
+              <TagSelector
+                onClose={this.props.onTagClosed}
+                onTagSelected={this.props.onTagSelected}
+              />
+            )}
+
+            {tag === undefined ? (
+              <div className="flex justify-center items-center gap-2">
+                <LocalOffer fontSize="small" />
+                <span className="text-xs">Add Tag</span>
+              </div>
+            ) : (
+              <div className="flex justify-center items-center gap-2">
+                <LocalOffer htmlColor={tag.color} fontSize="small" />
+                <span className="text-xs">{tag.name}</span>
+              </div>
+            )}
           </button>
+
+          <div className="h-full flex items-center">
+            <button
+              title="Is Productive?"
+              onClick={this.props.onProductiveChanged}
+              className={`h-full px-2 border-x border-dotted border-gray-300 ${
+                isProductive ? "text-blue-500" : "text-gray-400"
+              }`}
+            >
+              <TrendingUp />
+            </button>
+
+            <button
+              title="Is Billable?"
+              onClick={this.props.onBillableChanged}
+              className={`h-full px-2 border-x border-dotted border-gray-300 ${
+                isBillable ? "text-blue-500" : "text-gray-400"
+              }`}
+            >
+              <AttachMoney />
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <TimePicker
+              value={startTime.toLocaleString(DateTime.TIME_SIMPLE)}
+              onChange={this.props.onStartTimeChanged}
+            />
+            <span>-</span>
+            <TimePicker
+              value={endTime.toLocaleString(DateTime.TIME_SIMPLE)}
+              onChange={this.props.onEndTimeChanged}
+            />
+          </div>
+
+          <div className="pr-2">
+            <ReactDatePicker
+              title="Select Date"
+              selected={date.toJSDate()}
+              onChange={this.props.onDateChanged}
+              customInput={<CalendarToday />}
+            />
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 px-4">
-          <input
-            name="startTime"
-            type="time"
-            value={startTime.toLocaleString(DateTime.TIME_SIMPLE)}
-            onChange={this.props.onTimeChanged}
-            className="p-1 border border-gray-300"
-          />
-          <span> - </span>
-          <input
-            name="endTime"
-            type="time"
-            value={endTime.toLocaleString(DateTime.TIME_SIMPLE)}
-            onChange={this.props.onTimeChanged}
-            className="p-1 border border-gray-300"
-          />
-        </div>
-
-        <div className="inline-block w-fit pr-4">
-          <ReactDatePicker
-            title="Select Date"
-            selected={date.toJSDate()}
-            onChange={this.props.onDateChanged}
-            className=""
-            customInput={<CalendarToday />}
-          />
-        </div>
-
-        <div className="h-full flex items-center px-8 text-center text-base border-l border-dotted border-gray-300">
+        <div className="w-[12.5%] h-full flex justify-center items-center text-base">
           <span>{duration.toFormat("hh:mm:ss")}</span>
         </div>
 
-        <button
-          onClick={this.saveTimerEntry}
-          className="w-1/12 px-4 py-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase"
-        >
-          Add
-        </button>
-
-        <div className="flex flex-col pl-4">
+        <div className="w-[12.5%] h-full flex items-center gap-4">
           <button
-            title="Timer Mode"
-            onClick={this.props.onSwitchTimerMode}
-            className="text-gray-400"
+            onClick={this.saveTimerEntry}
+            className="w-[80%] p-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase"
           >
-            <Schedule fontSize="small" />
+            Add
           </button>
-          <button
-            title="Manual Mode"
-            onClick={this.props.onSwitchManualMode}
-            className={`${
-              this.props.trackingMode === "manual"
-                ? "text-gray-600"
-                : "text-gray-400"
-            }`}
-          >
-            <Menu fontSize="small" />
-          </button>
+          <div className="w-[20%] flex flex-col">
+            <button
+              title="Timer Mode"
+              onClick={this.props.onSwitchTimerMode}
+              className="text-gray-400"
+            >
+              <Schedule fontSize="small" />
+            </button>
+            <button
+              title="Manual Mode"
+              onClick={this.props.onSwitchManualMode}
+              className={`${
+                this.props.trackingMode === "manual"
+                  ? "text-gray-600"
+                  : "text-gray-400"
+              }`}
+            >
+              <Menu fontSize="small" />
+            </button>
+          </div>
         </div>
-      </>
+      </div>
     );
   }
 }

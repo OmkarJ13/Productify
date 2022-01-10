@@ -57,11 +57,7 @@ class Timer extends React.Component {
   }
 
   render() {
-    return (
-      <div className="w-full flex items-center p-4 shadow-md border border-gray-300 text-sm">
-        {this.generateTimerForm()}
-      </div>
-    );
+    return this.generateTimerForm();
   }
 }
 

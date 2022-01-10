@@ -5,6 +5,12 @@ module.exports = {
       fontFamily: {
         inter: ["Inter", "sans-serif"],
       },
+      keyframes: {
+        fade: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "100" },
+        },
+      },
     },
   },
   plugins: [],

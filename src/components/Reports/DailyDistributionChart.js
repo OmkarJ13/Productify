@@ -23,7 +23,7 @@ class DailyDistributionChart extends React.Component {
 
     const dailyData = this.getDailyData(timerEntryData, date);
 
-    const dailyTasks = dailyData.map((timerEntry) => timerEntry.task);
+    const dailyTasks = dailyData.map((timerEntry) => timerEntry.tag);
 
     const dailyDurations = dailyData.map((timerEntry) => timerEntry.duration);
 
@@ -62,13 +62,19 @@ class DailyDistributionChart extends React.Component {
         ) : (
           <Doughnut
             data={{
-              labels: dailyTasks,
+              labels: dailyTasks.map((dailyTask) =>
+                dailyTask ? dailyTask.name : "Untagged"
+              ),
               datasets: [
                 {
                   label: "Daily Task Distribution",
                   data: dailyHours,
-                  backgroundColor: colors,
-                  borderColor: colors,
+                  backgroundColor: dailyTasks.map((dailyTask) =>
+                    dailyTask ? dailyTask.color : "#808080"
+                  ),
+                  borderColor: dailyTasks.map((dailyTask) =>
+                    dailyTask ? dailyTask.color : "#808080"
+                  ),
                 },
               ],
             }}

@@ -20,6 +20,8 @@ import { connect } from "react-redux";
 
 import { timerEntryActions } from "../../store/slices/timerEntrySlice";
 import { currentTimerActions } from "../../store/slices/currentTimerSlice";
+import TagSelector from "../Tag/TagSelector";
+import TimePicker from "../UI/TimePicker";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -66,17 +68,16 @@ class TimerEntry extends React.Component {
 
     this.saveTimerID = setTimeout(() => {
       this.saveEditedChanges();
-    }, 1000);
+    }, 1500);
   }
 
   saveEditedChanges() {
     this.props.updateTimerEntry(this.props.timerEntry);
-    this.taskInput.current?.blur();
 
     toast(() => {
       return (
         <div className="flex items-center gap-2 text-sm">
-          <Save /> Updated Timer Entry
+          <Save /> Updated Timer Entry!
         </div>
       );
     });
@@ -170,6 +171,7 @@ class TimerEntry extends React.Component {
       date,
       startTime,
       endTime,
+      tag,
       duration,
       isProductive,
       isBillable,
@@ -187,129 +189,144 @@ class TimerEntry extends React.Component {
         />
 
         <div
-          className="group w-full flex items-center gap-5 p-4 border-x border-b border-gray-300 text-sm"
+          className="group w-full flex items-center gap-4 p-4 border-x border-b border-gray-300 text-sm"
           onClick={isCombined ? this.toggleAllEntries : null}
         >
-          <div className="w-1/3 flex items-center gap-4">
-            {isCombined && (
-              <div className="w-[35px] h-[35px] flex justify-center items-center bg-blue-500 text-white rounded-[50%]">
-                {this.props.allEntries.length}
-              </div>
-            )}
-            <input
-              type="text"
-              name="task"
-              value={task}
-              placeholder="Add Task Name"
-              ref={this.taskInput}
-              readOnly={isCombined}
-              autoComplete="off"
-              onChange={this.props.onTaskChanged}
-              className="transition-colors flex-grow p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
-            />
-          </div>
+          <div className="w-[75%] h-full flex items-center gap-4 border-r border-dotted border-gray-300">
+            <div className="flex-grow-[10] flex items-center gap-4">
+              {isCombined && (
+                <div className="w-[35px] h-[35px] flex justify-center items-center bg-blue-500 text-white rounded-[50%]">
+                  {this.props.allEntries.length}
+                </div>
+              )}
+              <input
+                type="text"
+                name="task"
+                value={task}
+                placeholder="Add Task Name"
+                ref={this.taskInput}
+                readOnly={isCombined}
+                autoComplete="off"
+                onChange={this.props.onTaskChanged}
+                className="transition-colors flex-grow p-1 border border-transparent group-hover:border-gray-300 focus:outline-none text-ellipsis"
+              />
+            </div>
 
-          <button
-            title="Select Tag"
-            className="transition-opacity flex items-center gap-2 opacity-0 group-hover:opacity-100 uppercase"
-            onClick={this.props.onTagClicked}
-          >
-            <LocalOffer />
-          </button>
-
-          <div className="transition-opacity h-full flex items-center opacity-0 group-hover:opacity-100">
             <button
-              title="Is Productive?"
-              onClick={this.props.onProductiveChanged}
-              className={`h-full px-4 border-x border-dotted border-gray-300 ${
-                isProductive ? "text-blue-500" : "text-gray-400"
-              }`}
+              title="Select Tag"
+              className="w-[15%] transition-opacity relative h-full opacity-0 group-hover:opacity-100 focus:opacity-100 text-left"
+              onClick={this.props.onTagClicked}
             >
-              <TrendingUp />
-            </button>
-            <button
-              title="Is Billable?"
-              onClick={this.props.onBillableChanged}
-              className={`h-full px-4 border-r border-dotted border-gray-300 ${
-                isBillable ? "text-blue-500" : "text-gray-400"
-              }`}
-            >
-              <AttachMoney />
-            </button>
-          </div>
+              {this.props.selectingTag && (
+                <TagSelector
+                  onClose={this.props.onTagClosed}
+                  onTagSelected={this.props.onTagSelected}
+                />
+              )}
 
-          <div className="flex items-center gap-2">
-            <input
-              type="time"
-              name="startTime"
-              readOnly={isCombined}
-              value={startTime.toLocaleString(DateTime.TIME_SIMPLE)}
-              onChange={this.props.onTimeChanged}
-              className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
-            />
-            <span>-</span>
-            <input
-              type="time"
-              name="endTime"
-              readOnly={isCombined}
-              value={endTime.toLocaleString(DateTime.TIME_SIMPLE)}
-              onChange={this.props.onTimeChanged}
-              className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
-            />
-          </div>
+              {tag === undefined ? (
+                <div className="flex justify-center items-center gap-2">
+                  <LocalOffer />
+                  <span className="text-xs">Add Tag</span>
+                </div>
+              ) : (
+                <div className="flex justify-center items-center gap-1">
+                  <LocalOffer htmlColor={tag.color} />
+                  <span className="text-xs">{tag.name}</span>
+                </div>
+              )}
+            </button>
 
-          <div className="transition-opacity inline-block w-fit opacity-0 group-hover:opacity-100">
-            <ReactDatePicker
-              title="Change Date"
-              selected={date.toJSDate()}
-              name="date"
-              onChange={this.props.onDateChanged}
-              readOnly={isCombined}
-              customInput={<CalendarToday />}
-            />
+            <div className="transition-opacity h-full flex items-center opacity-0 group-hover:opacity-100">
+              <button
+                title="Is Productive?"
+                onClick={this.props.onProductiveChanged}
+                className={`h-full px-2 border-x border-dotted border-gray-300 ${
+                  isProductive ? "text-blue-500" : "text-gray-400"
+                }`}
+              >
+                <TrendingUp />
+              </button>
+              <button
+                title="Is Billable?"
+                onClick={this.props.onBillableChanged}
+                className={`h-full px-2 border-r border-dotted border-gray-300 ${
+                  isBillable ? "text-blue-500" : "text-gray-400"
+                }`}
+              >
+                <AttachMoney />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-1">
+              <TimePicker
+                value={startTime.toLocaleString(DateTime.TIME_SIMPLE)}
+                onChange={this.props.onStartTimeChanged}
+                className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
+              />
+              <span>-</span>
+              <TimePicker
+                value={endTime.toLocaleString(DateTime.TIME_SIMPLE)}
+                onChange={this.props.onEndTimeChanged}
+                className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
+              />
+            </div>
+
+            <div className="pr-2 transition-opacity opacity-0 group-hover:opacity-100">
+              <ReactDatePicker
+                title="Change Date"
+                selected={date.toJSDate()}
+                name="date"
+                onChange={this.props.onDateChanged}
+                readOnly={isCombined}
+                customInput={<CalendarToday />}
+              />
+            </div>
           </div>
 
           <div className="flex-grow h-full flex justify-center items-center text-base">
             <span>{duration.toFormat("hh:mm:ss")}</span>
           </div>
 
-          <button
-            title="Continue Timer Entry"
-            onClick={this.continueTimerEntry}
-            className="transition-opacity opacity-0 group-hover:opacity-100"
-          >
-            <PlayCircle />
-          </button>
-
-          <div className="relative" ref={this.dropdownOptionsDiv}>
-            <button onClick={this.toggleDropdown} ref={this.dropdownBtn}>
-              <MoreVert />
+          <div className="h-full flex items-center gap-2">
+            <button
+              title="Continue Timer Entry"
+              onClick={this.continueTimerEntry}
+              className="transition-opacity opacity-0 group-hover:opacity-100"
+            >
+              <PlayCircle />
             </button>
 
-            {isDropdownOpen && (
-              <div className="absolute top-8 right-0 z-10 shadow-xl">
-                <ul>
-                  <li>
-                    <button
-                      onClick={this.duplicateEntry}
-                      className="w-full flex items-center gap-2 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
-                    >
-                      <ContentCopy fontSize="small" />
-                      Duplicate
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={this.deleteEntry}
-                      className="w-full flex items-center gap-2 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
-                    >
-                      <Delete fontSize="small" />
-                      Delete
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
+            <div className="relative" ref={this.dropdownOptionsDiv}>
+              <button onClick={this.toggleDropdown} ref={this.dropdownBtn}>
+                <MoreVert />
+              </button>
+
+              {isDropdownOpen && (
+                <div className="absolute top-8 right-0 z-10 shadow-xl">
+                  <ul>
+                    <li>
+                      <button
+                        onClick={this.duplicateEntry}
+                        className="w-full flex items-center gap-2 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
+                      >
+                        <ContentCopy fontSize="small" />
+                        Duplicate
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={this.deleteEntry}
+                        className="w-full flex items-center gap-2 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
+                      >
+                        <Delete fontSize="small" />
+                        Delete
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         {showAllEntries && this.props.allEntries}
