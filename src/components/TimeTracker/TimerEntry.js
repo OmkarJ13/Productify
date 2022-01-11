@@ -1,3 +1,6 @@
+import React from "react";
+import { connect } from "react-redux";
+
 import {
   AttachMoney,
   CalendarToday,
@@ -9,56 +12,41 @@ import {
   Save,
   TrendingUp,
 } from "@mui/icons-material";
-
-import React from "react";
-
 import ReactDatePicker from "react-datepicker";
 import { ToastContainer, toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { DateTime } from "luxon";
-import { connect } from "react-redux";
 
 import { timerEntryActions } from "../../store/slices/timerEntrySlice";
 import { currentTimerActions } from "../../store/slices/currentTimerSlice";
 import TagSelector from "../Tag/TagSelector";
 import TimePicker from "../UI/TimePicker";
+import FloatingWindow from "../UI/FloatingWindow";
 
 class TimerEntry extends React.Component {
   constructor(props) {
     super(props);
 
     this.saveTimerID = undefined;
-    this.taskInput = React.createRef();
-    this.dropdownBtn = React.createRef();
-    this.dropdownOptionsDiv = React.createRef();
 
     this.state = {
       isDropdownOpen: false,
       showAllEntries: false,
     };
 
-    this.documentClickHandler = this.documentClickHandler.bind(this);
     this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.closeDropdown = this.closeDropdown.bind(this);
     this.toggleAllEntries = this.toggleAllEntries.bind(this);
     this.deleteEntry = this.deleteEntry.bind(this);
     this.duplicateEntry = this.duplicateEntry.bind(this);
     this.continueTimerEntry = this.continueTimerEntry.bind(this);
   }
 
-  componentDidMount() {
-    document.addEventListener("mousedown", this.documentClickHandler);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("mousedown", this.documentClickHandler);
-  }
-
-  documentClickHandler(e) {
-    if (!this.dropdownOptionsDiv.current.contains(e.target)) {
-      if (this.state.isDropdownOpen) {
-        this.setState({ isDropdownOpen: false });
-      }
-    }
+  closeDropdown(e) {
+    if (this.state.isDropdownOpen)
+      this.setState({
+        isDropdownOpen: false,
+      });
   }
 
   setSaveTimer() {
@@ -77,7 +65,7 @@ class TimerEntry extends React.Component {
     toast(() => {
       return (
         <div className="flex items-center gap-2 text-sm">
-          <Save /> Updated Timer Entry!
+          <Save /> Updated!
         </div>
       );
     });
@@ -92,21 +80,11 @@ class TimerEntry extends React.Component {
   duplicateEntry(e) {
     const { timerEntry } = this.props;
 
-    if (timerEntry.allEntries) {
-      timerEntry.allEntries.forEach((entry) => {
-        const duplicatedTimerEntry = {
-          ...entry.props.timerEntry,
-          id: uuid(),
-        };
-        this.props.duplicateTimerEntry(duplicatedTimerEntry);
-      });
-    } else {
-      const duplicatedTimerEntry = {
-        ...timerEntry,
-        id: uuid(),
-      };
-      this.props.duplicateTimerEntry(duplicatedTimerEntry);
-    }
+    const duplicatedTimerEntry = {
+      ...timerEntry,
+      id: uuid(),
+    };
+    this.props.duplicateTimerEntry(duplicatedTimerEntry);
 
     this.setState({
       isDropdownOpen: false,
@@ -115,13 +93,8 @@ class TimerEntry extends React.Component {
 
   deleteEntry(e) {
     const { timerEntry } = this.props;
-    if (timerEntry.allEntries) {
-      timerEntry.allEntries.forEach((entry) =>
-        this.props.deleteTimerEntry(entry.props.timerEntry)
-      );
-    } else {
-      this.props.deleteTimerEntry(timerEntry);
-    }
+
+    this.props.deleteTimerEntry(timerEntry);
 
     this.setState({
       isDropdownOpen: false,
@@ -129,11 +102,9 @@ class TimerEntry extends React.Component {
   }
 
   toggleAllEntries(e) {
-    if (!this.dropdownBtn.current.contains(e.target)) {
-      this.setState({
-        showAllEntries: !this.state.showAllEntries,
-      });
-    }
+    this.setState({
+      showAllEntries: !this.state.showAllEntries,
+    });
   }
 
   continueTimerEntry(e) {
@@ -178,6 +149,7 @@ class TimerEntry extends React.Component {
     } = this.props.timerEntry;
 
     const isCombined = this.props.allEntries !== undefined;
+    const { isDuplicate } = this.props;
 
     return (
       <>
@@ -199,12 +171,12 @@ class TimerEntry extends React.Component {
                   {this.props.allEntries.length}
                 </div>
               )}
+              {isDuplicate && <div className="w-[35px] h-[35px]"></div>}
               <input
                 type="text"
                 name="task"
                 value={task}
                 placeholder="Add Task Name"
-                ref={this.taskInput}
                 readOnly={isCombined}
                 autoComplete="off"
                 onChange={this.props.onTaskChanged}
@@ -214,8 +186,9 @@ class TimerEntry extends React.Component {
 
             <button
               title="Select Tag"
-              className="w-[15%] transition-opacity relative h-full opacity-0 group-hover:opacity-100 focus:opacity-100 text-left"
+              className="w-[15%] transition-opacity relative h-full opacity-0 group-hover:opacity-100"
               onClick={this.props.onTagClicked}
+              disabled={isCombined}
             >
               {this.props.selectingTag && (
                 <TagSelector
@@ -244,6 +217,7 @@ class TimerEntry extends React.Component {
                 className={`h-full px-2 border-x border-dotted border-gray-300 ${
                   isProductive ? "text-blue-500" : "text-gray-400"
                 }`}
+                disabled={isCombined}
               >
                 <TrendingUp />
               </button>
@@ -253,6 +227,7 @@ class TimerEntry extends React.Component {
                 className={`h-full px-2 border-r border-dotted border-gray-300 ${
                   isBillable ? "text-blue-500" : "text-gray-400"
                 }`}
+                disabled={isCombined}
               >
                 <AttachMoney />
               </button>
@@ -272,7 +247,10 @@ class TimerEntry extends React.Component {
               />
             </div>
 
-            <div className="pr-2 transition-opacity opacity-0 group-hover:opacity-100">
+            <button
+              className="pr-2 transition-opacity opacity-0 group-hover:opacity-100"
+              disabled={isCombined}
+            >
               <ReactDatePicker
                 title="Change Date"
                 selected={date.toJSDate()}
@@ -280,8 +258,9 @@ class TimerEntry extends React.Component {
                 onChange={this.props.onDateChanged}
                 readOnly={isCombined}
                 customInput={<CalendarToday />}
+                popperPlacement="bottom"
               />
-            </div>
+            </button>
           </div>
 
           <div className="flex-grow h-full flex justify-center items-center text-base">
@@ -293,17 +272,18 @@ class TimerEntry extends React.Component {
               title="Continue Timer Entry"
               onClick={this.continueTimerEntry}
               className="transition-opacity opacity-0 group-hover:opacity-100"
+              disabled={isCombined}
             >
               <PlayCircle />
             </button>
 
-            <div className="relative" ref={this.dropdownOptionsDiv}>
-              <button onClick={this.toggleDropdown} ref={this.dropdownBtn}>
+            <div className="relative">
+              <button onClick={this.toggleDropdown} disabled={isCombined}>
                 <MoreVert />
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute top-8 right-0 z-10 shadow-xl">
+                <FloatingWindow onClose={this.toggleDropdown}>
                   <ul>
                     <li>
                       <button
@@ -324,7 +304,7 @@ class TimerEntry extends React.Component {
                       </button>
                     </li>
                   </ul>
-                </div>
+                </FloatingWindow>
               )}
             </div>
           </div>

@@ -1,9 +1,11 @@
 import React from "react";
-import { AddCircle, LocalOffer, Search } from "@mui/icons-material";
 import { connect } from "react-redux";
 
-import TagCreator from "./TagCreator";
+import { AddCircle, LocalOffer, Search } from "@mui/icons-material";
+
 import { tagActions } from "../../store/slices/tagSlice";
+import TagCreator from "./TagCreator";
+import FloatingWindow from "../UI/FloatingWindow";
 
 class TagSelector extends React.Component {
   constructor(props) {
@@ -14,27 +16,11 @@ class TagSelector extends React.Component {
       creatingTag: false,
     };
 
-    this.tagSelector = React.createRef();
     this.handleSearchQuery = this.handleSearchQuery.bind(this);
     this.openTagCreator = this.openTagCreator.bind(this);
     this.closeTagCreator = this.closeTagCreator.bind(this);
     this.handleTagCreated = this.handleTagCreated.bind(this);
     this.handleTagSelected = this.handleTagSelected.bind(this);
-    this.documentClickHandler = this.documentClickHandler.bind(this);
-  }
-
-  componentDidMount() {
-    document.addEventListener("mousedown", this.documentClickHandler);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("mousedown", this.documentClickHandler);
-  }
-
-  documentClickHandler(e) {
-    if (!this.tagSelector.current.contains(e.target)) {
-      this.props.onClose();
-    }
   }
 
   handleSearchQuery(e) {
@@ -92,7 +78,7 @@ class TagSelector extends React.Component {
     const results = this.filterTags(tags);
 
     return (
-      <div ref={this.tagSelector}>
+      <FloatingWindow onClose={this.props.onClose}>
         {this.state.creatingTag && (
           <TagCreator
             onClose={this.closeTagCreator}
@@ -100,7 +86,7 @@ class TagSelector extends React.Component {
           />
         )}
 
-        <div className="absolute top-full right-0 z-10 bg-white shadow-lg p-4 flex flex-col gap-4 animate-[fade_ease-in-out_250ms] border border-gray-200">
+        <div className="flex flex-col gap-4 p-4">
           <div className="px-1 py-2 flex gap-1 items-center border border-gray-300">
             <Search />
             <input
@@ -136,7 +122,7 @@ class TagSelector extends React.Component {
             <AddCircle /> Create A New Tag
           </button>
         </div>
-      </div>
+      </FloatingWindow>
     );
   }
 }

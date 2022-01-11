@@ -1,3 +1,6 @@
+import React from "react";
+import { connect } from "react-redux";
+
 import {
   AttachMoney,
   Close,
@@ -6,11 +9,7 @@ import {
   Schedule,
   TrendingUp,
 } from "@mui/icons-material";
-
-import React from "react";
-
 import { DateTime, Duration } from "luxon";
-import { connect } from "react-redux";
 import { v4 as uuid } from "uuid";
 
 import { currentTimerActions } from "../../store/slices/currentTimerSlice";
@@ -233,7 +232,10 @@ class TimerMode extends React.Component {
               <>
                 <button
                   title="Timer Mode"
-                  onClick={this.props.onSwitchTimerMode}
+                  onClick={() => {
+                    this.props.resetState();
+                    this.props.onSwitchTimerMode();
+                  }}
                   className={`${
                     this.props.trackingMode === "timer"
                       ? "text-gray-600"
@@ -244,7 +246,10 @@ class TimerMode extends React.Component {
                 </button>
                 <button
                   title="Manual Mode"
-                  onClick={this.props.onSwitchManualMode}
+                  onClick={() => {
+                    this.props.resetState();
+                    this.props.onSwitchManualMode();
+                  }}
                   className="text-gray-400"
                 >
                   <Menu fontSize="small" />

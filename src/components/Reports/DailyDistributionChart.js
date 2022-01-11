@@ -1,9 +1,10 @@
+import React from "react";
+
 import { ArrowBack, ArrowForward, Today } from "@mui/icons-material";
 import { Duration } from "luxon";
-import React from "react";
 import { Doughnut } from "react-chartjs-2";
 
-import { colors } from "../../helpers/colors";
+import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
 
 class DailyDistributionChart extends React.Component {
   getDailyData(timerEntries, date) {
@@ -22,18 +23,25 @@ class DailyDistributionChart extends React.Component {
     const { timerEntryData, date } = this.props;
 
     const dailyData = this.getDailyData(timerEntryData, date);
-
-    const dailyTasks = dailyData.map((timerEntry) => timerEntry.tag);
-
-    const dailyDurations = dailyData.map((timerEntry) => timerEntry.duration);
-
-    const totalDailyDuration = dailyDurations.reduce((acc, cur) => {
-      return acc.plus(cur);
+    const totalDailyDuration = dailyData.reduce((acc, cur) => {
+      return acc.plus(cur.duration);
     }, Duration.fromMillis(0));
 
-    const dailyHours = dailyDurations.flatMap((dailyDuration) =>
-      dailyDuration.as("hours")
+    const dailyTasks = groupTimerEntriesBy(dailyData, ["tag"]);
+
+    const labels = dailyTasks.map((groupedByTag) =>
+      groupedByTag[0].tag ? groupedByTag[0].tag.name : "Untagged"
     );
+
+    const bgColors = dailyTasks.map((groupedByTag) =>
+      groupedByTag[0].tag ? groupedByTag[0].tag.color : "#808080"
+    );
+
+    const hours = dailyTasks.map((groupedByTag) => {
+      return groupedByTag
+        .reduce((acc, cur) => acc.plus(cur.duration), Duration.fromMillis(0))
+        .as("hours");
+    });
 
     return (
       <div className="w-1/3 h-[75vh] flex flex-col justify-between items-center gap-4 p-4 border-r border-b border-gray-300">
@@ -62,19 +70,13 @@ class DailyDistributionChart extends React.Component {
         ) : (
           <Doughnut
             data={{
-              labels: dailyTasks.map((dailyTask) =>
-                dailyTask ? dailyTask.name : "Untagged"
-              ),
+              labels: labels,
               datasets: [
                 {
                   label: "Daily Task Distribution",
-                  data: dailyHours,
-                  backgroundColor: dailyTasks.map((dailyTask) =>
-                    dailyTask ? dailyTask.color : "#808080"
-                  ),
-                  borderColor: dailyTasks.map((dailyTask) =>
-                    dailyTask ? dailyTask.color : "#808080"
-                  ),
+                  data: hours,
+                  backgroundColor: bgColors,
+                  borderColor: bgColors,
                 },
               ],
             }}

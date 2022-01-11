@@ -1,4 +1,5 @@
 import React from "react";
+
 import { LocalOffer, Done } from "@mui/icons-material";
 
 import ModalWindow from "../UI/ModalWindow";
@@ -9,8 +10,11 @@ class TagCreator extends React.Component {
     super(props);
 
     this.state = {
-      name: "",
-      color: "#000000",
+      isValid: true,
+      tag: {
+        name: "",
+        color: "#000000",
+      },
     };
 
     this.nameChangeHandler = this.nameChangeHandler.bind(this);
@@ -20,13 +24,31 @@ class TagCreator extends React.Component {
 
   componentDidMount() {
     this.setState({
-      color: colors[0],
+      tag: {
+        ...this.state.tag,
+        color: colors[0],
+      },
     });
   }
 
   nameChangeHandler(e) {
+    const tags = JSON.parse(localStorage.getItem("tags"));
+    const exists = tags.some((cur) => cur.name === e.target.value);
+    if (exists) {
+      this.setState({
+        isValid: false,
+      });
+    } else if (!this.state.isValid) {
+      this.setState({
+        isValid: true,
+      });
+    }
+
     this.setState({
-      name: e.target.value,
+      tag: {
+        ...this.state.tag,
+        name: e.target.value,
+      },
     });
   }
 
@@ -35,41 +57,57 @@ class TagCreator extends React.Component {
 
     if (clicked) {
       this.setState({
-        color: clicked.dataset.color,
+        tag: {
+          ...this.state.tag,
+          color: clicked.dataset.color,
+        },
       });
     }
   }
 
   tagCreatedHandler(e) {
-    this.props.onTagCreated(this.state);
+    this.props.onTagCreated(this.state.tag);
   }
 
   render() {
     return (
       <ModalWindow
         heading={"Create A New Tag"}
-        confirmText={() => (
-          <>
-            <LocalOffer /> Create Tag
-          </>
-        )}
         onClose={this.props.onClose}
-        onConfirm={this.tagCreatedHandler}
+        confirmBtn={() => (
+          <button
+            className="px-4 py-2 bg-blue-500 text-white disabled:bg-gray-400"
+            onClick={this.tagCreatedHandler}
+            disabled={!this.state.isValid}
+          >
+            <LocalOffer /> Create Tag
+          </button>
+        )}
       >
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col items-start gap-2">
           <label>Tag Name</label>
           <input
             type="text"
             placeholder="e.g. Study"
             onChange={this.nameChangeHandler}
-            className="p-1 border border-gray-300 focus:outline-none"
+            className={`w-full p-1 border border-gray-300 focus:outline-none ${
+              !this.state.isValid && "border-red-500"
+            }`}
           />
+
+          <span
+            className={`self-start text-xs ${
+              this.state.isValid ? "text-transparent" : "text-red-500"
+            }`}
+          >
+            Tag Already Exists!
+          </span>
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col items-start gap-2">
           <label>Color</label>
 
-          <div>
+          <div className="grid grid-cols-8">
             {colors.map((color) => {
               return (
                 <button
@@ -81,7 +119,7 @@ class TagCreator extends React.Component {
                 >
                   <Done
                     className={`absolute top-0 left-0 z-10 border-2 border-white opacity-0 ${
-                      this.state.color === color && "opacity-100"
+                      this.state.tag.color === color && "opacity-100"
                     } text-white`}
                     fontSize="large"
                   />

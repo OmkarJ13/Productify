@@ -1,9 +1,10 @@
 import React from "react";
+
+import { ArrowBack, ArrowForward, Today } from "@mui/icons-material";
 import { Line } from "react-chartjs-2";
 import { Info } from "luxon";
 import { Duration } from "luxon";
 import { DateTime } from "luxon";
-import { ArrowBack, ArrowForward, Today } from "@mui/icons-material";
 
 class YearlyGraph extends React.Component {
   getYearlyData(timerEntries, year) {

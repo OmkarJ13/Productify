@@ -5,7 +5,7 @@ export const groupTimerEntriesBy = (timerEntries, keys) => {
     const matches = self.filter((ele) => {
       return keys.every((key) => {
         if (typeof timerEntry[key] === "object") {
-          return timerEntry[key].toString() === ele[key].toString();
+          return JSON.stringify(timerEntry[key]) === JSON.stringify(ele[key]);
         }
         return timerEntry[key] === ele[key];
       });

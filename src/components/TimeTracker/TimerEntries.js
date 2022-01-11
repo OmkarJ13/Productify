@@ -1,19 +1,20 @@
 import React from "react";
-import { v4 as uuid } from "uuid";
-import { Duration } from "luxon";
-import { DateTime } from "luxon";
-
-import TimerEntry from "./TimerEntry";
-
-import { getDaysPassed } from "../../helpers/getDaysPassed";
-import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
 import { connect } from "react-redux";
+
 import {
   ArrowCircleDown,
   ArrowCircleUp,
   SwapVerticalCircleOutlined,
 } from "@mui/icons-material";
+import { v4 as uuid } from "uuid";
+import { Duration } from "luxon";
+import { DateTime } from "luxon";
+
+import { getDaysPassed } from "../../helpers/getDaysPassed";
+import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
+import TimerEntry from "./TimerEntry";
 import TimerForm from "./TimerForm";
+import DailyTimerEntries from "./DailyTimerEntries";
 
 class TimerEntries extends React.Component {
   constructor(props) {
@@ -72,7 +73,7 @@ class TimerEntries extends React.Component {
       tag: timerEntries[0].tag,
       isProductive: timerEntries[0].isProductive,
       isBillable: timerEntries[0].isBillable,
-      allEntries: this.generateTimerEntries(timerEntries),
+      allEntries: this.generateTimerEntries(timerEntries, true),
     };
 
     return combinedTimerEntry;
@@ -121,32 +122,27 @@ class TimerEntries extends React.Component {
     });
 
     const JSX = finalTimerEntries.map((timerEntriesGrouped) => {
-      const day = timerEntriesGrouped[0].date.toRelativeCalendar({
-        unit: "days",
-      });
+      const date = timerEntriesGrouped[0].date;
 
-      const thisDayTotal = timerEntriesGrouped.reduce((acc, cur) => {
+      const totalDuration = timerEntriesGrouped.reduce((acc, cur) => {
         return acc.plus(cur.duration);
       }, Duration.fromMillis(0));
 
-      return (
-        <div className="w-full flex flex-col">
-          <div className="w-full flex justify-between px-4 py-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase text-lg">
-            <h4>{day}</h4>
-            <h4>{thisDayTotal.toFormat("hh:mm:ss")}</h4>
-          </div>
+      const timerEntries = this.generateTimerEntries(timerEntriesGrouped);
 
-          <div className="w-full flex flex-col">
-            {this.generateTimerEntries(timerEntriesGrouped)}
-          </div>
-        </div>
+      return (
+        <DailyTimerEntries
+          date={date}
+          totalDuration={totalDuration}
+          timerEntries={timerEntries}
+        />
       );
     });
 
     return JSX;
   }
 
-  generateTimerEntries(timerEntries) {
+  generateTimerEntries(timerEntries, isDuplicates = false) {
     return timerEntries.map((timerEntry) => {
       return (
         <TimerForm
@@ -164,7 +160,11 @@ class TimerEntries extends React.Component {
           }}
           UI={(otherProps) => {
             return (
-              <TimerEntry allEntries={timerEntry.allEntries} {...otherProps} />
+              <TimerEntry
+                allEntries={timerEntry.allEntries}
+                isDuplicate={isDuplicates}
+                {...otherProps}
+              />
             );
           }}
         />

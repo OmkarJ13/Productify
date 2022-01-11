@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+
 import { Chart as ChartJS } from "chart.js/auto";
 import { Chart } from "react-chartjs-2";
 import { DateTime } from "luxon";
@@ -7,7 +9,6 @@ import { Interval } from "luxon";
 import DailyDistributionChart from "./DailyDistributionChart";
 import WeeklyGraph from "./WeeklyGraph";
 import YearlyGraph from "./YearlyGraph";
-import { connect } from "react-redux";
 
 class Reports extends React.Component {
   constructor(props) {

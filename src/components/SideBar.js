@@ -42,7 +42,7 @@ class SideBar extends React.Component {
             Analyze
           </span>
           <NavLink
-            to="/reports"
+            to="/analytics"
             exact
             className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
             activeClassName="bg-blue-400"
@@ -72,7 +72,7 @@ class SideBar extends React.Component {
             Settings
           </NavLink>
           <NavLink
-            to="/settings"
+            to="/account"
             exact
             className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
             activeClassName="bg-blue-400"

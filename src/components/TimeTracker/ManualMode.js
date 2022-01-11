@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   AttachMoney,
   CalendarToday,
@@ -6,8 +8,6 @@ import {
   Schedule,
   TrendingUp,
 } from "@mui/icons-material";
-import React from "react";
-
 import ReactDatePicker from "react-datepicker";
 import { DateTime } from "luxon";
 import { connect } from "react-redux";
@@ -117,14 +117,15 @@ class ManualMode extends React.Component {
             />
           </div>
 
-          <div className="pr-2">
+          <button className="pr-2">
             <ReactDatePicker
               title="Select Date"
               selected={date.toJSDate()}
               onChange={this.props.onDateChanged}
               customInput={<CalendarToday />}
+              popperPlacement="bottom"
             />
-          </div>
+          </button>
         </div>
 
         <div className="w-[12.5%] h-full flex justify-center items-center text-base">

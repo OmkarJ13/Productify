@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Cancel } from "@mui/icons-material";
 
 class ModalWindow extends React.Component {
@@ -22,18 +23,7 @@ class ModalWindow extends React.Component {
           <div className="w-full p-4 flex flex-col gap-4">
             {this.props.children}
           </div>
-          <div className="self-end p-4">
-            <button
-              className="px-4 py-2 bg-blue-500 text-white"
-              onClick={this.props.onConfirm}
-            >
-              {typeof this.props.confirmText === "string"
-                ? this.props.confirmText
-                : typeof this.props.confirmText === "function"
-                ? this.props.confirmText()
-                : ""}
-            </button>
-          </div>
+          <div className="self-end p-4">{this.props.confirmBtn()}</div>
         </div>
       </div>
     );

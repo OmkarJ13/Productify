@@ -6,12 +6,17 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store/store.index";
 
+import DateAdapter from "@mui/lab/AdapterLuxon";
+import { LocalizationProvider } from "@mui/lab";
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <LocalizationProvider dateAdapter={DateAdapter}>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </LocalizationProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")

@@ -1,13 +1,12 @@
 import React from "react";
+
 import { Bar } from "react-chartjs-2";
 import { Duration } from "luxon";
 import { Info } from "luxon";
-import { DateTime } from "luxon";
 
+import { ArrowBack, ArrowForward, Today } from "@mui/icons-material";
 import { getDaysPassed } from "../../helpers/getDaysPassed";
 import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
-import { Interval } from "luxon";
-import { ArrowBack, ArrowForward, Today } from "@mui/icons-material";
 
 class WeeklyGraph extends React.Component {
   getWeeklyData(timerEntries, week) {
