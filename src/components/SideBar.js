@@ -1,18 +1,26 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import {
   AccountCircle,
+  AccountCircleOutlined,
   AlarmOn,
   Analytics,
+  AnalyticsOutlined,
   LocalOffer,
+  LocalOfferOutlined,
   Settings,
+  SettingsOutlined,
   StickyNote2,
+  StickyNote2Outlined,
   Timer,
+  TimerOutlined,
 } from "@mui/icons-material";
 
 class SideBar extends React.Component {
   render() {
+    const path = this.props.location.pathname;
     return (
       <div className="fixed top-0 left-0 w-2/12 h-screen flex flex-col items-center gap-8 py-8 bg-gradient-to-br from-blue-500 to-blue-400 text-white">
         <h1 className="flex items-center gap-2 text-3xl font-bold">
@@ -26,7 +34,7 @@ class SideBar extends React.Component {
             className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
             activeClassName="bg-blue-400"
           >
-            <Timer />
+            {path === "/track" ? <Timer /> : <TimerOutlined />}
             Time Tracker
           </NavLink>
           <NavLink
@@ -35,7 +43,7 @@ class SideBar extends React.Component {
             className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
             activeClassName="bg-blue-400"
           >
-            <StickyNote2 />
+            {path === "/todo" ? <StickyNote2 /> : <StickyNote2Outlined />}
             Todo
           </NavLink>
           <span className="self-start px-4 mt-4 text-xs font-light uppercase">
@@ -47,7 +55,7 @@ class SideBar extends React.Component {
             className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
             activeClassName="bg-blue-400"
           >
-            <Analytics />
+            {path === "/analytics" ? <Analytics /> : <AnalyticsOutlined />}
             Analytics
           </NavLink>
           <span className="self-start px-4 mt-4 text-xs font-light uppercase">
@@ -59,7 +67,7 @@ class SideBar extends React.Component {
             className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
             activeClassName="bg-blue-400"
           >
-            <LocalOffer />
+            {path === "/tags" ? <LocalOffer /> : <LocalOfferOutlined />}
             Tags
           </NavLink>
           <NavLink
@@ -68,7 +76,7 @@ class SideBar extends React.Component {
             className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
             activeClassName="bg-blue-400"
           >
-            <Settings />
+            {path === "/settings" ? <Settings /> : <SettingsOutlined />}
             Settings
           </NavLink>
           <NavLink
@@ -77,7 +85,11 @@ class SideBar extends React.Component {
             className="w-full flex gap-2 items-center px-4 py-2 text-lg  hover:bg-blue-400"
             activeClassName="bg-blue-400"
           >
-            <AccountCircle />
+            {path === "/account" ? (
+              <AccountCircle />
+            ) : (
+              <AccountCircleOutlined />
+            )}
             Account
           </NavLink>
         </div>
@@ -86,4 +98,4 @@ class SideBar extends React.Component {
   }
 }
 
-export default SideBar;
+export default withRouter(SideBar);
