@@ -272,7 +272,7 @@ class TimerEntry extends React.Component {
               title="Continue Timer Entry"
               onClick={this.continueTimerEntry}
               className="transition-opacity opacity-0 group-hover:opacity-100"
-              disabled={isCombined}
+              disabled={isCombined || this.props.currentTimer !== null}
             >
               <PlayCircle />
             </button>
@@ -315,6 +315,12 @@ class TimerEntry extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    currentTimer: state.currentTimerReducer.currentTimer,
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     updateTimerEntry: (timerEntry) => {
@@ -332,4 +338,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(TimerEntry);
+export default connect(mapStateToProps, mapDispatchToProps)(TimerEntry);
