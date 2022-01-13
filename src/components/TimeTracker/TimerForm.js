@@ -100,25 +100,19 @@ class TimerForm extends React.Component {
   }
 
   handleStartTimeChanged(e) {
-    const time = DateTime.fromFormat(e, "hh:mm");
+    const time = DateTime.fromFormat(e, "HH:mm");
+    const { endTime } = this.state.timerEntry;
 
     this.setState(
       {
         timerEntry: {
           ...this.state.timerEntry,
           startTime: time,
+          endTime: endTime.set({ second: 0, millisecond: 0 }),
         },
       },
       () => {
-        const { startTime, endTime } = this.state.timerEntry;
-        const difference = endTime.diff(startTime);
-
-        let changedDuration;
-        if (difference.toMillis() < 0) {
-          changedDuration = difference.plus({ day: 1 });
-        } else {
-          changedDuration = difference;
-        }
+        const changedDuration = this.calculateDuration();
 
         this.setState({
           timerEntry: {
@@ -131,25 +125,22 @@ class TimerForm extends React.Component {
   }
 
   handleEndTimeChanged(e) {
-    const time = DateTime.fromFormat(e, "hh:mm");
+    const time = DateTime.fromFormat(e, "HH:mm");
+    const { startTime } = this.state.timerEntry;
 
     this.setState(
       {
         timerEntry: {
           ...this.state.timerEntry,
+          startTime: startTime.set({
+            second: 0,
+            millisecond: 0,
+          }),
           endTime: time,
         },
       },
       () => {
-        const { startTime, endTime } = this.state.timerEntry;
-        const difference = endTime.diff(startTime);
-
-        let changedDuration;
-        if (difference.toMillis() < 0) {
-          changedDuration = difference.plus({ day: 1 });
-        } else {
-          changedDuration = difference;
-        }
+        const changedDuration = this.calculateDuration();
 
         this.setState({
           timerEntry: {
@@ -159,6 +150,17 @@ class TimerForm extends React.Component {
         });
       }
     );
+  }
+
+  calculateDuration() {
+    const { startTime, endTime } = this.state.timerEntry;
+    const difference = endTime.diff(startTime);
+
+    if (difference.toMillis() < 0) {
+      return difference.plus({ day: 1 });
+    }
+
+    return difference;
   }
 
   handleDateChanged(e) {

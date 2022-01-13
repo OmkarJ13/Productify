@@ -235,13 +235,13 @@ class TimerEntry extends React.Component {
 
             <div className="flex items-center gap-1">
               <TimePicker
-                value={startTime.toLocaleString(DateTime.TIME_SIMPLE)}
+                value={startTime.toFormat("HH:mm")}
                 onChange={this.props.onStartTimeChanged}
                 className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
               />
               <span>-</span>
               <TimePicker
-                value={endTime.toLocaleString(DateTime.TIME_SIMPLE)}
+                value={endTime.toFormat("HH:mm")}
                 onChange={this.props.onEndTimeChanged}
                 className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
               />
