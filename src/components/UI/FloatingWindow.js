@@ -1,35 +1,93 @@
 import React from "react";
+import reactDom from "react-dom";
+
+import Overlay from "./Overlay";
 
 class FloatingWindow extends React.Component {
   constructor(props) {
     super(props);
+
     this.floatingWindow = React.createRef();
-    this.documentClickHandler = this.documentClickHandler.bind(this);
+
+    this.state = {
+      x: 0,
+      y: 0,
+    };
+
+    this.windowPortal = document.getElementById("window-portal");
+    this.windowResizeHandler = this.windowResizeHandler.bind(this);
+    this.updatePosition = this.updatePosition.bind(this);
   }
 
   componentDidMount() {
-    document.addEventListener("mousedown", this.documentClickHandler);
+    window.addEventListener("resize", this.windowResizeHandler);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.open != this.props.open) this.updatePosition();
+  }
+
+  windowResizeHandler(e) {
+    this.updatePosition();
+  }
+
+  updatePosition() {
+    const { anchorEl } = this.props;
+    const windowRef = this.floatingWindow.current;
+    if (!anchorEl.current || !windowRef) return;
+
+    const anchorBounds = anchorEl.current.getBoundingClientRect();
+    const windowBounds = this.floatingWindow.current.getBoundingClientRect();
+
+    const screenX = window.innerWidth;
+    const screenY = window.innerHeight;
+
+    let x = anchorBounds.left + window.scrollX;
+    let y = anchorBounds.bottom + window.scrollY;
+
+    if (x + windowBounds.width > screenX) {
+      x =
+        anchorBounds.left -
+        (windowBounds.width - anchorBounds.width) +
+        window.scrollX;
+    }
+
+    if (y + windowBounds.height > screenY) {
+      y =
+        anchorBounds.bottom -
+        (windowBounds.height + anchorBounds.height) +
+        window.scrollY;
+    }
+
+    this.setState({
+      x,
+      y,
+    });
   }
 
   componentWillUnmount() {
-    document.removeEventListener("mousedown", this.documentClickHandler);
-  }
-
-  documentClickHandler(e) {
-    if (!this.floatingWindow.current.contains(e.target)) {
-      this.props.onClose();
-    }
+    window.removeEventListener("resize", this.windowResizeHandler);
   }
 
   render() {
-    return (
-      <div
-        className="absolute top-full right-0 z-10 bg-white shadow-lg animate-[fade_ease-in-out_250ms] border border-gray-200"
-        ref={this.floatingWindow}
-      >
-        {this.props.children}
-      </div>
-    );
+    const { open } = this.props;
+    const { x, y } = this.state;
+
+    return open ? (
+      <>
+        <Overlay opacity={0} zIndex={5} onClick={this.props.onClose} />
+        {reactDom.createPortal(
+          <div
+            style={{ top: `${y}px`, left: `${x}px` }}
+            ref={this.floatingWindow}
+            className={`absolute z-10 bg-white shadow-lg animate-[fade_ease-in-out_250ms] border border-gray-200`}
+          >
+            {this.props.children}
+          </div>,
+          this.windowPortal
+        )}
+      </>
+    ) : null;
   }
 }
 

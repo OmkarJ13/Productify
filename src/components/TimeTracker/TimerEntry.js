@@ -22,6 +22,7 @@ import { currentTimerActions } from "../../store/slices/currentTimerSlice";
 import TagSelector from "../Tag/TagSelector";
 import TimePicker from "../UI/TimePicker";
 import FloatingWindow from "../UI/FloatingWindow";
+import TimerEntryOptionsSelector from "./TimerEntryOptionsSelector";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -30,7 +31,6 @@ class TimerEntry extends React.Component {
     this.saveTimerID = undefined;
 
     this.state = {
-      isDropdownOpen: false,
       showAllEntries: false,
     };
 
@@ -184,31 +184,11 @@ class TimerEntry extends React.Component {
               />
             </div>
 
-            <button
-              title="Select Tag"
-              className="w-[15%] transition-opacity relative h-full opacity-0 group-hover:opacity-100"
-              onClick={this.props.onTagClicked}
-              disabled={isCombined}
-            >
-              {this.props.selectingTag && (
-                <TagSelector
-                  onClose={this.props.onTagClosed}
-                  onTagSelected={this.props.onTagSelected}
-                />
-              )}
-
-              {tag === undefined ? (
-                <div className="flex justify-center items-center gap-2">
-                  <LocalOffer />
-                  <span className="text-xs">Add Tag</span>
-                </div>
-              ) : (
-                <div className="flex justify-center items-center gap-1">
-                  <LocalOffer htmlColor={tag.color} />
-                  <span className="text-xs">{tag.name}</span>
-                </div>
-              )}
-            </button>
+            <TagSelector
+              className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 w-[15%] h-full flex justify-center items-center"
+              initialTag={tag}
+              onTagSelected={this.props.onTagSelected}
+            />
 
             <div className="transition-opacity h-full flex items-center opacity-0 group-hover:opacity-100">
               <button
@@ -276,38 +256,12 @@ class TimerEntry extends React.Component {
             >
               <PlayCircle />
             </button>
-
-            <div className="relative">
-              <button onClick={this.toggleDropdown} disabled={isCombined}>
-                <MoreVert />
-              </button>
-
-              {isDropdownOpen && (
-                <FloatingWindow onClose={this.toggleDropdown}>
-                  <ul>
-                    <li>
-                      <button
-                        onClick={this.duplicateEntry}
-                        className="w-full flex items-center gap-2 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
-                      >
-                        <ContentCopy fontSize="small" />
-                        Duplicate
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        onClick={this.deleteEntry}
-                        className="w-full flex items-center gap-2 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
-                      >
-                        <Delete fontSize="small" />
-                        Delete
-                      </button>
-                    </li>
-                  </ul>
-                </FloatingWindow>
-              )}
-            </div>
           </div>
+
+          <TimerEntryOptionsSelector
+            onDuplicate={this.duplicateEntry}
+            onDelete={this.deleteEntry}
+          />
         </div>
         {showAllEntries && this.props.allEntries}
       </>

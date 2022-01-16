@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 html {
-  @apply overflow-y-scroll;
+  @apply font-inter text-gray-600 overflow-y-scroll;
 }
 
 input[type="number"]::-webkit-inner-spin-button,

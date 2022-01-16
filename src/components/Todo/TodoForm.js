@@ -5,8 +5,6 @@ class TodoForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectingTag: false,
-      selectingPriority: false,
       todo: {
         task: "",
         tag: undefined,
@@ -20,44 +18,12 @@ class TodoForm extends React.Component {
       },
     };
 
-    this.openTagSelector = this.openTagSelector.bind(this);
-    this.closeTagSelector = this.closeTagSelector.bind(this);
-    this.openPrioritySelector = this.openPrioritySelector.bind(this);
-    this.closePrioritySelector = this.closePrioritySelector.bind(this);
     this.handleTaskChanged = this.handleTaskChanged.bind(this);
-    this.handleTagChanged = this.handleTagChanged.bind(this);
-    this.handlePriorityChanged = this.handlePriorityChanged.bind(this);
+    this.handleTagSelected = this.handleTagSelected.bind(this);
+    this.handlePrioritySelected = this.handlePrioritySelected.bind(this);
     this.handleDueDateChanged = this.handleDueDateChanged.bind(this);
     this.resetState = this.resetState.bind(this);
     this.updateState = this.updateState.bind(this);
-  }
-
-  openTagSelector() {
-    if (!this.state.selectingTag)
-      this.setState({
-        selectingTag: true,
-      });
-  }
-
-  closeTagSelector() {
-    if (this.state.selectingTag)
-      this.setState({
-        selectingTag: false,
-      });
-  }
-
-  openPrioritySelector() {
-    if (!this.state.selectingPriority)
-      this.setState({
-        selectingPriority: true,
-      });
-  }
-
-  closePrioritySelector() {
-    if (this.state.selectingPriority)
-      this.setState({
-        selectingPriority: false,
-      });
   }
 
   handleTaskChanged(e) {
@@ -69,26 +35,22 @@ class TodoForm extends React.Component {
     });
   }
 
-  handleTagChanged(tag) {
+  handleTagSelected(tag) {
     this.setState({
       todo: {
         ...this.state.todo,
         tag,
       },
     });
-
-    this.closeTagSelector();
   }
 
-  handlePriorityChanged(priority) {
+  handlePrioritySelected(priority) {
     this.setState({
       todo: {
         ...this.state.todo,
         priority,
       },
     });
-
-    this.closePrioritySelector();
   }
 
   handleDueDateChanged(date) {
@@ -125,15 +87,9 @@ class TodoForm extends React.Component {
     return (
       <UI
         todo={this.state.todo}
-        selectingTag={this.state.selectingTag}
-        selectingPriority={this.state.selectingPriority}
-        onTagSelectorOpened={this.openTagSelector}
-        onTagSelectorClosed={this.closeTagSelector}
-        onPrioritySelectorOpened={this.openPrioritySelector}
-        onPrioritySelectorClosed={this.closePrioritySelector}
         onTaskChanged={this.handleTaskChanged}
-        onTagChanged={this.handleTagChanged}
-        onPriorityChanged={this.handlePriorityChanged}
+        onTagSelected={this.handleTagSelected}
+        onPrioritySelected={this.handlePrioritySelected}
         onDueDateChanged={this.handleDueDateChanged}
         resetState={this.resetState}
         updateState={this.updateState}

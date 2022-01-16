@@ -8,12 +8,10 @@ class TimerForm extends React.Component {
 
     if (this.props.timerEntry) {
       this.state = {
-        selectingTag: false,
         timerEntry: this.props.timerEntry,
       };
     } else {
       this.state = {
-        selectingTag: false,
         timerEntry: {
           task: "",
           tag: undefined,
@@ -33,8 +31,6 @@ class TimerForm extends React.Component {
     }
 
     this.handleTaskChanged = this.handleTaskChanged.bind(this);
-    this.handleTagClicked = this.handleTagClicked.bind(this);
-    this.handleTagClosed = this.handleTagClosed.bind(this);
     this.handleTagSelected = this.handleTagSelected.bind(this);
     this.handleProductiveChanged = this.handleProductiveChanged.bind(this);
     this.handleBillableChanged = this.handleBillableChanged.bind(this);
@@ -55,25 +51,8 @@ class TimerForm extends React.Component {
     });
   }
 
-  handleTagClicked(e) {
-    if (!this.state.selectingTag) {
-      this.setState({
-        selectingTag: true,
-      });
-    }
-  }
-
-  handleTagClosed() {
-    if (this.state.selectingTag) {
-      this.setState({
-        selectingTag: false,
-      });
-    }
-  }
-
   handleTagSelected(tag) {
     this.setState({
-      selectingTag: false,
       timerEntry: {
         ...this.state.timerEntry,
         tag,
@@ -209,10 +188,7 @@ class TimerForm extends React.Component {
     return (
       <UI
         timerEntry={this.state.timerEntry}
-        selectingTag={this.state.selectingTag}
         onTaskChanged={this.handleTaskChanged}
-        onTagClicked={this.handleTagClicked}
-        onTagClosed={this.handleTagClosed}
         onTagSelected={this.handleTagSelected}
         onProductiveChanged={this.handleProductiveChanged}
         onBillableChanged={this.handleBillableChanged}

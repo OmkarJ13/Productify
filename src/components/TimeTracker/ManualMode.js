@@ -58,30 +58,11 @@ class ManualMode extends React.Component {
             onChange={this.props.onTaskChanged}
           />
 
-          <button
-            title="Select Tag"
-            className="relative w-[15%] h-full"
-            onClick={this.props.onTagClicked}
-          >
-            {this.props.selectingTag && (
-              <TagSelector
-                onClose={this.props.onTagClosed}
-                onTagSelected={this.props.onTagSelected}
-              />
-            )}
-
-            {tag === undefined ? (
-              <div className="flex justify-center items-center gap-2">
-                <LocalOffer fontSize="small" />
-                <span className="text-xs">Add Tag</span>
-              </div>
-            ) : (
-              <div className="flex justify-center items-center gap-2">
-                <LocalOffer htmlColor={tag.color} fontSize="small" />
-                <span className="text-xs">{tag.name}</span>
-              </div>
-            )}
-          </button>
+          <TagSelector
+            className="w-[15%] h-full flex justify-center items-center"
+            initialTag={tag}
+            onTagSelected={this.props.onTagSelected}
+          />
 
           <div className="h-full flex items-center">
             <button

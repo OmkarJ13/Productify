@@ -1,45 +1,42 @@
-import { Error } from "@mui/icons-material";
 import React from "react";
+import { Error } from "@mui/icons-material";
 
-import FloatingWindow from "../UI/FloatingWindow";
 import { priorities } from "../../helpers/priorities";
+import PrioritySelectorWindow from "./PrioritySelectorWindow";
+import FloatingWindowHandler from "../UI/FloatingWindowHandler";
 
 class PrioritySelector extends React.Component {
-  constructor(props) {
-    super(props);
-    this.prioritySelectedHandler = this.prioritySelectedHandler.bind(this);
-  }
+  getPriorityTitle(priority) {
+    const priorityName = priorities[priority].name;
+    const priorityStyles = priorities[priority].styles;
 
-  prioritySelectedHandler(e) {
-    const clicked = e.target.closest("a");
-    if (clicked) {
-      const idx = clicked.dataset.idx;
-      this.props.onPrioritySelected(idx);
-    }
+    return (
+      <div
+        className={`flex justify-center items-center gap-2 ${priorityStyles}`}
+      >
+        <Error />
+        <span className="text-xs">{priorityName}</span>
+      </div>
+    );
   }
 
   render() {
+    const { className, initialPriority } = this.props;
+
     return (
-      <FloatingWindow onClose={this.props.onClose}>
-        <div className="p-4 flex flex-col items-start gap-4">
-          <span>Select Priority</span>
-          <div className="min-w-[15vw] flex flex-col">
-            {priorities.map((priority, i) => {
-              return (
-                <a
-                  key={i}
-                  data-idx={i}
-                  className={`w-full p-2 flex items-center gap-2 ${priority.styles} hover:bg-gray-200`}
-                  onClick={this.prioritySelectedHandler}
-                >
-                  <Error />
-                  <span>{priority.name}</span>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </FloatingWindow>
+      <FloatingWindowHandler
+        className={className}
+        Window={(otherProps) => {
+          return (
+            <PrioritySelectorWindow
+              onPrioritySelected={this.props.onPrioritySelected}
+              {...otherProps}
+            />
+          );
+        }}
+      >
+        {this.getPriorityTitle(initialPriority)}
+      </FloatingWindowHandler>
     );
   }
 }

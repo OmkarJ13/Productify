@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from "react-router";
 
 import SideBar from "./SideBar";
 import TimeTracker from "./TimeTracker/TimeTracker";
-import Todo from "./Todo";
+import Todo from "./Todo/Todo";
 import Reports from "./Reports/Reports";
 import Tags from "./Tags";
 import Settings from "./Settings";
@@ -12,7 +12,7 @@ import Account from "./Account";
 class ProductivityApp extends React.Component {
   render() {
     return (
-      <div className="flex font-inter">
+      <div className="flex">
         <SideBar />
 
         <Switch>
