@@ -6,16 +6,13 @@ import FloatingWindowHandler from "../UI/FloatingWindowHandler";
 
 class TagSelector extends React.Component {
   render() {
-    const { className, initialTag } = this.props;
+    const { initialTag, onTagSelected, ...otherProps } = this.props;
 
     return (
       <FloatingWindowHandler
-        className={className}
+        {...otherProps}
         Window={(otherProps) => (
-          <TagSelectorWindow
-            onTagSelected={this.props.onTagSelected}
-            {...otherProps}
-          />
+          <TagSelectorWindow onTagSelected={onTagSelected} {...otherProps} />
         )}
       >
         {initialTag === undefined ? (

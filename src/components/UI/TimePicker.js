@@ -105,12 +105,20 @@ class TimePicker extends React.Component {
   }
 
   render() {
+    const {
+      containerClass,
+      hourClass,
+      minuteClass,
+      value,
+      onChange,
+      ...otherProps
+    } = this.props;
     const { hour, minute } = this.state;
 
     return (
       <form
         className={
-          this.props.className ??
+          containerClass ??
           "p-1 flex justify-center items-center gap-1 border border-gray-300"
         }
         onBlur={this.handleBlur}
@@ -121,8 +129,11 @@ class TimePicker extends React.Component {
           max="23"
           value={hour}
           onChange={this.handleHourChange}
-          className="w-[20px] text-center focus:outline-none text-base"
+          className={
+            hourClass ?? "w-[20px] text-center focus:outline-none text-base"
+          }
           required
+          {...otherProps}
         />
         <span>:</span>
         <input
@@ -131,8 +142,11 @@ class TimePicker extends React.Component {
           max="59"
           value={minute}
           onChange={this.handleMinuteChange}
-          className="w-[20px] text-center focus:outline-none text-base"
+          className={
+            minuteClass ?? "w-[20px] text-center focus:outline-none text-base"
+          }
           required
+          {...otherProps}
         />
       </form>
     );

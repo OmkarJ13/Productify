@@ -21,15 +21,15 @@ class PrioritySelector extends React.Component {
   }
 
   render() {
-    const { className, initialPriority } = this.props;
+    const { initialPriority, onPrioritySelected, ...otherProps } = this.props;
 
     return (
       <FloatingWindowHandler
-        className={className}
+        {...otherProps}
         Window={(otherProps) => {
           return (
             <PrioritySelectorWindow
-              onPrioritySelected={this.props.onPrioritySelected}
+              onPrioritySelected={onPrioritySelected}
               {...otherProps}
             />
           );

@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import React from "react";
 
-class TodoForm extends React.Component {
+class TodoStateManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -98,4 +98,4 @@ class TodoForm extends React.Component {
   }
 }
 
-export default TodoForm;
+export default TodoStateManager;

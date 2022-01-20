@@ -1,3 +1,11 @@
+import { DateTime } from "luxon";
+
 export const getDaysPassed = (date) => {
-  return Math.floor(date.diffNow().as("days"));
+  const today = DateTime.fromObject({
+    hour: 0,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+  });
+  return Math.floor(date.diff(today).as("days"));
 };

@@ -4,10 +4,6 @@ import { connect } from "react-redux";
 import {
   AttachMoney,
   CalendarToday,
-  ContentCopy,
-  Delete,
-  LocalOffer,
-  MoreVert,
   PlayCircle,
   Save,
   TrendingUp,
@@ -21,7 +17,6 @@ import { timerEntryActions } from "../../store/slices/timerEntrySlice";
 import { currentTimerActions } from "../../store/slices/currentTimerSlice";
 import TagSelector from "../Tag/TagSelector";
 import TimePicker from "../UI/TimePicker";
-import FloatingWindow from "../UI/FloatingWindow";
 import TimerEntryOptionsSelector from "./TimerEntryOptionsSelector";
 
 class TimerEntry extends React.Component {
@@ -136,7 +131,7 @@ class TimerEntry extends React.Component {
   }
 
   render() {
-    const { isDropdownOpen, showAllEntries } = this.state;
+    const { showAllEntries } = this.state;
     const {
       task,
       date,
@@ -186,6 +181,7 @@ class TimerEntry extends React.Component {
 
             <TagSelector
               className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 w-[15%] h-full flex justify-center items-center"
+              disabled={isCombined}
               initialTag={tag}
               onTagSelected={this.props.onTagSelected}
             />
@@ -217,13 +213,15 @@ class TimerEntry extends React.Component {
               <TimePicker
                 value={startTime.toFormat("HH:mm")}
                 onChange={this.props.onStartTimeChanged}
-                className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
+                containerClass="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
+                readOnly={isCombined}
               />
               <span>-</span>
               <TimePicker
                 value={endTime.toFormat("HH:mm")}
                 onChange={this.props.onEndTimeChanged}
-                className="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
+                containerClass="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
+                readOnly={isCombined}
               />
             </div>
 
@@ -261,6 +259,7 @@ class TimerEntry extends React.Component {
           <TimerEntryOptionsSelector
             onDuplicate={this.duplicateEntry}
             onDelete={this.deleteEntry}
+            disabled={isCombined}
           />
         </div>
         {showAllEntries && this.props.allEntries}

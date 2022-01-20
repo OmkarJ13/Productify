@@ -1,52 +1,59 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import {
-  ArrowCircleDown,
-  ArrowCircleUp,
-  SwapVerticalCircleOutlined,
-} from "@mui/icons-material";
 import { v4 as uuid } from "uuid";
 import { Duration } from "luxon";
 import { DateTime } from "luxon";
+import { Interval } from "luxon";
 
 import { getDaysPassed } from "../../helpers/getDaysPassed";
 import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
 import TimerEntry from "./TimerEntry";
-import TimerForm from "./TimerForm";
-import DailyTimerEntries from "./DailyTimerEntries";
+import TimerEntryStateManager from "./TimerEntryStateManager";
+import GroupByWindow from "../TimeTracker/GroupByWindow";
+import GroupBySelector from "../UI/GroupBySelector";
+import ViewBySelector from "../UI/ViewBySelector";
+import GroupedData from "../UI/GroupedData";
+import PeriodChanger from "../UI/PeriodChanger";
 
 class TimerEntries extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      view: "weekly",
-      duration: "unsorted",
-      time: "descending",
+      period: Interval.fromDateTimes(
+        DateTime.now().startOf("week"),
+        DateTime.now().endOf("week")
+      ),
+      group: "date",
+      view: "week",
     };
 
-    this.viewChangeHandler = this.viewChangeHandler.bind(this);
-    this.sortDuration = this.sortDuration.bind(this);
-    this.sortTime = this.sortTime.bind(this);
+    this.handlePeriodChanged = this.handlePeriodChanged.bind(this);
+    this.handleGroupChanged = this.handleGroupChanged.bind(this);
+    this.handleViewChanged = this.handleViewChanged.bind(this);
   }
 
-  viewChangeHandler(e) {
-    const view = e.target.value.toLowerCase();
+  handlePeriodChanged(e) {
     this.setState({
-      view: view,
+      period: e,
     });
   }
 
-  getWeeklyTotal(timerEntries) {
-    const filteredEntries = this.getWeeklyEntries(timerEntries);
-    return filteredEntries.reduce((acc, cur) => {
-      return acc.plus(cur.duration);
-    }, Duration.fromMillis(0));
+  handleGroupChanged(e) {
+    this.setState({
+      group: e,
+    });
   }
 
-  getDailyTotal(timerEntries) {
-    const filteredEntries = this.getDailyEntries(timerEntries);
-    return filteredEntries.reduce((acc, cur) => {
+  handleViewChanged(e) {
+    this.setState({
+      view: e,
+    });
+  }
+
+  getTotal(timerEntries) {
+    return timerEntries.reduce((acc, cur) => {
       return acc.plus(cur.duration);
     }, Duration.fromMillis(0));
   }
@@ -80,49 +87,53 @@ class TimerEntries extends React.Component {
   }
 
   getTimerEntries(timerEntries) {
-    const groupedByDate = groupTimerEntriesBy(timerEntries, ["date"]);
+    const groupedByGroup = groupTimerEntriesBy(timerEntries, [
+      this.state.group,
+    ]);
 
-    let sorted = [];
-    if (this.state.time !== "unsorted") {
-      sorted = groupedByDate.sort((a, b) => {
-        return this.state.time === "descending"
-          ? getDaysPassed(b[0].date) - getDaysPassed(a[0].date)
-          : getDaysPassed(a[0].date) - getDaysPassed(b[0].date);
-      });
-    }
+    const sortedRecent = groupedByGroup.sort((a, b) => {
+      return getDaysPassed(b[0].date) - getDaysPassed(a[0].date);
+    });
 
-    if (this.state.duration !== "unsorted") {
-      sorted = groupedByDate.sort((a, b) => {
-        const durationsA = a.reduce((acc, cur) => {
-          return acc.plus(cur.duration);
-        }, Duration.fromMillis(0));
-
-        const durationsB = b.reduce((acc, cur) => {
-          return acc.plus(cur.duration);
-        }, Duration.fromMillis(0));
-
-        return this.state.duration === "descending"
-          ? durationsB.toMillis() - durationsA.toMillis()
-          : durationsA.toMillis() - durationsB.toMillis();
-      });
-    }
-
-    const groupedByDateAndTask = sorted.map((groupedEntries) =>
-      groupTimerEntriesBy(groupedEntries, ["task"])
+    const groupedFinal = sortedRecent.map((groupedByGroup) =>
+      groupTimerEntriesBy(groupedByGroup, [
+        "task",
+        "tag",
+        "isProductive",
+        "isBillable",
+        "date",
+      ])
     );
 
-    const finalTimerEntries = groupedByDateAndTask.map((groupedByDate) => {
-      return groupedByDate.map((groupedByTask) => {
-        if (groupedByTask.length === 1) {
-          return groupedByTask[0];
+    const combined = groupedFinal.map((groupedByGroup) => {
+      return groupedByGroup.map((groupedByDuplicates) => {
+        if (groupedByDuplicates.length === 1) {
+          return groupedByDuplicates[0];
         } else {
-          return this.getCombinedTimerEntry(groupedByTask);
+          return this.getCombinedTimerEntry(groupedByDuplicates);
         }
       });
     });
 
-    const JSX = finalTimerEntries.map((timerEntriesGrouped) => {
-      const date = timerEntriesGrouped[0].date;
+    const JSX = combined.map((timerEntriesGrouped) => {
+      let heading = timerEntriesGrouped[0][this.state.group];
+      switch (this.state.group) {
+        case "tag":
+          heading = heading.name;
+          break;
+
+        case "isProductive":
+          heading = heading ? "Productive" : "Unproductive";
+          break;
+
+        case "isBillable":
+          heading = heading ? "Billable" : "Non-billable";
+          break;
+
+        case "date":
+          heading = heading.toRelativeCalendar({ unit: "days" });
+          break;
+      }
 
       const totalDuration = timerEntriesGrouped.reduce((acc, cur) => {
         return acc.plus(cur.duration);
@@ -131,10 +142,10 @@ class TimerEntries extends React.Component {
       const timerEntries = this.generateTimerEntries(timerEntriesGrouped);
 
       return (
-        <DailyTimerEntries
-          date={date}
-          totalDuration={totalDuration}
-          timerEntries={timerEntries}
+        <GroupedData
+          heading={heading}
+          subHeading={totalDuration.toFormat("hh:mm:ss")}
+          data={timerEntries}
         />
       );
     });
@@ -145,7 +156,7 @@ class TimerEntries extends React.Component {
   generateTimerEntries(timerEntries, isDuplicates = false) {
     return timerEntries.map((timerEntry) => {
       return (
-        <TimerForm
+        <TimerEntryStateManager
           key={timerEntry.id}
           timerEntry={{
             id: timerEntry.id,
@@ -176,115 +187,44 @@ class TimerEntries extends React.Component {
     return <h3 className="m-auto text-2xl font-light">No Time Tracked...</h3>;
   }
 
-  getWeeklyEntries(timerEntries) {
-    return timerEntries.filter((timerEntry) => {
-      return (
-        timerEntry.date.toRelativeCalendar({ unit: "weeks" }) === "this week"
-      );
-    });
-  }
-
-  getDailyEntries(timerEntries) {
-    return timerEntries.filter((timerEntry) => {
-      return timerEntry.date.toRelativeCalendar({ unit: "days" }) === "today";
-    });
-  }
-
-  getFilteredEntries(timerEntries) {
-    const { view } = this.state;
-    switch (view) {
-      case "weekly":
-        return this.getWeeklyEntries(timerEntries);
-
-      case "daily":
-        return this.getDailyEntries(timerEntries);
-
-      case "all":
-        return timerEntries;
-
-      default:
-        return [];
-    }
-  }
-
-  sortDuration(e) {
-    this.setState({
-      duration:
-        this.state.duration === "descending" ? "ascending" : "descending",
-      time: "unsorted",
-    });
-  }
-
-  sortTime(e) {
-    this.setState({
-      time: this.state.time === "descending" ? "ascending" : "descending",
-      duration: "unsorted",
-    });
+  filterEntries(timerEntries) {
+    return timerEntries.filter((timerEntry) =>
+      this.state.period.contains(timerEntry.date)
+    );
   }
 
   render() {
-    const filteredEntries = this.getFilteredEntries(this.props.timerEntries);
-
-    const weekTotal = this.getWeeklyTotal(this.props.timerEntries);
-    const dailyTotal = this.getDailyTotal(this.props.timerEntries);
+    const filteredEntries = this.filterEntries(this.props.timerEntries);
+    const filteredTotal = this.getTotal(filteredEntries);
 
     const timerEntries = this.getTimerEntries(filteredEntries);
 
     return (
       <div className="w-full min-h-full flex flex-col gap-8 pt-4">
         <div className="w-full flex justify-between items-center">
-          <div className="flex gap-4">
-            <span className="flex items-baseline gap-2 font-light">
-              Today
-              <strong className="text-lg">
-                {dailyTotal.toFormat("hh:mm:ss")}
-              </strong>
-            </span>
-            <span className="flex items-baseline gap-2 font-light">
-              This Week
-              <strong className="text-lg">
-                {weekTotal.toFormat("hh:mm:ss")}
-              </strong>
-            </span>
-          </div>
+          <span className="flex items-baseline gap-2 font-light">
+            Time Tracked
+            <strong className="text-lg">
+              {filteredTotal.toFormat("h'h' m'm'")}
+            </strong>
+          </span>
 
-          <div className="flex gap-8">
-            <button
-              onClick={this.sortTime}
-              className="flex justify-center items-center gap-2 font-light text-gray-600"
-            >
-              {this.state.time === "descending" ? (
-                <ArrowCircleDown />
-              ) : this.state.time === "ascending" ? (
-                <ArrowCircleUp />
-              ) : (
-                <SwapVerticalCircleOutlined />
-              )}
-              Recent
-            </button>
+          <div className="flex items-center gap-8">
+            <PeriodChanger
+              unit={this.state.view}
+              value={this.state.period}
+              onChange={this.handlePeriodChanged}
+            />
 
-            <button
-              onClick={this.sortDuration}
-              className="flex justify-center items-center gap-2 font-light text-gray-600"
-            >
-              {this.state.duration === "descending" ? (
-                <ArrowCircleDown />
-              ) : this.state.duration === "ascending" ? (
-                <ArrowCircleUp />
-              ) : (
-                <SwapVerticalCircleOutlined />
-              )}
-              Duration
-            </button>
-
-            <select
-              className="font-light focus:outline-none"
-              onChange={this.viewChangeHandler}
-            >
-              <option>Weekly</option>
-              <option>Daily</option>
-              <option>All</option>
-            </select>
+            <GroupBySelector
+              Window={GroupByWindow}
+              value={this.state.group}
+              onChange={this.handleGroupChanged}
+            />
+            <ViewBySelector
+              value={this.state.view}
+              onChange={this.handleViewChanged}
+            />
           </div>
         </div>
         <div className="w-full h-full flex flex-col gap-8">

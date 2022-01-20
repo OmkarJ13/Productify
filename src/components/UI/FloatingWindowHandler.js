@@ -27,7 +27,7 @@ class FloatingWindowHandler extends React.Component {
   }
 
   render() {
-    const { className, Window } = this.props;
+    const { Window, ...otherProps } = this.props;
     const { isOpen } = this.state;
     return (
       <>
@@ -36,11 +36,7 @@ class FloatingWindowHandler extends React.Component {
           onClose={this.closeWindow}
           anchorEl={this.anchorEl}
         />
-        <button
-          className={className}
-          onClick={this.toggleWindow}
-          ref={this.anchorEl}
-        >
+        <button {...otherProps} onClick={this.toggleWindow} ref={this.anchorEl}>
           {this.props.children}
         </button>
       </>

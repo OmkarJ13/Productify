@@ -2,7 +2,7 @@ import React from "react";
 
 import { DateTime, Duration } from "luxon";
 
-class TimerForm extends React.Component {
+class TimerEntryStateManager extends React.Component {
   constructor(props) {
     super(props);
 
@@ -203,4 +203,4 @@ class TimerForm extends React.Component {
   }
 }
 
-export default TimerForm;
+export default TimerEntryStateManager;

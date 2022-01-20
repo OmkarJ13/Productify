@@ -5,8 +5,11 @@ import TimerEntryOptionsWindow from "./TimerEntryOptionsWindow";
 
 class TimerEntryOptionsSelector extends React.Component {
   render() {
+    const { onDuplicate, onDelete, ...otherProps } = this.props;
+
     return (
       <FloatingWindowHandler
+        {...otherProps}
         Window={(otherProps) => {
           return (
             <TimerEntryOptionsWindow

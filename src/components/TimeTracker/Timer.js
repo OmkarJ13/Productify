@@ -1,6 +1,6 @@
 import React from "react";
 
-import TimerForm from "./TimerForm";
+import TimerEntryStateManager from "./TimerEntryStateManager";
 import TimerMode from "./TimerMode";
 import ManualMode from "./ManualMode";
 
@@ -32,7 +32,7 @@ class Timer extends React.Component {
 
   generateTimerForm() {
     return this.state.trackingMode === "timer" ? (
-      <TimerForm
+      <TimerEntryStateManager
         UI={(otherProps) => (
           <TimerMode
             trackingMode={this.state.trackingMode}
@@ -43,7 +43,7 @@ class Timer extends React.Component {
         )}
       />
     ) : (
-      <TimerForm
+      <TimerEntryStateManager
         UI={(otherProps) => (
           <ManualMode
             trackingMode={this.state.trackingMode}
