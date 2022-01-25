@@ -6,29 +6,18 @@ class TimerEntryStateManager extends React.Component {
   constructor(props) {
     super(props);
 
-    if (this.props.timerEntry) {
-      this.state = {
-        timerEntry: this.props.timerEntry,
-      };
-    } else {
-      this.state = {
-        timerEntry: {
-          task: "",
-          tag: undefined,
-          isProductive: false,
-          isBillable: false,
-          startTime: DateTime.fromObject({ second: 0, millisecond: 0 }),
-          endTime: DateTime.fromObject({ second: 0, millisecond: 0 }),
-          date: DateTime.fromObject({
-            hour: 0,
-            minute: 0,
-            second: 0,
-            millisecond: 0,
-          }),
-          duration: Duration.fromMillis(0),
-        },
-      };
-    }
+    this.state = {
+      timerEntry: this.props.timerEntry ?? {
+        task: "",
+        tag: undefined,
+        isProductive: false,
+        isBillable: false,
+        startTime: DateTime.now().startOf("minute"),
+        endTime: DateTime.now().startOf("minute"),
+        date: DateTime.now().startOf("day"),
+        duration: Duration.fromMillis(0),
+      },
+    };
 
     this.handleTaskChanged = this.handleTaskChanged.bind(this);
     this.handleTagSelected = this.handleTagSelected.bind(this);
@@ -79,14 +68,13 @@ class TimerEntryStateManager extends React.Component {
   }
 
   handleStartTimeChanged(e) {
-    const time = DateTime.fromFormat(e, "HH:mm");
     const { endTime } = this.state.timerEntry;
 
     this.setState(
       {
         timerEntry: {
           ...this.state.timerEntry,
-          startTime: time,
+          startTime: e,
           endTime: endTime.set({ second: 0, millisecond: 0 }),
         },
       },
@@ -104,7 +92,6 @@ class TimerEntryStateManager extends React.Component {
   }
 
   handleEndTimeChanged(e) {
-    const time = DateTime.fromFormat(e, "HH:mm");
     const { startTime } = this.state.timerEntry;
 
     this.setState(
@@ -115,7 +102,7 @@ class TimerEntryStateManager extends React.Component {
             second: 0,
             millisecond: 0,
           }),
-          endTime: time,
+          endTime: e,
         },
       },
       () => {
@@ -142,11 +129,11 @@ class TimerEntryStateManager extends React.Component {
     return difference;
   }
 
-  handleDateChanged(e) {
+  handleDateChanged(date) {
     this.setState({
       timerEntry: {
         ...this.state.timerEntry,
-        date: DateTime.fromJSDate(new Date(e)),
+        date,
       },
     });
   }
@@ -168,14 +155,9 @@ class TimerEntryStateManager extends React.Component {
     this.setState({
       timerEntry: {
         task: "",
-        date: DateTime.fromObject({
-          hour: 0,
-          minute: 0,
-          second: 0,
-          millisecond: 0,
-        }),
-        startTime: DateTime.fromObject({ second: 0, millisecond: 0 }),
-        endTime: DateTime.fromObject({ second: 0, millisecond: 0 }),
+        date: DateTime.now().startOf("day"),
+        startTime: DateTime.now().startOf("minute"),
+        endTime: DateTime.now().startOf("minute"),
         duration: Duration.fromMillis(0),
         isProductive: false,
         isBillable: false,
@@ -184,22 +166,19 @@ class TimerEntryStateManager extends React.Component {
   }
 
   render() {
-    const { UI } = this.props;
-    return (
-      <UI
-        timerEntry={this.state.timerEntry}
-        onTaskChanged={this.handleTaskChanged}
-        onTagSelected={this.handleTagSelected}
-        onProductiveChanged={this.handleProductiveChanged}
-        onBillableChanged={this.handleBillableChanged}
-        onStartTimeChanged={this.handleStartTimeChanged}
-        onEndTimeChanged={this.handleEndTimeChanged}
-        onDateChanged={this.handleDateChanged}
-        onDurationChanged={this.handleDurationChanged}
-        updateState={this.updateState}
-        resetState={this.resetState}
-      />
-    );
+    return this.props.renderTimerEntry({
+      timerEntry: this.state.timerEntry,
+      onTaskChanged: this.handleTaskChanged,
+      onTagSelected: this.handleTagSelected,
+      onProductiveChanged: this.handleProductiveChanged,
+      onBillableChanged: this.handleBillableChanged,
+      onStartTimeChanged: this.handleStartTimeChanged,
+      onEndTimeChanged: this.handleEndTimeChanged,
+      onDateChanged: this.handleDateChanged,
+      onDurationChanged: this.handleDurationChanged,
+      updateState: this.updateState,
+      resetState: this.resetState,
+    });
   }
 }
 

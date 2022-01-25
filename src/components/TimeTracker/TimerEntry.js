@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import {
+  Alarm,
   AttachMoney,
   CalendarToday,
   PlayCircle,
@@ -12,12 +13,13 @@ import ReactDatePicker from "react-datepicker";
 import { ToastContainer, toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { DateTime } from "luxon";
+import { TimePicker, DatePicker } from "@mui/lab";
 
 import { timerEntryActions } from "../../store/slices/timerEntrySlice";
 import { currentTimerActions } from "../../store/slices/currentTimerSlice";
 import TagSelector from "../Tag/TagSelector";
-import TimePicker from "../UI/TimePicker";
 import TimerEntryOptionsSelector from "./TimerEntryOptionsSelector";
+import MUIPickerHandler from "../UI/MUIPickerHandler";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -29,19 +31,10 @@ class TimerEntry extends React.Component {
       showAllEntries: false,
     };
 
-    this.toggleDropdown = this.toggleDropdown.bind(this);
-    this.closeDropdown = this.closeDropdown.bind(this);
     this.toggleAllEntries = this.toggleAllEntries.bind(this);
     this.deleteEntry = this.deleteEntry.bind(this);
     this.duplicateEntry = this.duplicateEntry.bind(this);
     this.continueTimerEntry = this.continueTimerEntry.bind(this);
-  }
-
-  closeDropdown(e) {
-    if (this.state.isDropdownOpen)
-      this.setState({
-        isDropdownOpen: false,
-      });
   }
 
   setSaveTimer() {
@@ -51,7 +44,7 @@ class TimerEntry extends React.Component {
 
     this.saveTimerID = setTimeout(() => {
       this.saveEditedChanges();
-    }, 1500);
+    }, 2000);
   }
 
   saveEditedChanges() {
@@ -66,12 +59,6 @@ class TimerEntry extends React.Component {
     });
   }
 
-  toggleDropdown(e) {
-    this.setState({
-      isDropdownOpen: !this.state.isDropdownOpen,
-    });
-  }
-
   duplicateEntry(e) {
     const { timerEntry } = this.props;
 
@@ -80,20 +67,11 @@ class TimerEntry extends React.Component {
       id: uuid(),
     };
     this.props.duplicateTimerEntry(duplicatedTimerEntry);
-
-    this.setState({
-      isDropdownOpen: false,
-    });
   }
 
   deleteEntry(e) {
     const { timerEntry } = this.props;
-
     this.props.deleteTimerEntry(timerEntry);
-
-    this.setState({
-      isDropdownOpen: false,
-    });
   }
 
   toggleAllEntries(e) {
@@ -106,12 +84,7 @@ class TimerEntry extends React.Component {
     const timer = {
       ...this.props.timerEntry,
       startTime: DateTime.now(),
-      date: DateTime.fromObject({
-        hour: 0,
-        minute: 0,
-        second: 0,
-        millisecond: 0,
-      }),
+      date: DateTime.now().startOf("day"),
     };
 
     this.props.continueTimerEntry(timer);
@@ -159,8 +132,8 @@ class TimerEntry extends React.Component {
           className="group w-full flex items-center gap-4 p-4 border-x border-b border-gray-300 text-sm"
           onClick={isCombined ? this.toggleAllEntries : null}
         >
-          <div className="w-[75%] h-full flex items-center gap-4 border-r border-dotted border-gray-300">
-            <div className="flex-grow-[10] flex items-center gap-4">
+          <div className="flex-grow h-full flex items-center border-r border-dotted border-gray-300">
+            <div className="flex-grow flex items-center gap-4">
               {isCombined && (
                 <div className="w-[35px] h-[35px] flex justify-center items-center bg-blue-500 text-white rounded-[50%]">
                   {this.props.allEntries.length}
@@ -180,7 +153,7 @@ class TimerEntry extends React.Component {
             </div>
 
             <TagSelector
-              className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 w-[15%] h-full flex justify-center items-center"
+              className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 w-[150px] h-full px-4 flex justify-center items-center"
               disabled={isCombined}
               initialTag={tag}
               onTagSelected={this.props.onTagSelected}
@@ -209,39 +182,82 @@ class TimerEntry extends React.Component {
               </button>
             </div>
 
-            <div className="flex items-center gap-1">
-              <TimePicker
-                value={startTime.toFormat("HH:mm")}
-                onChange={this.props.onStartTimeChanged}
-                containerClass="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
-                readOnly={isCombined}
+            <div className="mx-4 flex items-center gap-1">
+              <MUIPickerHandler
+                renderPicker={(otherProps) => {
+                  return (
+                    <TimePicker
+                      {...otherProps}
+                      value={startTime}
+                      onChange={this.props.onStartTimeChanged}
+                      renderInput={({ inputRef, InputProps }) => {
+                        return (
+                          <button
+                            ref={inputRef}
+                            onClick={InputProps.onClick}
+                            className="transition-colors w-[80px] p-1 border border-transparent group-hover:border-gray-300"
+                            disabled={isCombined}
+                          >
+                            {startTime.toLocaleString(DateTime.TIME_SIMPLE)}
+                          </button>
+                        );
+                      }}
+                    />
+                  );
+                }}
               />
-              <span>-</span>
-              <TimePicker
-                value={endTime.toFormat("HH:mm")}
-                onChange={this.props.onEndTimeChanged}
-                containerClass="transition-colors p-1 border border-transparent group-hover:border-gray-300 focus:outline-none"
-                readOnly={isCombined}
+              -
+              <MUIPickerHandler
+                renderPicker={(otherProps) => {
+                  return (
+                    <TimePicker
+                      {...otherProps}
+                      value={endTime}
+                      onChange={this.props.onEndTimeChanged}
+                      renderInput={({ inputRef, InputProps }) => {
+                        return (
+                          <button
+                            ref={inputRef}
+                            onClick={InputProps.onClick}
+                            className="transition-colors w-[80px] p-1 border border-transparent group-hover:border-gray-300"
+                            disabled={isCombined}
+                          >
+                            {endTime.toLocaleString(DateTime.TIME_SIMPLE)}
+                          </button>
+                        );
+                      }}
+                    />
+                  );
+                }}
               />
             </div>
 
-            <button
-              className="pr-2 transition-opacity opacity-0 group-hover:opacity-100"
-              disabled={isCombined}
-            >
-              <ReactDatePicker
-                title="Change Date"
-                selected={date.toJSDate()}
-                name="date"
-                onChange={this.props.onDateChanged}
-                readOnly={isCombined}
-                customInput={<CalendarToday />}
-                popperPlacement="bottom"
-              />
-            </button>
+            <MUIPickerHandler
+              renderPicker={(otherProps) => {
+                return (
+                  <DatePicker
+                    {...otherProps}
+                    value={date}
+                    onChange={this.props.onDateChanged}
+                    renderInput={({ inputRef, InputProps }) => {
+                      return (
+                        <button
+                          ref={inputRef}
+                          onClick={InputProps.onClick}
+                          disabled={isCombined}
+                          className="transition-opacity mr-2 opacity-0 group-hover:opacity-100"
+                        >
+                          <CalendarToday />
+                        </button>
+                      );
+                    }}
+                  />
+                );
+              }}
+            />
           </div>
 
-          <div className="flex-grow h-full flex justify-center items-center text-base">
+          <div className="w-[150px] h-full flex justify-center items-center text-base">
             <span>{duration.toFormat("hh:mm:ss")}</span>
           </div>
 

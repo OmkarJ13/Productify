@@ -1,21 +1,26 @@
 import React from "react";
-
+import { DatePicker, TimePicker } from "@mui/lab";
 import {
   AttachMoney,
   CalendarToday,
-  LocalOffer,
+  ArrowBack,
+  ArrowForward,
+  ArrowDownward,
   Menu,
   Schedule,
   TrendingUp,
+  Alarm,
+  Add,
+  Done,
 } from "@mui/icons-material";
-import ReactDatePicker from "react-datepicker";
 import { DateTime } from "luxon";
 import { connect } from "react-redux";
 import { v4 as uuid } from "uuid";
 
 import { timerEntryActions } from "../../store/slices/timerEntrySlice";
+import { getRelativeDate } from "../../helpers/getRelativeDate";
 import TagSelector from "../../components/Tag/TagSelector";
-import TimePicker from "../UI/TimePicker";
+import MUIPickerHandler from "../UI/MUIPickerHandler";
 
 class ManualMode extends React.Component {
   constructor(props) {
@@ -46,8 +51,8 @@ class ManualMode extends React.Component {
     } = this.props.timerEntry;
 
     return (
-      <div className="w-full flex items-center gap-4 p-4 shadow-md border border-gray-200 text-sm">
-        <div className="w-[75%] h-full flex items-center gap-4 border-r border-dotted border-gray-300">
+      <div className="w-full h-[75px] flex items-center gap-4 p-4 shadow-md border border-gray-200 text-sm">
+        <div className="flex-grow h-full flex items-center border-r border-dotted border-gray-300">
           <input
             name="task"
             type="text"
@@ -59,7 +64,7 @@ class ManualMode extends React.Component {
           />
 
           <TagSelector
-            className="w-[15%] h-full flex justify-center items-center"
+            className="w-[150px] px-4 h-full flex justify-center items-center"
             initialTag={tag}
             onTagSelected={this.props.onTagSelected}
           />
@@ -86,41 +91,102 @@ class ManualMode extends React.Component {
             </button>
           </div>
 
-          <div className="flex items-center gap-1">
-            <TimePicker
-              value={startTime.toFormat("HH:mm")}
-              onChange={this.props.onStartTimeChanged}
+          <div className="mx-4 flex items-center gap-1">
+            <MUIPickerHandler
+              renderPicker={(otherProps) => {
+                return (
+                  <TimePicker
+                    {...otherProps}
+                    value={startTime}
+                    onChange={this.props.onStartTimeChanged}
+                    renderInput={({ inputRef, InputProps }) => {
+                      return (
+                        <button
+                          ref={inputRef}
+                          onClick={InputProps.onClick}
+                          className="w-[80px] p-2 border border-gray-300"
+                        >
+                          {startTime.toLocaleString(DateTime.TIME_SIMPLE)}
+                        </button>
+                      );
+                    }}
+                  />
+                );
+              }}
             />
-            <span>-</span>
-            <TimePicker
-              value={endTime.toFormat("HH:mm")}
-              onChange={this.props.onEndTimeChanged}
+            -
+            <MUIPickerHandler
+              renderPicker={(otherProps) => {
+                return (
+                  <TimePicker
+                    {...otherProps}
+                    value={endTime}
+                    onChange={this.props.onEndTimeChanged}
+                    renderInput={({ inputRef, InputProps }) => {
+                      return (
+                        <button
+                          ref={inputRef}
+                          onClick={InputProps.onClick}
+                          className="w-[80px] p-2 border border-gray-300"
+                        >
+                          {endTime.toLocaleString(DateTime.TIME_SIMPLE)}
+                        </button>
+                      );
+                    }}
+                  />
+                );
+              }}
             />
           </div>
 
-          <button className="pr-2">
-            <ReactDatePicker
-              title="Select Date"
-              selected={date.toJSDate()}
-              onChange={this.props.onDateChanged}
-              customInput={<CalendarToday />}
-              popperPlacement="bottom"
+          <button className="mr-2">
+            <MUIPickerHandler
+              renderPicker={(otherProps) => {
+                return (
+                  <DatePicker
+                    {...otherProps}
+                    value={date.toJSDate()}
+                    onChange={this.props.onDateChanged}
+                    showToolbar={false}
+                    renderInput={({ inputRef, InputProps }) => {
+                      return (
+                        <button
+                          className="w-[125px] flex justify-between items-center gap-2 p-2 border border-gray-300 capitalize"
+                          ref={inputRef}
+                          onClick={InputProps.onClick}
+                        >
+                          <span className="flex-grow text-center">
+                            {getRelativeDate(date, "day")}
+                          </span>
+                          <CalendarToday fontSize="small" />
+                        </button>
+                      );
+                    }}
+                    components={{
+                      OpenPickerIcon: CalendarToday,
+                      LeftArrowIcon: ArrowBack,
+                      RightArrowIcon: ArrowForward,
+                      SwitchViewIcon: ArrowDownward,
+                    }}
+                  />
+                );
+              }}
             />
           </button>
         </div>
 
-        <div className="w-[12.5%] h-full flex justify-center items-center text-base">
+        <div className="w-[135px] h-full flex justify-center items-center text-base">
           <span>{duration.toFormat("hh:mm:ss")}</span>
         </div>
 
-        <div className="w-[12.5%] h-full flex items-center gap-4">
+        <div className="h-full flex items-center gap-2">
           <button
             onClick={this.saveTimerEntry}
-            className="w-[80%] p-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase"
+            className="p-2 bg-gradient-to-br from-blue-500 to-blue-400 rounded-[50%] text-white uppercase"
           >
-            Add
+            <Done />
           </button>
-          <div className="w-[20%] flex flex-col">
+          <div className="flex flex-col">
             <button
               title="Timer Mode"
               onClick={this.props.onSwitchTimerMode}

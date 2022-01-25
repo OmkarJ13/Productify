@@ -13,62 +13,10 @@ import YearlyGraph from "./YearlyGraph";
 class Reports extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      date: DateTime.fromObject({
-        hour: 0,
-        minute: 0,
-        second: 0,
-        millisecond: 0,
-      }),
-      week: Interval.fromDateTimes(
-        DateTime.now().startOf("week"),
-        DateTime.now().endOf("week")
-      ),
-      year: DateTime.now().year,
-    };
-
-    this.dateChangeHandler = this.dateChangeHandler.bind(this);
-    this.weekChangeHandler = this.weekChangeHandler.bind(this);
-    this.yearChangeHandler = this.yearChangeHandler.bind(this);
   }
 
   componentDidMount() {
     document.title = "Reports | Productify";
-  }
-
-  dateChangeHandler(e) {
-    const btn = e.target.closest("button");
-
-    this.setState({
-      date:
-        btn.name === "plus"
-          ? this.state.date.plus({ days: 1 })
-          : this.state.date.minus({ days: 1 }),
-    });
-  }
-
-  weekChangeHandler(e) {
-    const btn = e.target.closest("button");
-
-    this.setState({
-      week:
-        btn.name === "plus"
-          ? this.state.week.mapEndpoints((endPoint) =>
-              endPoint.plus({ week: 1 })
-            )
-          : this.state.week.mapEndpoints((endPoint) =>
-              endPoint.minus({ week: 1 })
-            ),
-    });
-  }
-
-  yearChangeHandler(e) {
-    const btn = e.target.closest("button");
-
-    this.setState({
-      year: btn.name === "plus" ? this.state.year + 1 : this.state.year - 1,
-    });
   }
 
   render() {
@@ -76,21 +24,9 @@ class Reports extends React.Component {
 
     return (
       <div className="w-10/12 min-h-screen flex flex-wrap ml-auto text-gray-600">
-        <DailyDistributionChart
-          timerEntryData={timerEntryData}
-          date={this.state.date}
-          dateChangeHandler={this.dateChangeHandler}
-        />
-        <WeeklyGraph
-          timerEntryData={timerEntryData}
-          week={this.state.week}
-          weekChangeHandler={this.weekChangeHandler}
-        />
-        <YearlyGraph
-          timerEntryData={timerEntryData}
-          year={this.state.year}
-          yearChangeHandler={this.yearChangeHandler}
-        />
+        <DailyDistributionChart timerEntryData={timerEntryData} />
+        <WeeklyGraph timerEntryData={timerEntryData} />
+        <YearlyGraph timerEntryData={timerEntryData} />
       </div>
     );
   }

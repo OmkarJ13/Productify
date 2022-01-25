@@ -6,7 +6,9 @@ import {
   Close,
   LocalOffer,
   Menu,
+  PlayArrow,
   Schedule,
+  Stop,
   TrendingUp,
 } from "@mui/icons-material";
 import { DateTime, Duration } from "luxon";
@@ -142,8 +144,8 @@ class TimerMode extends React.Component {
       this.props.timerEntry;
 
     return (
-      <div className="w-full flex items-center gap-4 p-4 shadow-md border border-gray-200 text-sm">
-        <div className="w-[75%] h-full flex items-center gap-4 border-r border-dotted border-gray-300">
+      <div className="w-full h-[75px] flex items-center gap-4 p-4 shadow-md border border-gray-200 text-sm">
+        <div className="flex-grow h-full flex items-center border-r border-dotted border-gray-300">
           <input
             name="task"
             type="text"
@@ -155,7 +157,7 @@ class TimerMode extends React.Component {
           />
 
           <TagSelector
-            className="w-[15%] h-full flex justify-center items-center"
+            className="w-[150px] px-4 h-full flex justify-center items-center"
             initialTag={tag}
             onTagSelected={this.props.onTagSelected}
           />
@@ -183,28 +185,28 @@ class TimerMode extends React.Component {
           </div>
         </div>
 
-        <span className="w-[12.5%] h-full flex justify-center items-center text-base">
+        <span className="w-[135px] h-full flex justify-center items-center text-base">
           {duration.toFormat("hh:mm:ss")}
         </span>
 
-        <div className="w-[12.5%] h-full flex items-center gap-4">
+        <div className="h-full flex items-center gap-2">
           {this.props.currentTimer !== null ? (
             <button
               onClick={this.stopTracking}
-              className="w-[80%] p-2 bg-gradient-to-br from-red-500 to-red-400 text-white uppercase"
+              className="p-2 bg-gradient-to-br from-red-500 to-red-400 rounded-[50%] text-white uppercase"
             >
-              Stop
+              <Stop />
             </button>
           ) : (
             <button
               onClick={this.startTracking}
-              className="w-[80%] p-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase"
+              className="p-2 bg-gradient-to-br from-blue-500 to-blue-400 rounded-[50%] text-white uppercase"
             >
-              Start
+              <PlayArrow />
             </button>
           )}
 
-          <div className="w-[20%] flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center items-center">
             {this.props.currentTimer !== null ? (
               <button title="Discard Timer" onClick={this.discardTimer}>
                 <Close fontSize="small" />

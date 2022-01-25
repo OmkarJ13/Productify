@@ -5,24 +5,41 @@ import { Duration } from "luxon";
 import { Doughnut } from "react-chartjs-2";
 
 import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
+import PeriodChanger from "../UI/PeriodChanger";
+import { DateTime, Interval } from "luxon";
 
 class DailyDistributionChart extends React.Component {
-  getDailyData(timerEntries, date) {
-    if (!timerEntries) return [];
+  constructor(props) {
+    super(props);
+    this.state = {
+      period: Interval.fromDateTimes(
+        DateTime.now().startOf("day"),
+        DateTime.now().endOf("day")
+      ),
+    };
 
-    return timerEntries.filter((timerEntry) => {
-      return timerEntry.date.toString() === date.toString();
+    this.handlePeriodChanged = this.handlePeriodChanged.bind(this);
+  }
+
+  handlePeriodChanged(e) {
+    this.setState({
+      period: e,
     });
   }
 
-  getDailyTitle(date) {
-    return date.toRelativeCalendar({ unit: "days" });
+  getDailyData(timerEntries) {
+    if (!timerEntries) return [];
+
+    return timerEntries.filter((timerEntry) => {
+      return this.state.period.contains(timerEntry.date);
+    });
   }
 
   render() {
-    const { timerEntryData, date } = this.props;
+    const { timerEntryData } = this.props;
+    const { period } = this.state;
 
-    const dailyData = this.getDailyData(timerEntryData, date);
+    const dailyData = this.getDailyData(timerEntryData);
     const totalDailyDuration = dailyData.reduce((acc, cur) => {
       return acc.plus(cur.duration);
     }, Duration.fromMillis(0));
@@ -45,26 +62,11 @@ class DailyDistributionChart extends React.Component {
 
     return (
       <div className="w-1/3 h-[75vh] flex flex-col justify-between items-center gap-4 p-4 border-r border-b border-gray-300">
-        <div className="inline-flex">
-          <button
-            name="minus"
-            onClick={this.props.dateChangeHandler}
-            className="px-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-l-full"
-          >
-            <ArrowBack />
-          </button>
-          <span className="flex items-center gap-2 px-4 py-2 border-y border-gray-300 capitalize">
-            <Today />
-            {this.getDailyTitle(date)}
-          </span>
-          <button
-            name="plus"
-            onClick={this.props.dateChangeHandler}
-            className="px-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-r-full"
-          >
-            <ArrowForward />
-          </button>
-        </div>
+        <PeriodChanger
+          unit="day"
+          period={this.state.period}
+          onChange={this.handlePeriodChanged}
+        />
         {totalDailyDuration.as("hours") === 0 ? (
           <h2>No Time Tracked...</h2>
         ) : (

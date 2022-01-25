@@ -4,14 +4,34 @@ import { ArrowBack, ArrowForward, Today } from "@mui/icons-material";
 import { Line } from "react-chartjs-2";
 import { Info } from "luxon";
 import { Duration } from "luxon";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
+
+import PeriodChanger from "../UI/PeriodChanger";
 
 class YearlyGraph extends React.Component {
-  getYearlyData(timerEntries, year) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      period: Interval.fromDateTimes(
+        DateTime.now().startOf("day"),
+        DateTime.now().endOf("day")
+      ),
+    };
+
+    this.handlePeriodChanged = this.handlePeriodChanged.bind(this);
+  }
+
+  handlePeriodChanged(e) {
+    this.setState({
+      period: e,
+    });
+  }
+
+  getYearlyData(timerEntries) {
     if (!timerEntries) return [];
 
     const filteredTimerEntries = timerEntries.filter((timerEntry) => {
-      return timerEntry.date.year === year;
+      return this.state.period.contains(timerEntry.date);
     });
 
     const sortedTimerEntries = filteredTimerEntries.sort(
@@ -30,15 +50,11 @@ class YearlyGraph extends React.Component {
     return yearlyData;
   }
 
-  getYearlyTitle(year) {
-    const date = DateTime.fromObject({ year: year });
-    return date.toRelativeCalendar({ unit: "years" });
-  }
-
   render() {
-    const { timerEntryData, year } = this.props;
+    const { timerEntryData } = this.props;
+    const { period } = this.state;
 
-    const yearlyData = this.getYearlyData(timerEntryData, year);
+    const yearlyData = this.getYearlyData(timerEntryData);
 
     const yearlyDurations = yearlyData.map((timerEntriesByMonth) => {
       return timerEntriesByMonth.reduce((acc, cur) => {
@@ -57,33 +73,18 @@ class YearlyGraph extends React.Component {
     return (
       <div className="w-full flex flex-col gap-4 p-4">
         <div className="flex justify-between items-center">
-          <div className="inline-flex self-end">
-            <button
-              name="minus"
-              onClick={this.props.yearChangeHandler}
-              className="px-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-l-full"
-            >
-              <ArrowBack />
-            </button>
-            <span className="flex items-center gap-2 px-4 py-2 border-y border-gray-300 capitalize">
-              <Today />
-              {this.getYearlyTitle(year)}
-            </span>
-            <button
-              name="plus"
-              onClick={this.props.yearChangeHandler}
-              className="px-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-r-full"
-            >
-              <ArrowForward />
-            </button>
-          </div>
-
           <span className="flex items-baseline gap-1">
             Clocked Hours -
             <strong className="font-bold text-lg">
               {totalYearlyDuration.toFormat("hh:mm:ss")}
             </strong>
           </span>
+
+          <PeriodChanger
+            unit="year"
+            period={this.state.period}
+            onChange={this.handlePeriodChanged}
+          />
         </div>
 
         <Line

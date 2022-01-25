@@ -1,68 +1,75 @@
 import React from "react";
-
-import { CalendarToday } from "@mui/icons-material";
-import ReactDatePicker from "react-datepicker";
-import { DateTime } from "luxon";
+import { DateTimePicker } from "@mui/lab";
+import { Add, CalendarToday } from "@mui/icons-material";
 
 import TagSelector from "../Tag/TagSelector";
 import PrioritySelector from "./PrioritySelector";
+import MUIPickerHandler from "../UI/MUIPickerHandler";
 
 class TodoCreator extends React.Component {
   render() {
     const { task, tag, priority, dueDate } = this.props.todo;
 
     return (
-      <div className="w-full flex items-center gap-4 p-4 shadow-md border border-gray-200 text-sm">
-        <div className="w-[90%] h-full flex items-center">
+      <div className="w-full h-[75px] flex items-center gap-4 p-4 shadow-md border border-gray-200 text-sm">
+        <div className="flex-grow h-full flex items-center">
           <input
             type="text"
             value={task}
-            className="w-[50%] p-2 border border-gray-300 focus:outline-none"
-            placeholder="Enter Task Name..."
+            className="flex-grow p-2 border border-gray-300 focus:outline-none"
+            placeholder="What are you planning to do?"
             onChange={this.props.onTaskChanged}
           />
 
           <TagSelector
-            className="w-[15%] h-full border-r border-dotted border-gray-300"
+            className="w-[150px] h-full px-4 border-r border-dotted border-gray-300"
             initialTag={tag}
             onTagSelected={this.props.onTagSelected}
           />
 
           <PrioritySelector
-            className="w-[15%] h-full border-r border-dotted border-gray-300"
+            className="w-[150px] h-full border-r border-dotted border-gray-300"
             initialPriority={priority}
             onPrioritySelected={this.props.onPrioritySelected}
           />
 
-          <div className="w-[20%] flex justify-center items-center gap-3">
-            <span>Due</span>
-            <button>
-              <ReactDatePicker
-                title="Change Date"
-                selected={dueDate.toJSDate()}
-                popperPlacement="bottom"
-                minDate={DateTime.now().toJSDate()}
-                customInput={
-                  <div className="p-1 flex gap-2 items-center border border-gray-300">
-                    <span className="capitalize">
-                      {dueDate.diffNow().as("days") > 1
-                        ? dueDate.toLocaleString(DateTime.DATE_MED)
-                        : dueDate.toRelativeCalendar()}
-                    </span>
-                    <CalendarToday />
-                  </div>
-                }
-                onChange={this.props.onDueDateChanged}
-              />
-            </button>
-          </div>
+          <MUIPickerHandler
+            renderPicker={(otherProps) => {
+              return (
+                <DateTimePicker
+                  {...otherProps}
+                  value={dueDate.toJSDate()}
+                  onChange={this.props.onDueDateChanged}
+                  showToolbar={false}
+                  renderInput={({ inputRef, InputProps }) => {
+                    return (
+                      <button
+                        ref={inputRef}
+                        onClick={InputProps.onClick}
+                        className="w-[250px] mx-4 p-2 flex justify-between items-center gap-2 border border-gray-300"
+                      >
+                        <div className="flex-grow flex justify-center items-baseline gap-1 capitalize">
+                          Due
+                          <span>{dueDate.toRelativeCalendar()}</span>
+                          On
+                          <span>{dueDate.toFormat("HH:mm")}</span>
+                        </div>
+                        <CalendarToday fontSize="small" />
+                      </button>
+                    );
+                  }}
+                />
+              );
+            }}
+          />
         </div>
-        <div className="w-[10%] h-full">
+
+        <div className="h-full flex items-center">
           <button
-            className="w-full px-4 py-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase"
+            className="w-full p-2 rounded-[50%] bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase"
             onClick={this.createTodo}
           >
-            Add
+            <Add />
           </button>
         </div>
       </div>

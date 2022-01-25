@@ -33,7 +33,7 @@ class Timer extends React.Component {
   generateTimerForm() {
     return this.state.trackingMode === "timer" ? (
       <TimerEntryStateManager
-        UI={(otherProps) => (
+        renderTimerEntry={(otherProps) => (
           <TimerMode
             trackingMode={this.state.trackingMode}
             onSwitchTimerMode={this.handleSwitchTimerMode}
@@ -44,7 +44,7 @@ class Timer extends React.Component {
       />
     ) : (
       <TimerEntryStateManager
-        UI={(otherProps) => (
+        renderTimerEntry={(otherProps) => (
           <ManualMode
             trackingMode={this.state.trackingMode}
             onSwitchTimerMode={this.handleSwitchTimerMode}

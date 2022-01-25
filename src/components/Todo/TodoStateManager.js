@@ -9,12 +9,7 @@ class TodoStateManager extends React.Component {
         task: "",
         tag: undefined,
         priority: 0,
-        dueDate: DateTime.fromObject({
-          millisecond: 0,
-          second: 0,
-          minute: 0,
-          hour: 0,
-        }),
+        dueDate: DateTime.now().startOf("minute"),
       },
     };
 
@@ -53,11 +48,11 @@ class TodoStateManager extends React.Component {
     });
   }
 
-  handleDueDateChanged(date) {
+  handleDueDateChanged(dueDate) {
     this.setState({
       todo: {
         ...this.state.todo,
-        dueDate: DateTime.fromJSDate(new Date(date)),
+        dueDate,
       },
     });
   }
@@ -72,29 +67,21 @@ class TodoStateManager extends React.Component {
         task: "",
         tag: undefined,
         priority: 0,
-        dueDate: DateTime.fromObject({
-          millisecond: 0,
-          second: 0,
-          minute: 0,
-          hour: 0,
-        }),
+        dueDate: DateTime.now().startOf("day"),
       },
     });
   }
 
   render() {
-    const { UI } = this.props;
-    return (
-      <UI
-        todo={this.state.todo}
-        onTaskChanged={this.handleTaskChanged}
-        onTagSelected={this.handleTagSelected}
-        onPrioritySelected={this.handlePrioritySelected}
-        onDueDateChanged={this.handleDueDateChanged}
-        resetState={this.resetState}
-        updateState={this.updateState}
-      />
-    );
+    return this.props.renderTodo({
+      todo: this.state.todo,
+      onTaskChanged: this.handleTaskChanged,
+      onTagSelected: this.handleTagSelected,
+      onPrioritySelected: this.handlePrioritySelected,
+      onDueDateChanged: this.handleDueDateChanged,
+      resetState: this.resetState,
+      updateState: this.updateState,
+    });
   }
 }
 

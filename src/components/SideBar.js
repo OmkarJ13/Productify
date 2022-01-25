@@ -22,8 +22,8 @@ class SideBar extends React.Component {
   render() {
     const path = this.props.location.pathname;
     return (
-      <div className="fixed top-0 left-0 w-2/12 h-screen flex flex-col items-center gap-8 py-8 bg-gradient-to-br from-blue-500 to-blue-400 text-white">
-        <h1 className="flex items-center gap-2 text-3xl font-bold">
+      <div className="fixed top-0 left-0 w-[15%] h-screen flex flex-col items-center gap-8 py-8 bg-gradient-to-br from-blue-500 to-blue-400 text-white">
+        <h1 className="flex items-center gap-1 text-2xl font-bold">
           <AlarmOn fontSize="large" />
           Productify
         </h1>

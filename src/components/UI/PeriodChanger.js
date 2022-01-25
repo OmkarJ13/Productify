@@ -1,24 +1,34 @@
-import { ArrowBack, ArrowForward, Today, Close } from "@mui/icons-material";
-import { Info, DateTime, Interval } from "luxon";
+// Fix bug -
+// Click this week, select different date from same week.
+// Change view to day
+// Selected day should be today, instead of previously selected.
+
 import React from "react";
+
+import { ArrowBack, ArrowForward, Today, Close } from "@mui/icons-material";
+import { DatePicker, PickersDay } from "@mui/lab";
+import { DateTime, Interval } from "luxon";
+
+import { getRelativeDate } from "../../helpers/getRelativeDate";
+import MUIPickerHandler from "./MUIPickerHandler";
 
 class PeriodChanger extends React.Component {
   constructor(props) {
     super(props);
 
-    const { unit } = this.props;
     this.state = {
-      datePickerOpen: false,
-      period:
-        this.props.value ??
-        Interval.fromDateTimes(
-          DateTime.now().startOf(unit),
-          DateTime.now().endOf(unit)
-        ),
+      period: this.props.value ?? this.getPeriod(),
     };
 
     this.handlePeriodChanged = this.handlePeriodChanged.bind(this);
-    this.handleResetPeriod = this.handleResetPeriod.bind(this);
+    this.handlePeriodSet = this.handlePeriodSet.bind(this);
+    this.handlePeriodReset = this.handlePeriodReset.bind(this);
+    this.pickersDayWeek = this.pickersDayWeek.bind(this);
+  }
+
+  getPeriod(date = DateTime.now()) {
+    const { unit } = this.props;
+    return Interval.fromDateTimes(date.startOf(unit), date.endOf(unit));
   }
 
   handlePeriodChanged(e) {
@@ -26,78 +36,78 @@ class PeriodChanger extends React.Component {
     if (clicked) {
       const { unit } = this.props;
       if (clicked.name === "minus") {
-        this.setState(
-          (prevState) => {
-            return {
-              period: prevState.period.mapEndpoints((endPoint) => {
-                return endPoint.minus({
-                  [unit]: 1,
-                });
-              }),
-            };
-          },
-          () => {
-            this.props.onChange && this.props.onChange(this.state.period);
-          }
-        );
+        this.setState((prevState) => {
+          return {
+            period: prevState.period.mapEndpoints((endPoint) => {
+              return endPoint.minus({
+                [unit]: 1,
+              });
+            }),
+          };
+        });
       } else {
-        this.setState(
-          (prevState) => {
-            return {
-              period: prevState.period.mapEndpoints((endPoint) => {
-                return endPoint.plus({
-                  [unit]: 1,
-                });
-              }),
-            };
-          },
-          () => {
-            this.props.onChange && this.props.onChange(this.state.period);
-          }
-        );
+        this.setState((prevState) => {
+          return {
+            period: prevState.period.mapEndpoints((endPoint) => {
+              return endPoint.plus({
+                [unit]: 1,
+              });
+            }),
+          };
+        });
       }
     }
   }
 
-  handleResetPeriod(e) {
+  handlePeriodSet(e) {
+    if (this.state.period.contains(e)) return;
+
+    this.setState({
+      period: this.getPeriod(e),
+    });
+  }
+
+  handlePeriodReset(e) {
     this.resetState();
   }
 
   resetState() {
-    const { unit } = this.props;
-    this.setState(
-      {
-        period: Interval.fromDateTimes(
-          DateTime.now().startOf(unit),
-          DateTime.now().endOf(unit)
-        ),
-      },
-      () => {
-        this.props.onChange && this.props.onChange(this.state.period);
-      }
+    this.setState({
+      period: this.getPeriod(),
+    });
+  }
+
+  pickersDayWeek(date, selectedDates, pickersDayProps) {
+    if (this.props.unit !== "week") return <PickersDay {...pickersDayProps} />;
+    const dayInWeek = this.state.period.contains(date);
+
+    return (
+      <PickersDay
+        {...pickersDayProps}
+        className={`${dayInWeek && "Mui-selected"}`}
+      />
     );
   }
 
-  getPeriodTitle() {
+  componentDidUpdate(prevProps, prevState) {
     const { unit } = this.props;
     const { period } = this.state;
-
-    switch (unit) {
-      case "day":
-        return period.start.toFormat("dd/MM/yyyy");
-
-      case "week":
-        return period.toFormat("dd/MM/yyyy");
-
-      case "month":
-        return `${Info.months()[period.start.month - 1]}, ${period.start.year}`;
-
-      case "year":
-        return period.start.year;
+    if (prevState.period.toISODate() !== period.toISODate()) {
+      this.props.onChange && this.props.onChange(period);
+    }
+    if (prevProps.unit !== unit) {
+      this.setState({
+        period: this.getPeriod(period.start),
+      });
     }
   }
 
   render() {
+    const { unit } = this.props;
+    const { period } = this.state;
+
+    console.log("Render");
+
     return (
       <div className="inline-flex">
         <button
@@ -108,11 +118,46 @@ class PeriodChanger extends React.Component {
           <ArrowBack />
         </button>
         <span className="flex justify-between items-center gap-4 px-4 py-2 border-y border-gray-300 capitalize">
-          <div className="flex items-center gap-2">
-            <Today />
-            {this.getPeriodTitle()}
-          </div>
-          <button onClick={this.handleResetPeriod}>
+          <MUIPickerHandler
+            renderPicker={(otherProps) => {
+              return (
+                <DatePicker
+                  {...otherProps}
+                  value={period.start}
+                  onChange={this.handlePeriodSet}
+                  showToolbar={false}
+                  views={
+                    unit === "month"
+                      ? ["month", "year"]
+                      : unit === "year"
+                      ? ["year"]
+                      : ["day"]
+                  }
+                  renderInput={({ inputRef, InputProps }) => {
+                    return (
+                      <button
+                        ref={inputRef}
+                        onClick={InputProps.onClick}
+                        className="flex items-center gap-2 capitalize"
+                      >
+                        <Today />
+                        {getRelativeDate(
+                          this.state.period.start,
+                          this.props.unit
+                        )}
+                      </button>
+                    );
+                  }}
+                  renderDay={this.pickersDayWeek}
+                />
+              );
+            }}
+          />
+          <button
+            onClick={this.handlePeriodReset}
+            disabled={period.toISODate() === this.getPeriod().toISODate()}
+            className="disabled:text-gray-300"
+          >
             <Close />
           </button>
         </span>

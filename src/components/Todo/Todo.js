@@ -11,8 +11,12 @@ class Todo extends React.Component {
 
   render() {
     return (
-      <div className="w-10/12 min-h-screen flex flex-col ml-auto p-8 text-gray-600">
-        <TodoStateManager UI={TodoCreator} />
+      <div className="w-[85%] min-h-screen flex flex-col gap-6 ml-auto p-6 text-gray-600">
+        <TodoStateManager
+          renderTodo={(otherProps) => {
+            return <TodoCreator {...otherProps} />;
+          }}
+        />
         <Todos />
       </div>
     );

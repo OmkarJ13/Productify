@@ -6,8 +6,8 @@ import { Duration } from "luxon";
 import { DateTime } from "luxon";
 import { Interval } from "luxon";
 
-import { getDaysPassed } from "../../helpers/getDaysPassed";
 import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
+import { getRelativeDate } from "../../helpers/getRelativeDate";
 import TimerEntry from "./TimerEntry";
 import TimerEntryStateManager from "./TimerEntryStateManager";
 import GroupByWindow from "../TimeTracker/GroupByWindow";
@@ -92,7 +92,7 @@ class TimerEntries extends React.Component {
     ]);
 
     const sortedRecent = groupedByGroup.sort((a, b) => {
-      return getDaysPassed(b[0].date) - getDaysPassed(a[0].date);
+      return b[0].date.toMillis() - a[0].date.toMillis();
     });
 
     const groupedFinal = sortedRecent.map((groupedByGroup) =>
@@ -131,7 +131,7 @@ class TimerEntries extends React.Component {
           break;
 
         case "date":
-          heading = heading.toRelativeCalendar({ unit: "days" });
+          heading = getRelativeDate(heading, "day");
           break;
       }
 
@@ -169,7 +169,7 @@ class TimerEntries extends React.Component {
             isProductive: timerEntry.isProductive,
             isBillable: timerEntry.isBillable,
           }}
-          UI={(otherProps) => {
+          renderTimerEntry={(otherProps) => {
             return (
               <TimerEntry
                 allEntries={timerEntry.allEntries}
@@ -200,13 +200,13 @@ class TimerEntries extends React.Component {
     const timerEntries = this.getTimerEntries(filteredEntries);
 
     return (
-      <div className="w-full min-h-full flex flex-col gap-8 pt-4">
+      <div className="w-full flex-grow flex flex-col gap-8">
         <div className="w-full flex justify-between items-center">
-          <span className="flex items-baseline gap-2 font-light">
+          <span className="flex items-baseline gap-2 text-base">
             Time Tracked
-            <strong className="text-lg">
+            <span className="text-lg">
               {filteredTotal.toFormat("h'h' m'm'")}
-            </strong>
+            </span>
           </span>
 
           <div className="flex items-center gap-8">

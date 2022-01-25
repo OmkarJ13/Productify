@@ -21,9 +21,11 @@ class TagSelector extends React.Component {
             <span className="text-xs">Add Tag</span>
           </div>
         ) : (
-          <div className="w-full flex justify-center items-center gap-2">
+          <div className="w-full h-full flex justify-center items-center gap-2">
             <LocalOffer htmlColor={initialTag.color} fontSize="small" />
-            <span className="text-xs">{initialTag.name}</span>
+            <span className="flex-grow text-xs overflow-hidden text-ellipsis whitespace-nowrap">
+              {initialTag.name}
+            </span>
           </div>
         )}
       </FloatingWindowHandler>

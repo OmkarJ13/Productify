@@ -99,7 +99,7 @@ class GroupByWindow extends React.Component {
           </li>
           <li>
             <button
-              data-option="dueDate"
+              data-option="date"
               className="w-[250px] flex justify-between items-center gap-4 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
             >
               <div className="flex items-center gap-4">
@@ -115,14 +115,14 @@ class GroupByWindow extends React.Component {
           </li>
           <li>
             <button
-              data-option="dueDate"
+              data-option="priority"
               className="w-[250px] flex justify-between items-center gap-4 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
             >
               <div className="flex items-center gap-4">
                 <Error fontSize="small" />
                 Priority
               </div>
-              {this.props.group === "date" && (
+              {this.props.group === "priority" && (
                 <span className="text-blue-500">
                   <Check />
                 </span>

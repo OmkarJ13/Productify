@@ -3,21 +3,40 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 import { Duration } from "luxon";
 import { Info } from "luxon";
+import { Interval, DateTime } from "luxon";
 
 import { ArrowBack, ArrowForward, Today } from "@mui/icons-material";
-import { getDaysPassed } from "../../helpers/getDaysPassed";
 import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
+import PeriodChanger from "../UI/PeriodChanger";
 
 class WeeklyGraph extends React.Component {
-  getWeeklyData(timerEntries, week) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      period: Interval.fromDateTimes(
+        DateTime.now().startOf("week"),
+        DateTime.now().endOf("week")
+      ),
+    };
+
+    this.handlePeriodChanged = this.handlePeriodChanged.bind(this);
+  }
+
+  handlePeriodChanged(e) {
+    this.setState({
+      period: e,
+    });
+  }
+
+  getWeeklyData(timerEntries) {
     if (!timerEntries) return [];
 
     const timerEntriesFiltered = timerEntries.filter((timerEntry) => {
-      return week.contains(timerEntry.date);
+      return this.state.period.contains(timerEntry.date);
     });
 
     const timerEntriesSorted = timerEntriesFiltered.sort((a, b) => {
-      return getDaysPassed(b.date) - getDaysPassed(a.date);
+      return b.date.toMillis() - a.date.toMillis();
     });
 
     const weeklyData = [];
@@ -32,12 +51,9 @@ class WeeklyGraph extends React.Component {
     return weeklyData;
   }
 
-  getWeeklyTitle(week) {
-    return week.start.toRelativeCalendar({ unit: "weeks" });
-  }
-
   render() {
-    const { timerEntryData, week } = this.props;
+    const { timerEntryData } = this.props;
+    const { period } = this.state;
 
     const weeklyData = groupTimerEntriesBy(timerEntryData, ["isProductive"]);
     const productive = weeklyData[0][0].isProductive
@@ -52,7 +68,7 @@ class WeeklyGraph extends React.Component {
       ? weeklyData[1]
       : [];
 
-    const productiveData = this.getWeeklyData(productive, week);
+    const productiveData = this.getWeeklyData(productive);
     const productiveDurations = productiveData.map((timerEntriesByDay) => {
       return timerEntriesByDay.reduce((acc, cur) => {
         return acc.plus(cur.duration);
@@ -62,7 +78,7 @@ class WeeklyGraph extends React.Component {
       weeklyDuration.as("hours")
     );
 
-    const unproductiveData = this.getWeeklyData(unproductive, week);
+    const unproductiveData = this.getWeeklyData(unproductive);
     const unproductiveDurations = unproductiveData.map((timerEntriesByDay) => {
       return timerEntriesByDay.reduce((acc, cur) => {
         return acc.plus(cur.duration);
@@ -87,28 +103,12 @@ class WeeklyGraph extends React.Component {
             <strong className="font-bold text-lg">
               {totalWeeklyDuration.toFormat("hh:mm:ss")}
             </strong>
+            <PeriodChanger
+              unit="week"
+              period={this.state.period}
+              onChange={this.handlePeriodChanged}
+            />
           </span>
-
-          <div className="flex self-start">
-            <button
-              name="minus"
-              onClick={this.props.weekChangeHandler}
-              className="px-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-l-full"
-            >
-              <ArrowBack />
-            </button>
-            <span className="flex items-center gap-2 px-4 py-2 border-y border-gray-300 capitalize">
-              <Today />
-              {this.getWeeklyTitle(week)}
-            </span>
-            <button
-              name="plus"
-              onClick={this.props.weekChangeHandler}
-              className="px-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-r-full"
-            >
-              <ArrowForward />
-            </button>
-          </div>
         </div>
 
         <div className="w-full h-full">
