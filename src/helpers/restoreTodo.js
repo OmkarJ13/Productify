@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
 export const restoreTodo = (todo) => {
-  todo.dueDate = DateTime.fromISO(todo.dueDate);
+  todo.date = DateTime.fromISO(todo.date);
   return todo;
 };

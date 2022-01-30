@@ -4,21 +4,37 @@ import React from "react";
 class TodoStateManager extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      todo: {
+      todo: this.props.todo ?? {
+        isDone: false,
+        isBillable: false,
         task: "",
         tag: undefined,
         priority: 0,
-        dueDate: DateTime.now().startOf("minute"),
+        date: DateTime.now().startOf("day"),
       },
     };
 
+    this.handleDoneChanged = this.handleDoneChanged.bind(this);
     this.handleTaskChanged = this.handleTaskChanged.bind(this);
     this.handleTagSelected = this.handleTagSelected.bind(this);
+    this.handleBillableChanged = this.handleBillableChanged.bind(this);
     this.handlePrioritySelected = this.handlePrioritySelected.bind(this);
-    this.handleDueDateChanged = this.handleDueDateChanged.bind(this);
+    this.handleDateChanged = this.handleDateChanged.bind(this);
     this.resetState = this.resetState.bind(this);
     this.updateState = this.updateState.bind(this);
+  }
+
+  handleDoneChanged(e) {
+    this.setState((prevState) => {
+      return {
+        todo: {
+          ...this.state.todo,
+          isDone: !prevState.todo.isDone,
+        },
+      };
+    });
   }
 
   handleTaskChanged(e) {
@@ -39,6 +55,17 @@ class TodoStateManager extends React.Component {
     });
   }
 
+  handleBillableChanged(e) {
+    this.setState((prevState) => {
+      return {
+        todo: {
+          ...prevState.todo,
+          isBillable: !prevState.todo.isBillable,
+        },
+      };
+    });
+  }
+
   handlePrioritySelected(priority) {
     this.setState({
       todo: {
@@ -48,11 +75,11 @@ class TodoStateManager extends React.Component {
     });
   }
 
-  handleDueDateChanged(dueDate) {
+  handleDateChanged(date) {
     this.setState({
       todo: {
         ...this.state.todo,
-        dueDate,
+        date,
       },
     });
   }
@@ -67,7 +94,7 @@ class TodoStateManager extends React.Component {
         task: "",
         tag: undefined,
         priority: 0,
-        dueDate: DateTime.now().startOf("day"),
+        date: DateTime.now().startOf("day"),
       },
     });
   }
@@ -75,10 +102,12 @@ class TodoStateManager extends React.Component {
   render() {
     return this.props.renderTodo({
       todo: this.state.todo,
+      onDoneChanged: this.handleDoneChanged,
       onTaskChanged: this.handleTaskChanged,
       onTagSelected: this.handleTagSelected,
+      onBillableChanged: this.handleBillableChanged,
       onPrioritySelected: this.handlePrioritySelected,
-      onDueDateChanged: this.handleDueDateChanged,
+      onDateChanged: this.handleDateChanged,
       resetState: this.resetState,
       updateState: this.updateState,
     });

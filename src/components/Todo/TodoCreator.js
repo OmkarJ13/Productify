@@ -1,18 +1,42 @@
+import {
+  AddTask,
+  AttachMoney,
+  CalendarToday,
+  MoneyOffCsred,
+} from "@mui/icons-material";
+import { DatePicker } from "@mui/lab";
+import { connect } from "react-redux";
+import { v4 as uuid } from "uuid";
 import React from "react";
-import { DateTimePicker } from "@mui/lab";
-import { Add, CalendarToday } from "@mui/icons-material";
 
-import TagSelector from "../Tag/TagSelector";
-import PrioritySelector from "./PrioritySelector";
+import { getRelativeDate } from "../../helpers/getRelativeDate";
+import { todoActions } from "../../store/slices/todoSlice";
 import MUIPickerHandler from "../UI/MUIPickerHandler";
+import PrioritySelector from "./PrioritySelector";
+import TagSelector from "../Tag/TagSelector";
 
 class TodoCreator extends React.Component {
+  constructor(props) {
+    super(props);
+    this.createTodo = this.createTodo.bind(this);
+  }
+
+  createTodo(e) {
+    const todo = {
+      ...this.props.todo,
+      id: uuid(),
+    };
+
+    this.props.addTodo(todo);
+    this.props.resetState();
+  }
+
   render() {
-    const { task, tag, priority, dueDate } = this.props.todo;
+    const { task, tag, priority, isBillable, date } = this.props.todo;
 
     return (
-      <div className="w-full h-[75px] flex items-center gap-4 p-4 shadow-md border border-gray-200 text-sm">
-        <div className="flex-grow h-full flex items-center">
+      <div className="w-full h-[75px] flex items-center p-4 shadow-md border border-gray-200 text-sm">
+        <div className="flex-grow-[2] h-full flex items-center">
           <input
             type="text"
             value={task}
@@ -21,55 +45,62 @@ class TodoCreator extends React.Component {
             onChange={this.props.onTaskChanged}
           />
 
-          <TagSelector
-            className="w-[150px] h-full px-4 border-r border-dotted border-gray-300"
-            initialTag={tag}
-            onTagSelected={this.props.onTagSelected}
-          />
+          <div className="w-[250px] h-full flex justify-center items-center gap-4 mx-4">
+            <TagSelector
+              className="max-w-[125px] h-full"
+              initialTag={tag}
+              onTagSelected={this.props.onTagSelected}
+            />
 
-          <PrioritySelector
-            className="w-[150px] h-full border-r border-dotted border-gray-300"
-            initialPriority={priority}
-            onPrioritySelected={this.props.onPrioritySelected}
-          />
+            <PrioritySelector
+              initialPriority={priority}
+              onPrioritySelected={this.props.onPrioritySelected}
+            />
+          </div>
 
-          <MUIPickerHandler
-            renderPicker={(otherProps) => {
-              return (
-                <DateTimePicker
-                  {...otherProps}
-                  value={dueDate.toJSDate()}
-                  onChange={this.props.onDueDateChanged}
-                  showToolbar={false}
-                  renderInput={({ inputRef, InputProps }) => {
-                    return (
-                      <button
-                        ref={inputRef}
-                        onClick={InputProps.onClick}
-                        className="w-[250px] mx-4 p-2 flex justify-between items-center gap-2 border border-gray-300"
-                      >
-                        <div className="flex-grow flex justify-center items-baseline gap-1 capitalize">
-                          Due
-                          <span>{dueDate.toRelativeCalendar()}</span>
-                          On
-                          <span>{dueDate.toFormat("HH:mm")}</span>
-                        </div>
-                        <CalendarToday fontSize="small" />
-                      </button>
-                    );
-                  }}
-                />
-              );
-            }}
-          />
+          <button
+            className={`h-full p-1 border-x border-gray-300 text-gray-500 px-2`}
+            onClick={this.props.onBillableChanged}
+          >
+            {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
+          </button>
         </div>
 
-        <div className="h-full flex items-center">
+        <div className="flex-grow h-full flex justify-end items-center gap-4">
+          <div className="flex-grow flex justify-center">
+            <MUIPickerHandler
+              renderPicker={(otherProps) => {
+                return (
+                  <DatePicker
+                    {...otherProps}
+                    value={date.toJSDate()}
+                    onChange={this.props.onDateChanged}
+                    showToolbar={false}
+                    renderInput={({ inputRef, InputProps }) => {
+                      return (
+                        <button
+                          ref={inputRef}
+                          onClick={InputProps.onClick}
+                          className="w-[125px] p-2 flex justify-between items-center gap-2 border border-gray-300"
+                        >
+                          <span className="flex-grow flex justify-center capitalize">
+                            {getRelativeDate(date, "day")}
+                          </span>
+                          <CalendarToday fontSize="small" />
+                        </button>
+                      );
+                    }}
+                  />
+                );
+              }}
+            />
+          </div>
+
           <button
-            className="w-full p-2 rounded-[50%] bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase"
+            className="p-2 rounded-[50%] bg-gradient-to-br from-blue-500 to-blue-400 text-white uppercase"
             onClick={this.createTodo}
           >
-            <Add />
+            <AddTask />
           </button>
         </div>
       </div>
@@ -77,4 +108,12 @@ class TodoCreator extends React.Component {
   }
 }
 
-export default TodoCreator;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addTodo: (todo) => {
+      dispatch(todoActions.create(todo));
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(TodoCreator);

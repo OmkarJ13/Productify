@@ -1,8 +1,8 @@
 import { Error } from "@mui/icons-material";
 import React from "react";
 
-import FloatingWindow from "../UI/FloatingWindow";
 import { priorities } from "../../helpers/priorities";
+import FloatingWindow from "../UI/FloatingWindow";
 
 class PrioritySelectorWindow extends React.Component {
   constructor(props) {
@@ -34,8 +34,9 @@ class PrioritySelectorWindow extends React.Component {
                 <button
                   key={i}
                   data-idx={i}
-                  className={`w-full p-2 flex items-center gap-2 ${priority.styles} hover:bg-gray-200`}
+                  className={`w-full p-2 flex items-center gap-2 hover:bg-gray-200`}
                   onClick={this.prioritySelectedHandler}
+                  style={{ color: priority.color }}
                 >
                   <Error />
                   <span>{priority.name}</span>

@@ -79,7 +79,7 @@ class TagSelectorWindow extends React.Component {
             ></input>
           </div>
 
-          <div className="min-w-[20vw] max-h-[25vh] py-2 flex flex-col  overflow-y-auto">
+          <div className="w-[20vw] max-h-[25vh] py-2 flex flex-col overflow-y-auto">
             {results.length === 0 && "No Tags Found"}
             {results.length > 0 &&
               results.map((tag) => {
@@ -91,7 +91,9 @@ class TagSelectorWindow extends React.Component {
                     data-tag={JSON.stringify(tag)}
                   >
                     <LocalOffer htmlColor={tag.color} />
-                    <span className="text-md">{tag.name}</span>
+                    <span className="text-md w-full text-left overflow-hidden overflow-ellipsis">
+                      {tag.name}
+                    </span>
                   </button>
                 );
               })}

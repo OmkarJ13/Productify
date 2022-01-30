@@ -6,6 +6,7 @@ import {
   Close,
   LocalOffer,
   Menu,
+  MoneyOffCsred,
   PlayArrow,
   Schedule,
   Stop,
@@ -140,12 +141,11 @@ class TimerMode extends React.Component {
   }
 
   render() {
-    const { task, isProductive, isBillable, tag, duration } =
-      this.props.timerEntry;
+    const { task, isBillable, tag, duration } = this.props.timerEntry;
 
     return (
-      <div className="w-full h-[75px] flex items-center gap-4 p-4 shadow-md border border-gray-200 text-sm">
-        <div className="flex-grow h-full flex items-center border-r border-dotted border-gray-300">
+      <div className="w-full h-[75px] flex items-center p-4 shadow-md border border-gray-200 text-sm">
+        <div className="flex-grow h-full flex items-center">
           <input
             name="task"
             type="text"
@@ -156,36 +156,24 @@ class TimerMode extends React.Component {
             onChange={this.props.onTaskChanged}
           />
 
-          <TagSelector
-            className="w-[150px] px-4 h-full flex justify-center items-center"
-            initialTag={tag}
-            onTagSelected={this.props.onTagSelected}
-          />
-
-          <div className="h-full flex items-center">
-            <button
-              title="Is Productive?"
-              onClick={this.props.onProductiveChanged}
-              className={`h-full px-2 border-l border-dotted border-gray-300 ${
-                isProductive ? "text-blue-500" : "text-gray-400"
-              }`}
-            >
-              <TrendingUp />
-            </button>
-
-            <button
-              title="Is Billable?"
-              onClick={this.props.onBillableChanged}
-              className={`h-full px-2 border-l border-dotted border-gray-300 ${
-                isBillable ? "text-blue-500" : "text-gray-400"
-              }`}
-            >
-              <AttachMoney />
-            </button>
+          <div className="w-[150px] mx-4 flex justify-center items-center">
+            <TagSelector
+              className="max-w-[125px] h-full flex justify-center items-center"
+              initialTag={tag}
+              onTagSelected={this.props.onTagSelected}
+            />
           </div>
+
+          <button
+            title="Is Billable?"
+            onClick={this.props.onBillableChanged}
+            className={`h-full px-2 mr-4 border-x border-gray-300 text-gray-500`}
+          >
+            {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
+          </button>
         </div>
 
-        <span className="w-[135px] h-full flex justify-center items-center text-base">
+        <span className="w-[135px] h-full mr-4 flex justify-center items-center text-base">
           {duration.toFormat("hh:mm:ss")}
         </span>
 

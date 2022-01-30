@@ -5,11 +5,12 @@ import {
   Alarm,
   AttachMoney,
   CalendarToday,
+  MoneyOffCsred,
+  PlayArrow,
   PlayCircle,
   Save,
   TrendingUp,
 } from "@mui/icons-material";
-import ReactDatePicker from "react-datepicker";
 import { ToastContainer, toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { DateTime } from "luxon";
@@ -20,6 +21,7 @@ import { currentTimerActions } from "../../store/slices/currentTimerSlice";
 import TagSelector from "../Tag/TagSelector";
 import TimerEntryOptionsSelector from "./TimerEntryOptionsSelector";
 import MUIPickerHandler from "../UI/MUIPickerHandler";
+import { getRelativeDate } from "../../helpers/getRelativeDate";
 
 class TimerEntry extends React.Component {
   constructor(props) {
@@ -129,10 +131,10 @@ class TimerEntry extends React.Component {
         />
 
         <div
-          className="group w-full flex items-center gap-4 p-4 border-x border-b border-gray-300 text-sm"
+          className="group w-full flex items-center p-4 border-x border-b border-gray-300 text-sm"
           onClick={isCombined ? this.toggleAllEntries : null}
         >
-          <div className="flex-grow h-full flex items-center border-r border-dotted border-gray-300">
+          <div className="flex-grow h-full flex items-center">
             <div className="flex-grow flex items-center gap-4">
               {isCombined && (
                 <div className="w-[35px] h-[35px] flex justify-center items-center bg-blue-500 text-white rounded-[50%]">
@@ -152,35 +154,23 @@ class TimerEntry extends React.Component {
               />
             </div>
 
-            <TagSelector
-              className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 w-[150px] h-full px-4 flex justify-center items-center"
-              disabled={isCombined}
-              initialTag={tag}
-              onTagSelected={this.props.onTagSelected}
-            />
-
-            <div className="transition-opacity h-full flex items-center opacity-0 group-hover:opacity-100">
-              <button
-                title="Is Productive?"
-                onClick={this.props.onProductiveChanged}
-                className={`h-full px-2 border-x border-dotted border-gray-300 ${
-                  isProductive ? "text-blue-500" : "text-gray-400"
-                }`}
+            <div className="w-[150px] flex justify-center items-center mx-4">
+              <TagSelector
+                className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 max-w-[125px] h-full flex justify-center items-center"
                 disabled={isCombined}
-              >
-                <TrendingUp />
-              </button>
-              <button
-                title="Is Billable?"
-                onClick={this.props.onBillableChanged}
-                className={`h-full px-2 border-r border-dotted border-gray-300 ${
-                  isBillable ? "text-blue-500" : "text-gray-400"
-                }`}
-                disabled={isCombined}
-              >
-                <AttachMoney />
-              </button>
+                initialTag={tag}
+                onTagSelected={this.props.onTagSelected}
+              />
             </div>
+
+            <button
+              title="Is Billable?"
+              onClick={this.props.onBillableChanged}
+              className={`transition-opacity opacity-0 group-hover:opacity-100 h-full px-2 border-x border-gray-300 text-gray-500`}
+              disabled={isCombined}
+            >
+              {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
+            </button>
 
             <div className="mx-4 flex items-center gap-1">
               <MUIPickerHandler
@@ -245,9 +235,12 @@ class TimerEntry extends React.Component {
                           ref={inputRef}
                           onClick={InputProps.onClick}
                           disabled={isCombined}
-                          className="transition-opacity mr-2 opacity-0 group-hover:opacity-100"
+                          className="transition-opacity w-[125px] mr-4 opacity-0 group-hover:opacity-100 capitalize flex items-center gap-2 border border-gray-300 p-1"
                         >
-                          <CalendarToday />
+                          <span className="flex-grow text-center">
+                            {getRelativeDate(date, "day")}
+                          </span>
+                          <CalendarToday fontSize="small" />
                         </button>
                       );
                     }}
@@ -257,26 +250,26 @@ class TimerEntry extends React.Component {
             />
           </div>
 
-          <div className="w-[150px] h-full flex justify-center items-center text-base">
+          <div className="w-[150px] h-full flex justify-center items-center text-base border-x border-gray-300">
             <span>{duration.toFormat("hh:mm:ss")}</span>
           </div>
 
-          <div className="h-full flex items-center gap-2">
+          <div className="h-full flex items-center gap-1 ml-4">
             <button
               title="Continue Timer Entry"
               onClick={this.continueTimerEntry}
-              className="transition-opacity opacity-0 group-hover:opacity-100"
+              className="bg-blue-500 text-white rounded-[50%] disabled:bg-gray-600"
               disabled={isCombined || this.props.currentTimer !== null}
             >
-              <PlayCircle />
+              <PlayArrow fontSize="small" />
             </button>
-          </div>
 
-          <TimerEntryOptionsSelector
-            onDuplicate={this.duplicateEntry}
-            onDelete={this.deleteEntry}
-            disabled={isCombined}
-          />
+            <TimerEntryOptionsSelector
+              onDuplicate={this.duplicateEntry}
+              onDelete={this.deleteEntry}
+              disabled={isCombined}
+            />
+          </div>
         </div>
         {showAllEntries && this.props.allEntries}
       </>

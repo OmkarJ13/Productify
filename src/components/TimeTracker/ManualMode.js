@@ -12,6 +12,7 @@ import {
   Alarm,
   Add,
   Done,
+  MoneyOffCsred,
 } from "@mui/icons-material";
 import { DateTime } from "luxon";
 import { connect } from "react-redux";
@@ -51,8 +52,8 @@ class ManualMode extends React.Component {
     } = this.props.timerEntry;
 
     return (
-      <div className="w-full h-[75px] flex items-center gap-4 p-4 shadow-md border border-gray-200 text-sm">
-        <div className="flex-grow h-full flex items-center border-r border-dotted border-gray-300">
+      <div className="w-full h-[75px] flex items-center p-4 shadow-md border border-gray-200 text-sm">
+        <div className="flex-grow h-full flex items-center border-r border-gray-300">
           <input
             name="task"
             type="text"
@@ -63,35 +64,23 @@ class ManualMode extends React.Component {
             onChange={this.props.onTaskChanged}
           />
 
-          <TagSelector
-            className="w-[150px] px-4 h-full flex justify-center items-center"
-            initialTag={tag}
-            onTagSelected={this.props.onTagSelected}
-          />
-
-          <div className="h-full flex items-center">
-            <button
-              title="Is Productive?"
-              onClick={this.props.onProductiveChanged}
-              className={`h-full px-2 border-x border-dotted border-gray-300 ${
-                isProductive ? "text-blue-500" : "text-gray-400"
-              }`}
-            >
-              <TrendingUp />
-            </button>
-
-            <button
-              title="Is Billable?"
-              onClick={this.props.onBillableChanged}
-              className={`h-full px-2 border-x border-dotted border-gray-300 ${
-                isBillable ? "text-blue-500" : "text-gray-400"
-              }`}
-            >
-              <AttachMoney />
-            </button>
+          <div className="w-[150px] flex justify-center items-center mx-4">
+            <TagSelector
+              className="max-w-[125px] h-full flex justify-center items-center"
+              initialTag={tag}
+              onTagSelected={this.props.onTagSelected}
+            />
           </div>
 
-          <div className="mx-4 flex items-center gap-1">
+          <button
+            title="Is Billable?"
+            onClick={this.props.onBillableChanged}
+            className={`h-full mr-4 px-2 border-x border-gray-300`}
+          >
+            {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
+          </button>
+
+          <div className="mr-4 flex items-center gap-1">
             <MUIPickerHandler
               renderPicker={(otherProps) => {
                 return (
@@ -139,43 +128,41 @@ class ManualMode extends React.Component {
             />
           </div>
 
-          <button className="mr-2">
-            <MUIPickerHandler
-              renderPicker={(otherProps) => {
-                return (
-                  <DatePicker
-                    {...otherProps}
-                    value={date.toJSDate()}
-                    onChange={this.props.onDateChanged}
-                    showToolbar={false}
-                    renderInput={({ inputRef, InputProps }) => {
-                      return (
-                        <button
-                          className="w-[125px] flex justify-between items-center gap-2 p-2 border border-gray-300 capitalize"
-                          ref={inputRef}
-                          onClick={InputProps.onClick}
-                        >
-                          <span className="flex-grow text-center">
-                            {getRelativeDate(date, "day")}
-                          </span>
-                          <CalendarToday fontSize="small" />
-                        </button>
-                      );
-                    }}
-                    components={{
-                      OpenPickerIcon: CalendarToday,
-                      LeftArrowIcon: ArrowBack,
-                      RightArrowIcon: ArrowForward,
-                      SwitchViewIcon: ArrowDownward,
-                    }}
-                  />
-                );
-              }}
-            />
-          </button>
+          <MUIPickerHandler
+            renderPicker={(otherProps) => {
+              return (
+                <DatePicker
+                  {...otherProps}
+                  value={date.toJSDate()}
+                  onChange={this.props.onDateChanged}
+                  showToolbar={false}
+                  renderInput={({ inputRef, InputProps }) => {
+                    return (
+                      <button
+                        className="w-[125px] flex justify-between items-center gap-2 p-2 mr-4 border border-gray-300 capitalize"
+                        ref={inputRef}
+                        onClick={InputProps.onClick}
+                      >
+                        <span className="flex-grow text-center">
+                          {getRelativeDate(date, "day")}
+                        </span>
+                        <CalendarToday fontSize="small" />
+                      </button>
+                    );
+                  }}
+                  components={{
+                    OpenPickerIcon: CalendarToday,
+                    LeftArrowIcon: ArrowBack,
+                    RightArrowIcon: ArrowForward,
+                    SwitchViewIcon: ArrowDownward,
+                  }}
+                />
+              );
+            }}
+          />
         </div>
 
-        <div className="w-[135px] h-full flex justify-center items-center text-base">
+        <div className="w-[135px] h-full flex justify-center items-center mr-4 text-base">
           <span>{duration.toFormat("hh:mm:ss")}</span>
         </div>
 

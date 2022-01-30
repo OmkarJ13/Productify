@@ -16,14 +16,17 @@ class TagSelector extends React.Component {
         )}
       >
         {initialTag === undefined ? (
-          <div className="w-full flex justify-center items-center gap-2">
-            <LocalOffer />
+          <div className="w-full flex justify-center items-center gap-2 px-2 py-1 rounded-full bg-gray-400 text-white">
+            <LocalOffer fontSize="small" />
             <span className="text-xs">Add Tag</span>
           </div>
         ) : (
-          <div className="w-full h-full flex justify-center items-center gap-2">
-            <LocalOffer htmlColor={initialTag.color} fontSize="small" />
-            <span className="flex-grow text-xs overflow-hidden text-ellipsis whitespace-nowrap">
+          <div
+            className="w-full flex justify-center items-center gap-2 px-2 py-1 rounded-full text-white"
+            style={{ backgroundColor: initialTag.color }}
+          >
+            <LocalOffer fontSize="small" />
+            <span className="max-w-full text-xs overflow-hidden text-ellipsis whitespace-nowrap">
               {initialTag.name}
             </span>
           </div>

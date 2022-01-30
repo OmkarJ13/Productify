@@ -6084,10 +6084,10 @@
   dependencies:
     "yallist" "^4.0.0"
 
-"luxon@^1.21.3 || ^2.x", "luxon@^1.28.0 || ^2.0.0", "luxon@^2.2.0":
-  "integrity" "sha512-LwmknessH4jVIseCsizUgveIHwlLv/RQZWC2uDSMfGJs7w8faPUi2JFxfyfMcTPrpNbChTem3Uz6IKRtn+LcIA=="
-  "resolved" "https://registry.npmjs.org/luxon/-/luxon-2.2.0.tgz"
-  "version" "2.2.0"
+"luxon@^1.21.3 || ^2.x", "luxon@^1.28.0 || ^2.0.0", "luxon@^2.3.0":
+  "integrity" "sha512-gv6jZCV+gGIrVKhO90yrsn8qXPKD8HYZJtrUDSfEbow8Tkw84T9OnCyJhWvnJIaIF/tBuiAjZuQHUt1LddX2mg=="
+  "resolved" "https://registry.npmjs.org/luxon/-/luxon-2.3.0.tgz"
+  "version" "2.3.0"
 
 "lz-string@^1.4.4":
   "integrity" "sha1-wNjq82BZ9wV5bh40SBHPTEmNOiY="

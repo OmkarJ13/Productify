@@ -106,8 +106,6 @@ class PeriodChanger extends React.Component {
     const { unit } = this.props;
     const { period } = this.state;
 
-    console.log("Render");
-
     return (
       <div className="inline-flex">
         <button

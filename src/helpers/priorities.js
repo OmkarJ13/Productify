@@ -1,14 +1,14 @@
 export const priorities = [
   {
     name: "High",
-    styles: "text-red-500",
+    color: "#f87171",
   },
   {
-    name: "Moderate ",
-    styles: "text-yellow-500",
+    name: "Moderate",
+    color: "#eab308",
   },
   {
     name: "Low",
-    styles: "text-green-500",
+    color: "#84cc16",
   },
 ];

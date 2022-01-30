@@ -8,13 +8,14 @@ import FloatingWindowHandler from "../UI/FloatingWindowHandler";
 class PrioritySelector extends React.Component {
   getPriorityTitle(priority) {
     const priorityName = priorities[priority].name;
-    const priorityStyles = priorities[priority].styles;
+    const priorityColor = priorities[priority].color;
 
     return (
       <div
-        className={`flex justify-center items-center gap-2 ${priorityStyles}`}
+        className={`w-full h-full px-2 py-1 flex justify-center items-center gap-2 text-white rounded-full`}
+        style={{ backgroundColor: priorityColor }}
       >
-        <Error />
+        <Error fontSize="small" />
         <span className="text-xs">{priorityName}</span>
       </div>
     );

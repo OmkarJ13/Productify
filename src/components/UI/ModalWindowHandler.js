@@ -12,6 +12,7 @@ class ModalWindowHandler extends React.Component {
   }
 
   openWindow() {
+    this.props.onClick && this.props.onClick();
     if (!this.state.isOpen) this.setState({ isOpen: true });
   }
 
