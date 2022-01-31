@@ -78,7 +78,7 @@ class TodoTrackWindow extends React.Component {
       <FloatingWindow
         open={this.props.open}
         onClose={this.props.onClose}
-        anchorEl={this.props.anchorEl}
+        buttonRef={this.props.buttonRef}
       >
         <div className="flex flex-col gap-2 p-4">
           <div className="flex items-center border-b border-gray-300">

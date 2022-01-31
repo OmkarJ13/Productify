@@ -3,7 +3,7 @@ import { Error } from "@mui/icons-material";
 
 import { priorities } from "../../helpers/priorities";
 import PrioritySelectorWindow from "./PrioritySelectorWindow";
-import FloatingWindowHandler from "../UI/FloatingWindowHandler";
+import WindowHandler from "../UI/WindowHandler";
 
 class PrioritySelector extends React.Component {
   getPriorityTitle(priority) {
@@ -25,7 +25,7 @@ class PrioritySelector extends React.Component {
     const { initialPriority, onPrioritySelected, ...otherProps } = this.props;
 
     return (
-      <FloatingWindowHandler
+      <WindowHandler
         {...otherProps}
         Window={(otherProps) => {
           return (
@@ -37,7 +37,7 @@ class PrioritySelector extends React.Component {
         }}
       >
         {this.getPriorityTitle(initialPriority)}
-      </FloatingWindowHandler>
+      </WindowHandler>
     );
   }
 }

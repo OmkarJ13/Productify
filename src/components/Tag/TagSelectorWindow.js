@@ -5,7 +5,7 @@ import { AddCircle, LocalOffer, Search } from "@mui/icons-material";
 import { tagActions } from "../../store/slices/tagSlice";
 import FloatingWindow from "../UI/FloatingWindow";
 import TagCreatorWindow from "./TagCreatorWindow";
-import ModalWindowHandler from "../UI/ModalWindowHandler";
+import WindowHandler from "../UI/WindowHandler";
 
 class TagSelectorWindow extends React.Component {
   constructor(props) {
@@ -66,7 +66,7 @@ class TagSelectorWindow extends React.Component {
       <FloatingWindow
         open={this.props.open}
         onClose={this.props.onClose}
-        anchorEl={this.props.anchorEl}
+        buttonRef={this.props.buttonRef}
       >
         <div className="flex flex-col gap-4 p-4 text-sm">
           <div className="px-1 py-2 flex gap-1 items-center border border-gray-300">
@@ -99,7 +99,7 @@ class TagSelectorWindow extends React.Component {
               })}
           </div>
 
-          <ModalWindowHandler
+          <WindowHandler
             className="w-full flex justify-center items-center gap-2 text-blue-500"
             Window={(otherProps) => {
               return (
@@ -111,7 +111,7 @@ class TagSelectorWindow extends React.Component {
             }}
           >
             <AddCircle /> Create A New Tag
-          </ModalWindowHandler>
+          </WindowHandler>
         </div>
       </FloatingWindow>
     );

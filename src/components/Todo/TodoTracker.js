@@ -1,6 +1,6 @@
 import React from "react";
 
-import FloatingWindowHandler from "../UI/FloatingWindowHandler";
+import WindowHandler from "../UI/WindowHandler";
 import TodoTrackerWindow from "./TodoTrackerWindow";
 
 class TodoTracker extends React.Component {
@@ -8,7 +8,7 @@ class TodoTracker extends React.Component {
     const { onManualTimeEntered, onStartTracking, timerActive, ...otherProps } =
       this.props;
     return (
-      <FloatingWindowHandler
+      <WindowHandler
         {...otherProps}
         Window={(otherProps) => {
           return (
@@ -21,7 +21,7 @@ class TodoTracker extends React.Component {
         }}
       >
         {this.props.children}
-      </FloatingWindowHandler>
+      </WindowHandler>
     );
   }
 }

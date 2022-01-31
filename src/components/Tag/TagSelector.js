@@ -2,14 +2,14 @@ import React from "react";
 import { LocalOffer } from "@mui/icons-material";
 
 import TagSelectorWindow from "./TagSelectorWindow";
-import FloatingWindowHandler from "../UI/FloatingWindowHandler";
+import WindowHandler from "../UI/WindowHandler";
 
 class TagSelector extends React.Component {
   render() {
     const { initialTag, onTagSelected, ...otherProps } = this.props;
 
     return (
-      <FloatingWindowHandler
+      <WindowHandler
         {...otherProps}
         Window={(otherProps) => (
           <TagSelectorWindow onTagSelected={onTagSelected} {...otherProps} />
@@ -31,7 +31,7 @@ class TagSelector extends React.Component {
             </span>
           </div>
         )}
-      </FloatingWindowHandler>
+      </WindowHandler>
     );
   }
 }

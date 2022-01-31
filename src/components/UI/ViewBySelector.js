@@ -1,8 +1,8 @@
 import { ViewList } from "@mui/icons-material";
 import React from "react";
 
-import FloatingWindowHandler from "./FloatingWindowHandler";
 import ViewByWindow from "./ViewByWindow";
+import WindowHandler from "./WindowHandler";
 
 class ViewBySelector extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class ViewBySelector extends React.Component {
     const { view } = this.state;
 
     return (
-      <FloatingWindowHandler
+      <WindowHandler
         className="h-full flex items-center gap-2"
         {...otherProps}
         Window={(otherProps) => {
@@ -44,7 +44,7 @@ class ViewBySelector extends React.Component {
         }}
       >
         <ViewList /> View
-      </FloatingWindowHandler>
+      </WindowHandler>
     );
   }
 }

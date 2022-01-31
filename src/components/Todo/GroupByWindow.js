@@ -32,7 +32,7 @@ class GroupByWindow extends React.Component {
       <FloatingWindow
         open={this.props.open}
         onClose={this.props.onClose}
-        anchorEl={this.props.anchorEl}
+        buttonRef={this.props.buttonRef}
       >
         <ul onClick={this.handleGroupBySelected}>
           {this.groups.map((group) => {

@@ -2,9 +2,8 @@ import {
   AttachMoney,
   CalendarToday,
   LocalOffer,
-  Task,
-  TrendingUp,
   Check,
+  Note,
 } from "@mui/icons-material";
 import React from "react";
 
@@ -13,6 +12,7 @@ import FloatingWindow from "../UI/FloatingWindow";
 class GroupByWindow extends React.Component {
   constructor(props) {
     super(props);
+    this.groups = ["task", "tag", "isBillable", "date"];
     this.handleGroupBySelected = this.handleGroupBySelected.bind(this);
   }
 
@@ -29,89 +29,45 @@ class GroupByWindow extends React.Component {
       <FloatingWindow
         open={this.props.open}
         onClose={this.props.onClose}
-        anchorEl={this.props.anchorEl}
+        buttonRef={this.props.buttonRef}
       >
         <ul onClick={this.handleGroupBySelected}>
-          <li>
-            <button
-              data-option="task"
-              className="w-[250px] flex justify-between items-center gap-4 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
-            >
-              <div className="flex items-center gap-4">
-                <Task fontSize="small" />
-                Task
-              </div>
-              {this.props.group === "task" && (
-                <span className="text-blue-500">
-                  <Check />
-                </span>
-              )}
-            </button>
-          </li>
-          <li>
-            <button
-              data-option="tag"
-              className="w-[250px] flex justify-between items-center gap-4 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
-            >
-              <div className="flex items-center gap-4">
-                <LocalOffer fontSize="small" />
-                Tag
-              </div>
-              {this.props.group === "tag" && (
-                <span className="text-blue-500">
-                  <Check />
-                </span>
-              )}
-            </button>
-          </li>
-          <li>
-            <button
-              data-option="isProductive"
-              className="w-[250px] flex justify-between items-center gap-4 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
-            >
-              <div className="flex items-center gap-4">
-                <TrendingUp fontSize="small" />
-                Productive
-              </div>
-              {this.props.group === "isProductive" && (
-                <span className="text-blue-500">
-                  <Check />
-                </span>
-              )}
-            </button>
-          </li>
-          <li>
-            <button
-              data-option="isBillable"
-              className="w-[250px] flex justify-between items-center gap-4 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
-            >
-              <div className="flex items-center gap-4">
-                <AttachMoney fontSize="small" />
-                Billable
-              </div>
-              {this.props.group === "isBillable" && (
-                <span className="text-blue-500">
-                  <Check />
-                </span>
-              )}
-            </button>
-          </li>
-          <li>
-            <button
-              data-option="date"
-              className="w-[250px] flex justify-between items-center gap-4 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
-            >
-              <div className="flex items-center gap-4">
-                <CalendarToday fontSize="small" />
-                Date
-              </div>
-              {this.props.group === "date" && (
-                <span className="text-blue-500">
-                  <Check />
-                </span>
-              )}
-            </button>
-          </li>
+          {this.groups.map((group) => {
+            return (
+              <li>
+                <button
+                  data-option={group}
+                  className="w-[250px] flex justify-between items-center gap-4 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
+                >
+                  <div className="flex items-center gap-4">
+                    {group === "task" && (
+                      <>
+                        <Note /> Task
+                      </>
+                    )}
+                    {group === "tag" && (
+                      <>
+                        <LocalOffer /> Tag
+                      </>
+                    )}
+                    {group === "isBillable" && (
+                      <>
+                        <AttachMoney /> Is Billable
+                      </>
+                    )}
+                    {group === "date" && (
+                      <>
+                        <CalendarToday /> Date
+                      </>
+                    )}
+                  </div>
+                  {this.props.group === group && (
+                    <Check className="text-blue-500" />
+                  )}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </FloatingWindow>
     );

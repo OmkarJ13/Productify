@@ -1,6 +1,6 @@
 import React from "react";
 
-class DailyTimerEntries extends React.Component {
+class GroupedEntries extends React.Component {
   render() {
     const { heading, subHeading, data } = this.props;
 
@@ -17,4 +17,4 @@ class DailyTimerEntries extends React.Component {
   }
 }
 
-export default DailyTimerEntries;
+export default GroupedEntries;

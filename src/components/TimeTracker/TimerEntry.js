@@ -2,14 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 
 import {
-  Alarm,
   AttachMoney,
   CalendarToday,
   MoneyOffCsred,
   PlayArrow,
-  PlayCircle,
   Save,
-  TrendingUp,
 } from "@mui/icons-material";
 import { ToastContainer, toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
@@ -107,16 +104,8 @@ class TimerEntry extends React.Component {
 
   render() {
     const { showAllEntries } = this.state;
-    const {
-      task,
-      date,
-      startTime,
-      endTime,
-      tag,
-      duration,
-      isProductive,
-      isBillable,
-    } = this.props.timerEntry;
+    const { task, date, startTime, endTime, tag, duration, isBillable } =
+      this.props.timerEntry;
 
     const isCombined = this.props.allEntries !== undefined;
     const { isDuplicate } = this.props;

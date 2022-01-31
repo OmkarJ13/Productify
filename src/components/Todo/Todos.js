@@ -9,7 +9,7 @@ import { priorities } from "../../helpers/priorities";
 import ViewBySelector from "../UI/ViewBySelector";
 import GroupBySelector from "../UI/GroupBySelector";
 import PeriodChanger from "../UI/PeriodChanger";
-import GroupedData from "../UI/GroupedData";
+import GroupedEntries from "../UI/GroupedEntries";
 
 import GroupByWindow from "./GroupByWindow";
 import TodoStateManager from "./TodoStateManager";
@@ -99,7 +99,7 @@ class Todos extends React.Component {
       const data = this.generateTodos(todos);
 
       return (
-        <GroupedData
+        <GroupedEntries
           heading={heading}
           subHeading={`${complete.length}/${todos.length}`}
           data={data}

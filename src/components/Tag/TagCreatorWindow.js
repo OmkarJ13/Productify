@@ -125,7 +125,7 @@ class TagCreatorWindow extends React.Component {
             onClick={this.tagCreatedHandler}
             disabled={!this.state.isValid}
           >
-            <LocalOffer /> Create Tag
+            <LocalOffer /> Save
           </button>
         </div>
       </ModalWindow>

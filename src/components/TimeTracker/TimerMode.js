@@ -4,13 +4,11 @@ import { connect } from "react-redux";
 import {
   AttachMoney,
   Close,
-  LocalOffer,
   Menu,
   MoneyOffCsred,
   PlayArrow,
   Schedule,
   Stop,
-  TrendingUp,
 } from "@mui/icons-material";
 import { DateTime, Duration } from "luxon";
 import { v4 as uuid } from "uuid";

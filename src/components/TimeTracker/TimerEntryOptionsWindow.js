@@ -26,7 +26,7 @@ class TimerEntryOptionsWindow extends React.Component {
       <FloatingWindow
         open={this.props.open}
         onClose={this.props.onClose}
-        anchorEl={this.props.anchorEl}
+        buttonRef={this.props.buttonRef}
       >
         <ul>
           <li>

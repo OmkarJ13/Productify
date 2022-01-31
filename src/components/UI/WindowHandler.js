@@ -1,10 +1,9 @@
 import React from "react";
 
-class FloatingWindowHandler extends React.Component {
+class WindowHandler extends React.Component {
   constructor(props) {
     super(props);
-
-    this.anchorEl = React.createRef();
+    this.buttonRef = React.createRef();
 
     this.state = {
       isOpen: false,
@@ -34,9 +33,13 @@ class FloatingWindowHandler extends React.Component {
         <Window
           open={isOpen}
           onClose={this.closeWindow}
-          anchorEl={this.anchorEl}
+          buttonRef={this.buttonRef}
         />
-        <button {...otherProps} onClick={this.toggleWindow} ref={this.anchorEl}>
+        <button
+          {...otherProps}
+          onClick={this.toggleWindow}
+          ref={this.buttonRef}
+        >
           {this.props.children}
         </button>
       </>
@@ -44,4 +47,4 @@ class FloatingWindowHandler extends React.Component {
   }
 }
 
-export default FloatingWindowHandler;
+export default WindowHandler;

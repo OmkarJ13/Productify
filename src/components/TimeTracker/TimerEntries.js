@@ -13,7 +13,7 @@ import TimerEntryStateManager from "./TimerEntryStateManager";
 import GroupByWindow from "../TimeTracker/GroupByWindow";
 import GroupBySelector from "../UI/GroupBySelector";
 import ViewBySelector from "../UI/ViewBySelector";
-import GroupedData from "../UI/GroupedData";
+import GroupedEntries from "../UI/GroupedEntries";
 import PeriodChanger from "../UI/PeriodChanger";
 
 class TimerEntries extends React.Component {
@@ -119,11 +119,7 @@ class TimerEntries extends React.Component {
       let heading = timerEntriesGrouped[0][this.state.group];
       switch (this.state.group) {
         case "tag":
-          heading = heading.name;
-          break;
-
-        case "isProductive":
-          heading = heading ? "Productive" : "Unproductive";
+          heading = heading ? heading.name : "Untagged";
           break;
 
         case "isBillable":
@@ -142,7 +138,7 @@ class TimerEntries extends React.Component {
       const timerEntries = this.generateTimerEntries(timerEntriesGrouped);
 
       return (
-        <GroupedData
+        <GroupedEntries
           heading={heading}
           subHeading={totalDuration.toFormat("hh:mm:ss")}
           data={timerEntries}
@@ -221,6 +217,7 @@ class TimerEntries extends React.Component {
               value={this.state.group}
               onChange={this.handleGroupChanged}
             />
+
             <ViewBySelector
               value={this.state.view}
               onChange={this.handleViewChanged}

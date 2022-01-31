@@ -24,7 +24,7 @@ class PrioritySelectorWindow extends React.Component {
       <FloatingWindow
         open={this.props.open}
         onClose={this.props.onClose}
-        anchorEl={this.props.anchorEl}
+        buttonRef={this.props.buttonRef}
       >
         <div className="p-4 flex flex-col items-start gap-4 text-sm">
           <span>Select Priority</span>

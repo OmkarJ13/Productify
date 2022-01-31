@@ -1,7 +1,7 @@
 import { Category } from "@mui/icons-material";
 import React from "react";
 
-import FloatingWindowHandler from "./FloatingWindowHandler";
+import WindowHandler from "./WindowHandler";
 
 class GroupBySelector extends React.Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class GroupBySelector extends React.Component {
     const { group } = this.state;
 
     return (
-      <FloatingWindowHandler
+      <WindowHandler
         className="h-full flex items-center gap-2"
         {...otherProps}
         Window={(otherProps) => {
@@ -43,7 +43,7 @@ class GroupBySelector extends React.Component {
         }}
       >
         <Category /> Group
-      </FloatingWindowHandler>
+      </WindowHandler>
     );
   }
 }

@@ -8,9 +8,6 @@ import {
   ArrowDownward,
   Menu,
   Schedule,
-  TrendingUp,
-  Alarm,
-  Add,
   Done,
   MoneyOffCsred,
 } from "@mui/icons-material";
@@ -40,16 +37,8 @@ class ManualMode extends React.Component {
   }
 
   render() {
-    const {
-      task,
-      isProductive,
-      isBillable,
-      tag,
-      startTime,
-      endTime,
-      date,
-      duration,
-    } = this.props.timerEntry;
+    const { task, isBillable, tag, startTime, endTime, date, duration } =
+      this.props.timerEntry;
 
     return (
       <div className="w-full h-[75px] flex items-center p-4 shadow-md border border-gray-200 text-sm">

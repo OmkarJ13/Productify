@@ -32,11 +32,11 @@ class FloatingWindow extends React.Component {
   }
 
   updatePosition() {
-    const { anchorEl } = this.props;
+    const { buttonRef } = this.props;
     const windowRef = this.floatingWindow.current;
-    if (!anchorEl.current || !windowRef) return;
+    if (!buttonRef.current || !windowRef) return;
 
-    const anchorBounds = anchorEl.current.getBoundingClientRect();
+    const anchorBounds = buttonRef.current.getBoundingClientRect();
     const windowBounds = this.floatingWindow.current.getBoundingClientRect();
 
     const screenX = window.innerWidth;
