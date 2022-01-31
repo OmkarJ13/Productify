@@ -78,7 +78,6 @@ class TimerEntries extends React.Component {
       startTime: minStartTime,
       endTime: maxEndTime,
       tag: timerEntries[0].tag,
-      isProductive: timerEntries[0].isProductive,
       isBillable: timerEntries[0].isBillable,
       allEntries: this.generateTimerEntries(timerEntries, true),
     };
@@ -96,13 +95,7 @@ class TimerEntries extends React.Component {
     });
 
     const groupedFinal = sortedRecent.map((groupedByGroup) =>
-      groupTimerEntriesBy(groupedByGroup, [
-        "task",
-        "tag",
-        "isProductive",
-        "isBillable",
-        "date",
-      ])
+      groupTimerEntriesBy(groupedByGroup, ["task", "tag", "isBillable", "date"])
     );
 
     const combined = groupedFinal.map((groupedByGroup) => {

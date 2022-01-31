@@ -8,8 +8,6 @@ class Timer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.timerId = undefined;
-
     this.state = {
       trackingMode: "timer",
     };

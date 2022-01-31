@@ -3,9 +3,6 @@ import { DatePicker, TimePicker } from "@mui/lab";
 import {
   AttachMoney,
   CalendarToday,
-  ArrowBack,
-  ArrowForward,
-  ArrowDownward,
   Menu,
   Schedule,
   Done,
@@ -138,12 +135,6 @@ class ManualMode extends React.Component {
                         <CalendarToday fontSize="small" />
                       </button>
                     );
-                  }}
-                  components={{
-                    OpenPickerIcon: CalendarToday,
-                    LeftArrowIcon: ArrowBack,
-                    RightArrowIcon: ArrowForward,
-                    SwitchViewIcon: ArrowDownward,
                   }}
                 />
               );

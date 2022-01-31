@@ -1,5 +1,4 @@
 import React from "react";
-
 import { LocalOffer, Done } from "@mui/icons-material";
 
 import ModalWindow from "../UI/ModalWindow";
@@ -123,7 +122,7 @@ class TagCreatorWindow extends React.Component {
           <button
             className="px-4 py-2 bg-blue-500 text-white disabled:bg-gray-400"
             onClick={this.tagCreatedHandler}
-            disabled={!this.state.isValid}
+            disabled={this.state.tag.name === "" || !this.state.isValid}
           >
             <LocalOffer /> Save
           </button>
