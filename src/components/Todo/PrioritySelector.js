@@ -27,7 +27,7 @@ class PrioritySelector extends React.Component {
     return (
       <WindowHandler
         {...otherProps}
-        Window={(otherProps) => {
+        renderWindow={(otherProps) => {
           return (
             <PrioritySelectorWindow
               onPrioritySelected={onPrioritySelected}

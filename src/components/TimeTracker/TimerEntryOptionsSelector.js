@@ -10,7 +10,7 @@ class TimerEntryOptionsSelector extends React.Component {
     return (
       <FloatingWindowHandler
         {...otherProps}
-        Window={(otherProps) => {
+        renderWindow={(otherProps) => {
           return (
             <TimerEntryOptionsWindow
               onDuplicate={this.props.onDuplicate}

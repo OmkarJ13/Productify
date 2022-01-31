@@ -101,7 +101,7 @@ class TagSelectorWindow extends React.Component {
 
           <WindowHandler
             className="w-full flex justify-center items-center gap-2 text-blue-500"
-            Window={(otherProps) => {
+            renderWindow={(otherProps) => {
               return (
                 <TagCreatorWindow
                   onTagCreated={this.handleTagCreated}

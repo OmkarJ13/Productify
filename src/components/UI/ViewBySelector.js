@@ -33,7 +33,7 @@ class ViewBySelector extends React.Component {
       <WindowHandler
         className="h-full flex items-center gap-2"
         {...otherProps}
-        Window={(otherProps) => {
+        renderWindow={(otherProps) => {
           return (
             <ViewByWindow
               view={view}

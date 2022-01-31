@@ -11,7 +11,7 @@ class TagSelector extends React.Component {
     return (
       <WindowHandler
         {...otherProps}
-        Window={(otherProps) => (
+        renderWindow={(otherProps) => (
           <TagSelectorWindow onTagSelected={onTagSelected} {...otherProps} />
         )}
       >
