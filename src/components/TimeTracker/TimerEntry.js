@@ -51,8 +51,8 @@ class TimerEntry extends React.Component {
 
     toast(() => {
       return (
-        <div className="flex items-center gap-2 text-sm">
-          <Save /> Updated!
+        <div className="flex items-center gap-4">
+          <Save /> Successfully Saved Changes!
         </div>
       );
     });
@@ -115,7 +115,9 @@ class TimerEntry extends React.Component {
         <ToastContainer
           position="bottom-right"
           autoClose={3000}
-          bodyClassName={"bg-white text-gray-600 font-inter"}
+          toastClassName={
+            "bg-white text-gray-600 font-inter rounded-none border shadow-md border-gray-200"
+          }
           hideProgressBar={true}
         />
 
