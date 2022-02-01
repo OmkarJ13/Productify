@@ -6,7 +6,7 @@ import { Duration } from "luxon";
 import { DateTime } from "luxon";
 import { Interval } from "luxon";
 
-import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
+import { groupObjectArrayBy } from "../../helpers/groupObjectArrayBy";
 import { getRelativeDate } from "../../helpers/getRelativeDate";
 import TimerEntry from "./TimerEntry";
 import TimerEntryStateManager from "./TimerEntryStateManager";
@@ -15,6 +15,7 @@ import GroupBySelector from "../UI/GroupBySelector";
 import ViewBySelector from "../UI/ViewBySelector";
 import GroupedEntries from "../UI/GroupedEntries";
 import PeriodChanger from "../UI/PeriodChanger";
+import NoData from "../UI/NoData";
 
 class TimerEntries extends React.Component {
   constructor(props) {
@@ -86,16 +87,14 @@ class TimerEntries extends React.Component {
   }
 
   getTimerEntries(timerEntries) {
-    const groupedByGroup = groupTimerEntriesBy(timerEntries, [
-      this.state.group,
-    ]);
+    const groupedByGroup = groupObjectArrayBy(timerEntries, [this.state.group]);
 
     const sortedRecent = groupedByGroup.sort((a, b) => {
       return b[0].date.toMillis() - a[0].date.toMillis();
     });
 
     const groupedFinal = sortedRecent.map((groupedByGroup) =>
-      groupTimerEntriesBy(groupedByGroup, ["task", "tag", "isBillable", "date"])
+      groupObjectArrayBy(groupedByGroup, ["task", "tag", "isBillable", "date"])
     );
 
     const combined = groupedFinal.map((groupedByGroup) => {
@@ -172,10 +171,6 @@ class TimerEntries extends React.Component {
     });
   }
 
-  generateEmptyMessage() {
-    return <h3 className="m-auto text-2xl font-light">No Time Tracked...</h3>;
-  }
-
   filterEntries(timerEntries) {
     return timerEntries.filter((timerEntry) =>
       this.state.period.contains(timerEntry.date)
@@ -219,7 +214,7 @@ class TimerEntries extends React.Component {
         </div>
         <div className="w-full h-full flex flex-col gap-8">
           {timerEntries.length > 0 && timerEntries}
-          {timerEntries.length === 0 && this.generateEmptyMessage()}
+          {timerEntries.length === 0 && <NoData text="No Time Tracked" />}
         </div>
       </div>
     );

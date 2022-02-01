@@ -1,10 +1,13 @@
 import { DateTime, Duration } from "luxon";
 
 export const restoreTimerEntry = (timerEntry) => {
-  timerEntry.date = DateTime.fromISO(timerEntry.date);
-  timerEntry.startTime = DateTime.fromISO(timerEntry.startTime);
-  timerEntry.endTime = DateTime.fromISO(timerEntry.endTime);
-  timerEntry.duration = Duration.fromISO(timerEntry.duration);
+  const restoredTimerEntry = {
+    ...timerEntry,
+    date: DateTime.fromISO(timerEntry.date),
+    startTime: DateTime.fromISO(timerEntry.startTime),
+    endTime: DateTime.fromISO(timerEntry.endTime),
+    duration: Duration.fromISO(timerEntry.duration),
+  };
 
-  return timerEntry;
+  return restoreTimerEntry;
 };

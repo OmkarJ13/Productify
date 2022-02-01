@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { restoreTodo } from "../../helpers/restoreTodo";
 
 let state = {};
-const todos = JSON.parse(localStorage.getItem("todos"));
+let todos = JSON.parse(localStorage.getItem("todos"));
 if (todos) {
-  todos.forEach((todo) => restoreTodo(todo));
+  todos = todos.map((todo) => restoreTodo(todo));
   state = { todos };
 } else {
   localStorage.setItem("todos", JSON.stringify([]));

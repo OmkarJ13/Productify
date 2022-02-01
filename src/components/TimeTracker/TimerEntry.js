@@ -147,8 +147,8 @@ class TimerEntry extends React.Component {
               <TagSelector
                 className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 max-w-[125px] h-full flex justify-center items-center"
                 disabled={isCombined}
-                initialTag={tag}
-                onTagSelected={this.props.onTagSelected}
+                value={tag}
+                onChange={this.props.onTagSelected}
               />
             </div>
 

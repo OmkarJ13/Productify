@@ -48,13 +48,13 @@ class TodoCreator extends React.Component {
           <div className="w-[250px] h-full flex justify-center items-center gap-4 mx-4">
             <TagSelector
               className="max-w-[125px] h-full"
-              initialTag={tag}
-              onTagSelected={this.props.onTagSelected}
+              value={tag}
+              onChange={this.props.onTagSelected}
             />
 
             <PrioritySelector
-              initialPriority={priority}
-              onPrioritySelected={this.props.onPrioritySelected}
+              value={priority}
+              onChange={this.props.onPrioritySelected}
             />
           </div>
 

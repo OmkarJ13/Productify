@@ -7,7 +7,7 @@ class Tags extends React.Component {
 
   render() {
     return (
-      <div className="w-10/12 min-h-screen flex flex-col ml-auto p-8 text-gray-600">
+      <div className="w-[85%] min-h-screen flex flex-col ml-auto p-6 text-gray-600">
         <h2>Account</h2>
       </div>
     );

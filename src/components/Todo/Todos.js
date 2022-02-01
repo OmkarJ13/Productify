@@ -3,7 +3,7 @@ import { CheckCircle } from "@mui/icons-material";
 import { connect } from "react-redux";
 import React from "react";
 
-import { groupTimerEntriesBy } from "../../helpers/groupTimerEntriesBy";
+import { groupObjectArrayBy } from "../../helpers/groupObjectArrayBy";
 import { getRelativeDate } from "../../helpers/getRelativeDate";
 import { priorities } from "../../helpers/priorities";
 
@@ -11,6 +11,7 @@ import ViewBySelector from "../UI/ViewBySelector";
 import GroupBySelector from "../UI/GroupBySelector";
 import PeriodChanger from "../UI/PeriodChanger";
 import GroupedEntries from "../UI/GroupedEntries";
+import NoData from "../UI/NoData";
 
 import GroupByWindow from "./GroupByWindow";
 import TodoStateManager from "./TodoStateManager";
@@ -82,7 +83,7 @@ class Todos extends React.Component {
     const filteredTodos = todos.filter((todo) =>
       showDone ? true : !todo.isDone
     );
-    const groupedTodos = groupTimerEntriesBy(filteredTodos, [this.state.group]);
+    const groupedTodos = groupObjectArrayBy(filteredTodos, [this.state.group]);
 
     const sortedTodos = groupedTodos.sort((a, b) => {
       return a[0].date.toMillis() - b[0].date.toMillis();
@@ -133,10 +134,6 @@ class Todos extends React.Component {
     });
 
     return filteredPeriod;
-  }
-
-  generateEmptyMessage() {
-    return <h3 className="m-auto text-2xl font-light">No Tasks To Do...</h3>;
   }
 
   componentDidUpdate() {
@@ -191,7 +188,7 @@ class Todos extends React.Component {
         </div>
         <div className="w-full flex-grow flex flex-col gap-8">
           {finalTodos.length > 0 && finalTodos}
-          {finalTodos.length === 0 && this.generateEmptyMessage()}
+          {finalTodos.length === 0 && <NoData text="No Tasks To Do" />}
         </div>
       </div>
     );

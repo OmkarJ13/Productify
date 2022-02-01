@@ -210,14 +210,14 @@ class Todo extends React.Component {
             <div className="w-[250px] flex justify-center items-center gap-4 mx-4">
               <TagSelector
                 className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 max-w-[125px] h-full flex justify-center items-center"
-                initialTag={tag}
-                onTagSelected={this.props.onTagSelected}
+                value={tag}
+                onChange={this.props.onTagSelected}
               />
 
               <PrioritySelector
                 className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100"
-                initialPriority={priority}
-                onPrioritySelected={this.props.onPrioritySelected}
+                value={priority}
+                onChange={this.props.onPrioritySelected}
               />
             </div>
 

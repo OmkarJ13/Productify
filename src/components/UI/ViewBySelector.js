@@ -5,29 +5,8 @@ import ViewByWindow from "./ViewByWindow";
 import WindowHandler from "./WindowHandler";
 
 class ViewBySelector extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      view: this.props.value ?? "week",
-    };
-
-    this.handleViewBySelected = this.handleViewBySelected.bind(this);
-  }
-
-  handleViewBySelected(e) {
-    this.setState(
-      {
-        view: e,
-      },
-      () => {
-        this.props.onChange && this.props.onChange(e);
-      }
-    );
-  }
-
   render() {
     const { value, onChange, ...otherProps } = this.props;
-    const { view } = this.state;
 
     return (
       <WindowHandler
@@ -36,8 +15,8 @@ class ViewBySelector extends React.Component {
         renderWindow={(otherProps) => {
           return (
             <ViewByWindow
-              view={view}
-              onViewBySelected={this.handleViewBySelected}
+              view={value}
+              onViewBySelected={onChange}
               {...otherProps}
             />
           );

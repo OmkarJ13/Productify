@@ -4,29 +4,8 @@ import React from "react";
 import WindowHandler from "./WindowHandler";
 
 class GroupBySelector extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      group: this.props.value ?? "date",
-    };
-
-    this.handleGroupBySelected = this.handleGroupBySelected.bind(this);
-  }
-
-  handleGroupBySelected(e) {
-    this.setState(
-      {
-        group: e,
-      },
-      () => {
-        this.props.onChange && this.props.onChange(e);
-      }
-    );
-  }
-
   render() {
     const { value, Window, onChange, ...otherProps } = this.props;
-    const { group } = this.state;
 
     return (
       <WindowHandler
@@ -35,8 +14,8 @@ class GroupBySelector extends React.Component {
         renderWindow={(otherProps) => {
           return (
             <Window
-              group={group}
-              onGroupBySelected={this.handleGroupBySelected}
+              group={value}
+              onGroupBySelected={onChange}
               {...otherProps}
             />
           );

@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { restoreTimerEntry } from "../../helpers/restoreTimerEntry";
 
 let state = {};
-const currentTimer = JSON.parse(localStorage.getItem("currentTimer"));
+let currentTimer = JSON.parse(localStorage.getItem("currentTimer"));
 if (currentTimer) {
-  restoreTimerEntry(currentTimer);
+  currentTimer = restoreTimerEntry(currentTimer);
   state = { currentTimer };
 } else {
   localStorage.setItem("currentTimer", JSON.stringify(null));

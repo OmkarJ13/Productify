@@ -6,16 +6,16 @@ import WindowHandler from "../UI/WindowHandler";
 
 class TagSelector extends React.Component {
   render() {
-    const { initialTag, onTagSelected, ...otherProps } = this.props;
+    const { value, onChange, ...otherProps } = this.props;
 
     return (
       <WindowHandler
         {...otherProps}
         renderWindow={(otherProps) => (
-          <TagSelectorWindow onTagSelected={onTagSelected} {...otherProps} />
+          <TagSelectorWindow onTagSelected={onChange} {...otherProps} />
         )}
       >
-        {initialTag === undefined ? (
+        {value === undefined ? (
           <div className="w-full flex justify-center items-center gap-2 px-2 py-1 rounded-full bg-gray-400 text-white">
             <LocalOffer fontSize="small" />
             <span className="text-xs">Add Tag</span>
@@ -23,11 +23,11 @@ class TagSelector extends React.Component {
         ) : (
           <div
             className="w-full flex justify-center items-center gap-2 px-2 py-1 rounded-full text-white"
-            style={{ backgroundColor: initialTag.color }}
+            style={{ backgroundColor: value.color }}
           >
             <LocalOffer fontSize="small" />
             <span className="max-w-full text-xs overflow-hidden text-ellipsis whitespace-nowrap">
-              {initialTag.name}
+              {value.name}
             </span>
           </div>
         )}

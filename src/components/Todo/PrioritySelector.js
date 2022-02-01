@@ -22,7 +22,7 @@ class PrioritySelector extends React.Component {
   }
 
   render() {
-    const { initialPriority, onPrioritySelected, ...otherProps } = this.props;
+    const { value, onChange, ...otherProps } = this.props;
 
     return (
       <WindowHandler
@@ -30,13 +30,13 @@ class PrioritySelector extends React.Component {
         renderWindow={(otherProps) => {
           return (
             <PrioritySelectorWindow
-              onPrioritySelected={onPrioritySelected}
+              onPrioritySelected={onChange}
               {...otherProps}
             />
           );
         }}
       >
-        {this.getPriorityTitle(initialPriority)}
+        {this.getPriorityTitle(value)}
       </WindowHandler>
     );
   }

@@ -53,8 +53,8 @@ class ManualMode extends React.Component {
           <div className="w-[150px] flex justify-center items-center mx-4">
             <TagSelector
               className="max-w-[125px] h-full flex justify-center items-center"
-              initialTag={tag}
-              onTagSelected={this.props.onTagSelected}
+              value={tag}
+              onChange={this.props.onTagSelected}
             />
           </div>
 
