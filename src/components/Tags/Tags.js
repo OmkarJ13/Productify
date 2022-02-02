@@ -21,12 +21,14 @@ class Tags extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchQuery: "",
       sortBy: "alpha",
       sortAscending: true,
     };
 
     this.handleTagCreated = this.handleTagCreated.bind(this);
     this.handleSort = this.handleSort.bind(this);
+    this.handleSearchQuery = this.handleSearchQuery.bind(this);
   }
 
   componentDidMount() {
@@ -77,6 +79,12 @@ class Tags extends React.Component {
     return doneByTag;
   }
 
+  handleSearchQuery(e) {
+    this.setState({
+      searchQuery: e.target.value,
+    });
+  }
+
   generateTags(tags) {
     if (!tags || tags.length === 0) return null;
     const { sortBy, sortAscending } = this.state;
@@ -93,6 +101,7 @@ class Tags extends React.Component {
               name="alpha"
               onClick={this.handleSort}
             >
+              <LocalOffer /> Tag Name
               {sortBy !== "alpha" ? (
                 <SwapVerticalCircleOutlined />
               ) : sortAscending ? (
@@ -100,7 +109,6 @@ class Tags extends React.Component {
               ) : (
                 <ArrowCircleUp />
               )}
-              <LocalOffer /> Tag Name
             </button>
           </th>
           <div className="w-[300px] flex items-center gap-4">
@@ -230,11 +238,19 @@ class Tags extends React.Component {
     localStorage.setItem("tags", JSON.stringify(this.props.tags));
   }
 
+  filterTags(tags) {
+    const { searchQuery } = this.state;
+    if (searchQuery === "") return tags;
+
+    return tags.filter((tag) => tag.name === searchQuery);
+  }
+
   render() {
     const { tags } = this.props;
 
-    const tagsSorted = this.sortTags(tags);
-    const tagsJSX = this.generateTags(tagsSorted);
+    const filteredTags = this.filterTags(tags);
+    const sortedTags = this.sortTags(filteredTags);
+    const tagsJSX = this.generateTags(sortedTags);
 
     return (
       <div className="w-[85%] min-h-screen flex flex-col gap-6 ml-auto p-6 text-gray-600">
@@ -260,6 +276,7 @@ class Tags extends React.Component {
             type="text"
             className="flex-grow outline-none"
             placeholder="Search"
+            onChange={this.handleSearchQuery}
           />
         </div>
 
