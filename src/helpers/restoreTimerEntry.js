@@ -9,5 +9,5 @@ export const restoreTimerEntry = (timerEntry) => {
     duration: Duration.fromISO(timerEntry.duration),
   };
 
-  return restoreTimerEntry;
+  return restoredTimerEntry;
 };
