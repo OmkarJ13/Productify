@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from "react-router";
 import SideBar from "./SideBar";
 import TimeTracker from "./TimeTracker/TimeTracker";
 import Analytics from "./Analytics/Analytics";
-import Tags from "./Tags";
+import Tags from "./Tags/Tags";
 import Settings from "./Settings";
 import Account from "./Account";
 import TaskTracker from "./Todo/TaskTracker";

@@ -10,11 +10,12 @@ import {
 import { Duration } from "luxon";
 import React from "react";
 import { connect } from "react-redux";
-import { groupObjectArrayBy } from "../helpers/groupObjectArrayBy";
-import { tagActions } from "../store/slices/tagSlice";
-import TagCreatorWindow from "./Tag/TagCreatorWindow";
-import NoData from "./UI/NoData";
-import WindowHandler from "./UI/WindowHandler";
+import { groupObjectArrayBy } from "../../helpers/groupObjectArrayBy";
+import { tagActions } from "../../store/slices/tagSlice";
+import TagCreatorWindow from "../Tag/TagCreatorWindow";
+import NoData from "../UI/NoData";
+import WindowHandler from "../UI/WindowHandler";
+import Tag from "./Tag";
 
 class Tags extends React.Component {
   constructor(props) {
@@ -43,12 +44,10 @@ class Tags extends React.Component {
 
     const durationsByTag = tags.map((tag) => {
       return groupedTimerEntries.find(
-        (timerEntriesGroup) => timerEntriesGroup[0].tag.name === tag.name
+        (timerEntriesGroup) => timerEntriesGroup[0].tag === tag.id
       )
         ? groupedTimerEntries
-            .find(
-              (timerEntriesGroup) => timerEntriesGroup[0].tag.name === tag.name
-            )
+            .find((timerEntriesGroup) => timerEntriesGroup[0].tag === tag.id)
             .reduce(
               (acc, cur) => acc.plus(cur.duration),
               Duration.fromMillis(0)
@@ -65,11 +64,11 @@ class Tags extends React.Component {
 
     todos = todos.filter((todo) => todo.tag !== undefined);
     const groupedTodos = groupObjectArrayBy(todos, ["tag"]);
+    console.log(groupedTodos);
 
     const doneByTag = tags.map((tag) => {
       const match =
-        groupedTodos.find((todoGroup) => todoGroup[0].tag.name === tag.name) ??
-        [];
+        groupedTodos.find((todoGroup) => todoGroup[0].tag === tag.id) ?? [];
 
       const done = match.filter((cur) => cur.isDone);
       return [done.length, match.length];
@@ -162,24 +161,13 @@ class Tags extends React.Component {
 
         {tags.map((tag, i) => {
           return (
-            <tr className="flex items-center gap-4 p-2 border-b border-gray-200">
-              <td className="flex-grow flex items-center gap-2" key={tag.name}>
-                <LocalOffer htmlColor={tag.color} />
-                {tag.name}
-              </td>
-              <div className="w-[300px] flex items-center gap-4">
-                <td className="w-1/3 text-center">
-                  {durationsByTags[i].toFixed(1)}h
-                </td>
-                <td className="w-1/3 text-center">
-                  {`${tasksDoneByTags[i][0]} / ${tasksDoneByTags[i][1]}`}
-                </td>
-                <td className="w-1/3 text-center">0$</td>
-              </div>
-              <td>
-                <MoreVert />
-              </td>
-            </tr>
+            <Tag
+              key={tag.id}
+              tag={tag}
+              duration={durationsByTags[i]}
+              tasksDone={tasksDoneByTags[i]}
+              revenue={0}
+            />
           );
         })}
       </table>
@@ -238,16 +226,19 @@ class Tags extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    localStorage.setItem("tags", JSON.stringify(this.props.tags));
+  }
+
   render() {
     const { tags } = this.props;
-    console.log(this.state);
 
     const tagsSorted = this.sortTags(tags);
     const tagsJSX = this.generateTags(tagsSorted);
 
     return (
       <div className="w-[85%] min-h-screen flex flex-col gap-6 ml-auto p-6 text-gray-600">
-        <div className="w-full h-[75px] flex justify-between items-center border-b border-gray-300">
+        <div className="w-full h-[75px] flex justify-between items-center p-4 border border-gray-200 shadow-md">
           <h1 className="text-2xl font-bold uppercase">Tags</h1>
           <WindowHandler
             className="px-4 py-2 bg-gradient-to-br from-blue-500 to-blue-400 text-white rounded-md"
@@ -272,7 +263,7 @@ class Tags extends React.Component {
           />
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex-grow flex flex-col">
           {tagsJSX && tagsJSX}
           {!tagsJSX && <NoData text="No Tags" />}
         </div>

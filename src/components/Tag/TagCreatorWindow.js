@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuid } from "uuid";
 import { LocalOffer, Done } from "@mui/icons-material";
 
 import ModalWindow from "../UI/ModalWindow";
@@ -11,8 +12,9 @@ class TagCreatorWindow extends React.Component {
     this.state = {
       isValid: true,
       tag: {
+        id: uuid(),
         name: "",
-        color: "#000000",
+        color: colors[0],
       },
     };
 
@@ -22,17 +24,16 @@ class TagCreatorWindow extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      tag: {
-        ...this.state.tag,
-        color: colors[0],
-      },
-    });
+    if (this.props.tag) {
+      this.setState({ tag: this.props.tag });
+    }
   }
 
   nameChangeHandler(e) {
     const tags = JSON.parse(localStorage.getItem("tags"));
-    const exists = tags.some((cur) => cur.name === e.target.value);
+    const exists = tags.some(
+      (cur) => cur.name === e.target.value && cur.id !== this.state.tag.id
+    );
     if (exists) {
       this.setState({
         isValid: false,
@@ -74,12 +75,13 @@ class TagCreatorWindow extends React.Component {
       <ModalWindow open={this.props.open} onClose={this.props.onClose}>
         <div className="flex flex-col gap-4">
           <h2 className="w-full flex gap-2 text-blue-500 text-2xl font-bold uppercase border-b border-gray-300">
-            Create A New Tag
+            Create / Edit
           </h2>
           <div className="flex flex-col items-start gap-2">
             <label>Tag Name</label>
             <input
               type="text"
+              value={this.state.tag.name}
               placeholder="e.g. Study"
               onChange={this.nameChangeHandler}
               className={`w-full p-1 border border-gray-300 focus:outline-none ${

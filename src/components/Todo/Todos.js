@@ -77,6 +77,11 @@ class Todos extends React.Component {
     });
   }
 
+  getTag(id) {
+    const { tags } = this.props;
+    return tags.find((x) => x.id === id);
+  }
+
   getTodos(todos) {
     const { showDone } = this.state;
 
@@ -97,7 +102,7 @@ class Todos extends React.Component {
           break;
 
         case "tag":
-          heading = heading.name;
+          heading = heading ? this.getTag(heading).name : "Untagged";
           break;
 
         case "isBillable":
@@ -198,6 +203,7 @@ class Todos extends React.Component {
 const mapStateToProps = (state) => {
   return {
     todos: state.todoReducer.todos,
+    tags: state.tagReducer.tags,
   };
 };
 

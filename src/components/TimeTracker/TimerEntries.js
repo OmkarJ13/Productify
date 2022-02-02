@@ -86,6 +86,11 @@ class TimerEntries extends React.Component {
     return combinedTimerEntry;
   }
 
+  getTag(id) {
+    const { tags } = this.props;
+    return tags.find((x) => x.id === id);
+  }
+
   getTimerEntries(timerEntries) {
     const groupedByGroup = groupObjectArrayBy(timerEntries, [this.state.group]);
 
@@ -111,7 +116,7 @@ class TimerEntries extends React.Component {
       let heading = timerEntriesGrouped[0][this.state.group];
       switch (this.state.group) {
         case "tag":
-          heading = heading ? heading.name : "Untagged";
+          heading = heading ? this.getTag(heading).name : "Untagged";
           break;
 
         case "isBillable":
@@ -235,6 +240,7 @@ class TimerEntries extends React.Component {
 const mapStateToProps = (state) => {
   return {
     timerEntries: state.timerEntryReducer.timerEntries,
+    tags: state.tagReducer.tags,
   };
 };
 

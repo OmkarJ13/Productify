@@ -42,8 +42,8 @@ class TagSelectorWindow extends React.Component {
   handleTagSelected(e) {
     const clicked = e.target.closest("button");
     if (clicked) {
-      const tag = JSON.parse(clicked.dataset.tag);
-      this.props.onTagSelected(tag);
+      const tagID = clicked.dataset.id;
+      this.props.onTagSelected(tagID);
       this.props.onClose();
     }
   }
@@ -85,10 +85,10 @@ class TagSelectorWindow extends React.Component {
               results.map((tag) => {
                 return (
                   <button
-                    key={tag.name}
+                    key={tag.id}
                     className="p-2 flex items-center gap-2 hover:bg-gray-200"
                     onClick={this.handleTagSelected}
-                    data-tag={JSON.stringify(tag)}
+                    data-id={tag.id}
                   >
                     <LocalOffer htmlColor={tag.color} />
                     <span className="text-md w-full text-left overflow-hidden overflow-ellipsis">

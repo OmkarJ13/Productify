@@ -22,7 +22,7 @@ const tagSlice = createSlice({
     update(state, action) {
       const { tags } = state;
       const editedTags = tags.map((tag) => {
-        if (tag.name === action.payload.name) {
+        if (tag.id === action.payload.id) {
           return action.payload;
         }
 

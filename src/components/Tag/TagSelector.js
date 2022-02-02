@@ -3,10 +3,17 @@ import { LocalOffer } from "@mui/icons-material";
 
 import TagSelectorWindow from "./TagSelectorWindow";
 import WindowHandler from "../UI/WindowHandler";
+import { connect } from "react-redux";
 
 class TagSelector extends React.Component {
+  getTag(id) {
+    const { tags } = this.props;
+    return tags.find((x) => x.id === id);
+  }
+
   render() {
     const { value, onChange, ...otherProps } = this.props;
+    const tag = this.getTag(value);
 
     return (
       <WindowHandler
@@ -15,7 +22,7 @@ class TagSelector extends React.Component {
           <TagSelectorWindow onTagSelected={onChange} {...otherProps} />
         )}
       >
-        {value === undefined ? (
+        {tag === undefined ? (
           <div className="w-full flex justify-center items-center gap-2 px-2 py-1 rounded-full bg-gray-400 text-white">
             <LocalOffer fontSize="small" />
             <span className="text-xs">Add Tag</span>
@@ -23,11 +30,11 @@ class TagSelector extends React.Component {
         ) : (
           <div
             className="w-full flex justify-center items-center gap-2 px-2 py-1 rounded-full text-white"
-            style={{ backgroundColor: value.color }}
+            style={{ backgroundColor: tag.color }}
           >
             <LocalOffer fontSize="small" />
             <span className="max-w-full text-xs overflow-hidden text-ellipsis whitespace-nowrap">
-              {value.name}
+              {tag.name}
             </span>
           </div>
         )}
@@ -36,4 +43,10 @@ class TagSelector extends React.Component {
   }
 }
 
-export default TagSelector;
+const mapStateToProps = (state) => {
+  return {
+    tags: state.tagReducer.tags,
+  };
+};
+
+export default connect(mapStateToProps)(TagSelector);
