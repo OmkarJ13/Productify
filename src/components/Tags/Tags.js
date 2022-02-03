@@ -5,16 +5,14 @@ import {
   Search,
   ArrowCircleDown,
   ArrowCircleUp,
-  SwapVerticalCircleOutlined,
 } from "@mui/icons-material";
-import { Duration } from "luxon";
 import React from "react";
 import { connect } from "react-redux";
-import { groupObjectArrayBy } from "../../helpers/groupObjectArrayBy";
+
 import { tagActions } from "../../store/slices/tagSlice";
 import TagCreatorWindow from "../Tag/TagCreatorWindow";
-import NoData from "../UI/NoData";
 import WindowHandler from "../UI/WindowHandler";
+import NoData from "../UI/NoData";
 import Tag from "./Tag";
 
 class Tags extends React.Component {
@@ -22,7 +20,6 @@ class Tags extends React.Component {
     super(props);
     this.state = {
       searchQuery: "",
-      sortBy: "alpha",
       sortAscending: true,
     };
 
@@ -35,49 +32,85 @@ class Tags extends React.Component {
     document.title = "Tags | Productify";
   }
 
-  getDurationsForTags(tags) {
-    let { timerEntries } = this.props;
+  // getDurationsForTags(tags) {
+  //   let { timerEntries } = this.props;
 
-    timerEntries = timerEntries.filter(
-      (timerEntry) => timerEntry.tag !== undefined
-    );
+  //   timerEntries = timerEntries.filter(
+  //     (timerEntry) => timerEntry.tag !== undefined
+  //   );
 
-    const groupedTimerEntries = groupObjectArrayBy(timerEntries, ["tag"]);
+  //   const groupedTimerEntries = groupObjectArrayBy(timerEntries, ["tag"]);
 
-    const durationsByTag = tags.map((tag) => {
-      return groupedTimerEntries.find(
-        (timerEntriesGroup) => timerEntriesGroup[0].tag === tag.id
-      )
-        ? groupedTimerEntries
-            .find((timerEntriesGroup) => timerEntriesGroup[0].tag === tag.id)
-            .reduce(
-              (acc, cur) => acc.plus(cur.duration),
-              Duration.fromMillis(0)
-            )
-            .as("hours")
-        : 0;
-    });
+  //   const durations = tags.map((tag) => {
+  //     const entriesWithCurTag = groupedTimerEntries.find(
+  //       (timerEntriesGroup) => timerEntriesGroup[0].tag === tag.id
+  //     );
 
-    return durationsByTag;
-  }
+  //     if (entriesWithCurTag) {
+  //       return entriesWithCurTag
+  //         .reduce((acc, cur) => acc.plus(cur.duration), Duration.fromMillis(0))
+  //         .as("hours");
+  //     }
 
-  getTasksDoneForTags(tags) {
-    let { todos } = this.props;
+  //     return 0;
+  //   });
 
-    todos = todos.filter((todo) => todo.tag !== undefined);
-    const groupedTodos = groupObjectArrayBy(todos, ["tag"]);
-    console.log(groupedTodos);
+  //   return durations;
+  // }
 
-    const doneByTag = tags.map((tag) => {
-      const match =
-        groupedTodos.find((todoGroup) => todoGroup[0].tag === tag.id) ?? [];
+  // getRevenueForTags(tags) {
+  //   let { timerEntries } = this.props;
 
-      const done = match.filter((cur) => cur.isDone);
-      return [done.length, match.length];
-    });
+  //   timerEntries = timerEntries.filter(
+  //     (timerEntry) => timerEntry.tag !== undefined
+  //   );
 
-    return doneByTag;
-  }
+  //   const groupedTimerEntries = groupObjectArrayBy(timerEntries, ["tag"]);
+
+  //   const revenue = tags.map((tag) => {
+  //     const entriesWithCurTag = groupedTimerEntries.find(
+  //       (timerEntriesGroup) => timerEntriesGroup[0].tag === tag.id
+  //     );
+
+  //     if (entriesWithCurTag) {
+  //       return entriesWithCurTag
+  //         .filter((timerEntry) => timerEntry.isBillable)
+  //         .reduce(
+  //           (acc, cur) =>
+  //             acc +
+  //             cur.duration.as("hours") *
+  //               tags.find((x) => x.id === cur.tag).billableAmount,
+  //           0
+  //         );
+  //     }
+
+  //     return 0;
+  //   });
+
+  //   return revenue;
+  // }
+
+  // getTasksDoneForTags(tags) {
+  //   let { todos } = this.props;
+
+  //   todos = todos.filter((todo) => todo.tag !== undefined);
+
+  //   const groupedTodos = groupObjectArrayBy(todos, ["tag"]);
+
+  //   const done = tags.map((tag) => {
+  //     const todosWithCurTag =
+  //       groupedTodos.find((todoGroup) => todoGroup[0].tag === tag.id) ?? [];
+
+  //     if (todosWithCurTag) {
+  //       return [
+  //         todosWithCurTag.filter((todo) => todo.isDone).length,
+  //         todosWithCurTag.length,
+  //       ];
+  //     }
+  //   });
+
+  //   return done;
+  // }
 
   handleSearchQuery(e) {
     this.setState({
@@ -87,98 +120,32 @@ class Tags extends React.Component {
 
   generateTags(tags) {
     if (!tags || tags.length === 0) return null;
-    const { sortBy, sortAscending } = this.state;
-
-    const durationsByTags = this.getDurationsForTags(tags);
-    const tasksDoneByTags = this.getTasksDoneForTags(tags);
+    const { sortAscending } = this.state;
 
     return (
-      <table>
-        <tr className="flex items-center gap-4 p-2 border-b border-gray-300">
-          <th className="flex-grow">
+      <div>
+        <div className="flex items-center gap-4 p-2 border-b border-gray-300">
+          <div className="group flex-grow">
             <button
-              className="flex items-center gap-2 text-center"
+              className="flex items-center gap-4 text-center"
               name="alpha"
               onClick={this.handleSort}
             >
-              <LocalOffer /> Tag Name
-              {sortBy !== "alpha" ? (
-                <SwapVerticalCircleOutlined />
-              ) : sortAscending ? (
-                <ArrowCircleDown />
-              ) : (
-                <ArrowCircleUp />
-              )}
+              <span className="flex items-center gap-2">
+                <LocalOffer /> Name
+              </span>
+
+              <div className="transition-opacity opacity-0 group-hover:opacity-100">
+                {sortAscending ? <ArrowCircleDown /> : <ArrowCircleUp />}
+              </div>
             </button>
-          </th>
-          <div className="w-[300px] flex items-center gap-4">
-            <th className="w-1/3">
-              <button
-                className="flex items-center gap-2 text-center"
-                name="duration"
-                onClick={this.handleSort}
-              >
-                {sortBy !== "duration" ? (
-                  <SwapVerticalCircleOutlined />
-                ) : sortAscending ? (
-                  <ArrowCircleDown />
-                ) : (
-                  <ArrowCircleUp />
-                )}
-                Duration
-              </button>
-            </th>
-            <th className="w-1/3">
-              <button
-                className="flex items-center gap-2 text-center"
-                name="tasksDone"
-                onClick={this.handleSort}
-              >
-                {sortBy !== "tasksDone" ? (
-                  <SwapVerticalCircleOutlined />
-                ) : sortAscending ? (
-                  <ArrowCircleDown />
-                ) : (
-                  <ArrowCircleUp />
-                )}
-                Tasks
-              </button>
-            </th>
-            <th className="w-1/3">
-              <button
-                className="flex items-center gap-2 text-center"
-                name="revenue"
-                onClick={this.handleSort}
-              >
-                {sortBy !== "revenue" ? (
-                  <SwapVerticalCircleOutlined />
-                ) : sortAscending ? (
-                  <ArrowCircleDown />
-                ) : (
-                  <ArrowCircleUp />
-                )}
-                Revenue
-              </button>
-            </th>
           </div>
+        </div>
 
-          <th>
-            <MoreVert className="opacity-0" />
-          </th>
-        </tr>
-
-        {tags.map((tag, i) => {
-          return (
-            <Tag
-              key={tag.id}
-              tag={tag}
-              duration={durationsByTags[i]}
-              tasksDone={tasksDoneByTags[i]}
-              revenue={0}
-            />
-          );
+        {tags.map((tag) => {
+          return <Tag key={tag.id} tag={tag} />;
         })}
-      </table>
+      </div>
     );
   }
 
@@ -187,51 +154,20 @@ class Tags extends React.Component {
   }
 
   sortTags(tags) {
-    const { sortBy, sortAscending } = this.state;
-
-    switch (sortBy) {
-      case "alpha":
-        return tags.slice().sort((a, b) => {
-          return sortAscending
-            ? a.name.localeCompare(b.name)
-            : b.name.localeCompare(a.name);
-        });
-
-      case "duration":
-        const durationsByTags = this.getDurationsForTags(tags);
-        return tags.slice().sort((a, b) => {
-          return sortAscending
-            ? durationsByTags[tags.findIndex((x) => x.name === a.name)] -
-                durationsByTags[tags.findIndex((x) => x.name === b.name)]
-            : durationsByTags[tags.findIndex((x) => x.name === b.name)] -
-                durationsByTags[tags.findIndex((x) => x.name === a.name)];
-        });
-
-      case "tasksDone":
-        const tasksDoneByTags = this.getTasksDoneForTags(tags);
-        return tags.slice().sort((a, b) => {
-          return sortAscending
-            ? tasksDoneByTags[tags.findIndex((x) => x.name === a.name)][0] -
-                tasksDoneByTags[tags.findIndex((x) => x.name === b.name)][0]
-            : tasksDoneByTags[tags.findIndex((x) => x.name === b.name)][0] -
-                tasksDoneByTags[tags.findIndex((x) => x.name === a.name)][0];
-        });
-
-      case "revenue":
-        return tags;
-    }
+    const { sortAscending } = this.state;
+    return tags.slice().sort((a, b) => {
+      return sortAscending
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name);
+    });
   }
 
   handleSort(e) {
-    const clicked = e.target.closest("button");
-
-    if (clicked) {
-      this.setState({
-        sortBy: clicked.name,
-        sortAscending:
-          clicked.name === this.state.sortBy ? !this.state.sortAscending : true,
-      });
-    }
+    this.setState((prevState) => {
+      return {
+        sortAscending: !prevState.sortAscending,
+      };
+    });
   }
 
   componentDidUpdate() {

@@ -1,6 +1,11 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
-import { LocalOffer, Done } from "@mui/icons-material";
+import {
+  LocalOffer,
+  Done,
+  ChevronRight,
+  ExpandMore,
+} from "@mui/icons-material";
 
 import ModalWindow from "../UI/ModalWindow";
 import { colors } from "../../helpers/colors";
@@ -11,16 +16,21 @@ class TagCreatorWindow extends React.Component {
 
     this.state = {
       isValid: true,
+      billingOptionsOpen: false,
       tag: {
         id: uuid(),
         name: "",
+        billableAmount: 0,
         color: colors[0],
       },
     };
 
     this.nameChangeHandler = this.nameChangeHandler.bind(this);
     this.colorChangeHandler = this.colorChangeHandler.bind(this);
+    this.handleBillableAmountChanged =
+      this.handleBillableAmountChanged.bind(this);
     this.tagCreatedHandler = this.tagCreatedHandler.bind(this);
+    this.toggleBillingOptions = this.toggleBillingOptions.bind(this);
   }
 
   componentDidMount() {
@@ -34,6 +44,7 @@ class TagCreatorWindow extends React.Component {
     const exists = tags.some(
       (cur) => cur.name === e.target.value && cur.id !== this.state.tag.id
     );
+
     if (exists) {
       this.setState({
         isValid: false,
@@ -65,9 +76,26 @@ class TagCreatorWindow extends React.Component {
     }
   }
 
+  handleBillableAmountChanged(e) {
+    this.setState({
+      tag: {
+        ...this.state.tag,
+        billableAmount: e.target.value,
+      },
+    });
+  }
+
   tagCreatedHandler(e) {
     this.props.onClose();
     this.props.onTagCreated(this.state.tag);
+  }
+
+  toggleBillingOptions(e) {
+    this.setState((prevState) => {
+      return {
+        billingOptionsOpen: !prevState.billingOptionsOpen,
+      };
+    });
   }
 
   render() {
@@ -120,6 +148,32 @@ class TagCreatorWindow extends React.Component {
                 );
               })}
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <button
+              className="flex justify-start items-center gap-2"
+              onClick={this.toggleBillingOptions}
+            >
+              {this.state.billingOptionsOpen ? (
+                <ExpandMore />
+              ) : (
+                <ChevronRight />
+              )}
+              Billing Options
+            </button>
+
+            {this.state.billingOptionsOpen && (
+              <div className="flex flex-col gap-2">
+                <span>Enter Billable Amount (Per Hour)</span>
+                <input
+                  type="number"
+                  value={this.state.tag.billableAmount}
+                  className="p-2 border border-gray-300 outline-none"
+                  onChange={this.handleBillableAmountChanged}
+                />
+              </div>
+            )}
           </div>
           <button
             className="px-4 py-2 bg-blue-500 text-white disabled:bg-gray-400"

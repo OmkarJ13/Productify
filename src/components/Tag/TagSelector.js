@@ -49,4 +49,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(TagSelector);
+export default connect(mapStateToProps, null)(TagSelector);

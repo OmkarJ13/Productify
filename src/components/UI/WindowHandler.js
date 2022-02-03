@@ -26,17 +26,19 @@ class WindowHandler extends React.Component {
   }
 
   render() {
+    const { renderWindow, ...otherProps } = this.props;
     const { isOpen } = this.state;
+
     return (
       <>
-        {this.props.renderWindow({
+        {renderWindow({
           open: isOpen,
           onClose: this.closeWindow,
           buttonRef: this.buttonRef,
         })}
 
         <button
-          {...this.props}
+          {...otherProps}
           onClick={this.toggleWindow}
           ref={this.buttonRef}
         >

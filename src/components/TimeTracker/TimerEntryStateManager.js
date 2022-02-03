@@ -1,5 +1,4 @@
 import React from "react";
-
 import { DateTime, Duration } from "luxon";
 
 class TimerEntryStateManager extends React.Component {
@@ -21,7 +20,6 @@ class TimerEntryStateManager extends React.Component {
 
     this.handleTaskChanged = this.handleTaskChanged.bind(this);
     this.handleTagSelected = this.handleTagSelected.bind(this);
-    this.handleProductiveChanged = this.handleProductiveChanged.bind(this);
     this.handleBillableChanged = this.handleBillableChanged.bind(this);
     this.handleStartTimeChanged = this.handleStartTimeChanged.bind(this);
     this.handleEndTimeChanged = this.handleEndTimeChanged.bind(this);
@@ -45,15 +43,6 @@ class TimerEntryStateManager extends React.Component {
       timerEntry: {
         ...this.state.timerEntry,
         tag,
-      },
-    });
-  }
-
-  handleProductiveChanged(e) {
-    this.setState({
-      timerEntry: {
-        ...this.state.timerEntry,
-        isProductive: !this.state.timerEntry.isProductive,
       },
     });
   }
@@ -170,7 +159,6 @@ class TimerEntryStateManager extends React.Component {
       timerEntry: this.state.timerEntry,
       onTaskChanged: this.handleTaskChanged,
       onTagSelected: this.handleTagSelected,
-      onProductiveChanged: this.handleProductiveChanged,
       onBillableChanged: this.handleBillableChanged,
       onStartTimeChanged: this.handleStartTimeChanged,
       onEndTimeChanged: this.handleEndTimeChanged,

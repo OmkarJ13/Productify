@@ -182,6 +182,10 @@ class TimerEntries extends React.Component {
     );
   }
 
+  componentDidUpdate() {
+    this.storeTimerEntries();
+  }
+
   render() {
     const filteredEntries = this.filterEntries(this.props.timerEntries);
     const filteredTotal = this.getTotal(filteredEntries);
@@ -223,10 +227,6 @@ class TimerEntries extends React.Component {
         </div>
       </div>
     );
-  }
-
-  componentDidUpdate() {
-    this.storeTimerEntries();
   }
 
   storeTimerEntries() {
