@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { AddCircle, LocalOffer, Search } from "@mui/icons-material";
 
-import { tagActions } from "../../store/slices/tagSlice";
+import { addTagAsync } from "../../store/slices/tagSlice";
 import FloatingWindow from "../UI/FloatingWindow";
 import TagCreatorWindow from "./TagCreatorWindow";
 import WindowHandler from "../UI/WindowHandler";
@@ -127,7 +127,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addTag: (tag) => {
-      dispatch(tagActions.create(tag));
+      dispatch(addTagAsync(tag));
     },
   };
 };

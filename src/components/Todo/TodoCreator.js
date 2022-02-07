@@ -6,11 +6,10 @@ import {
 } from "@mui/icons-material";
 import { DatePicker } from "@mui/lab";
 import { connect } from "react-redux";
-import { v4 as uuid } from "uuid";
 import React from "react";
 
 import { getRelativeDate } from "../../helpers/getRelativeDate";
-import { todoActions } from "../../store/slices/todoSlice";
+import { addTodoAsync, todoActions } from "../../store/slices/todoSlice";
 import MUIPickerHandler from "../UI/MUIPickerHandler";
 import PrioritySelector from "./PrioritySelector";
 import TagSelector from "../Tag/TagSelector";
@@ -24,7 +23,6 @@ class TodoCreator extends React.Component {
   createTodo(e) {
     const todo = {
       ...this.props.todo,
-      id: uuid(),
     };
 
     this.props.addTodo(todo);
@@ -111,7 +109,7 @@ class TodoCreator extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     addTodo: (todo) => {
-      dispatch(todoActions.create(todo));
+      dispatch(addTodoAsync(todo));
     },
   };
 };

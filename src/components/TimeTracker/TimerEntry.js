@@ -13,8 +13,12 @@ import { v4 as uuid } from "uuid";
 import { DateTime } from "luxon";
 import { TimePicker, DatePicker } from "@mui/lab";
 
-import { timerEntryActions } from "../../store/slices/timerEntrySlice";
-import { currentTimerActions } from "../../store/slices/currentTimerSlice";
+import {
+  addTimerEntryAsync,
+  deleteTimerEntryAsync,
+  updateTimerEntryAsync,
+} from "../../store/slices/timerEntrySlice";
+import { startTimerAsync } from "../../store/slices/timerSlice";
 import TagSelector from "../Tag/TagSelector";
 import TimerEntryOptionsSelector from "./TimerEntryOptionsSelector";
 import MUIPickerHandler from "../UI/MUIPickerHandler";
@@ -59,11 +63,10 @@ class TimerEntry extends React.Component {
   }
 
   duplicateEntry(e) {
-    const { timerEntry } = this.props;
+    const { id, ...timerEntryData } = this.props.timerEntry;
 
     const duplicatedTimerEntry = {
-      ...timerEntry,
-      id: uuid(),
+      ...timerEntryData,
     };
     this.props.duplicateTimerEntry(duplicatedTimerEntry);
   }
@@ -80,8 +83,11 @@ class TimerEntry extends React.Component {
   }
 
   continueTimerEntry(e) {
+    const { id, ...timerEntryData } = this.props.timerEntry;
+
     const timer = {
-      ...this.props.timerEntry,
+      ...timerEntryData,
+      timerRef: id,
       startTime: DateTime.now(),
       date: DateTime.now().startOf("day"),
     };
@@ -250,7 +256,7 @@ class TimerEntry extends React.Component {
               title="Continue Timer Entry"
               onClick={this.continueTimerEntry}
               className="bg-blue-500 text-white rounded-[50%] disabled:bg-gray-600"
-              disabled={isCombined || this.props.currentTimer !== null}
+              disabled={isCombined || this.props.timer !== null}
             >
               <PlayArrow fontSize="small" />
             </button>
@@ -270,23 +276,23 @@ class TimerEntry extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentTimer: state.currentTimerReducer.currentTimer,
+    timer: state.timerReducer.timer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     updateTimerEntry: (timerEntry) => {
-      dispatch(timerEntryActions.update(timerEntry));
+      dispatch(updateTimerEntryAsync(timerEntry));
     },
     deleteTimerEntry: (timerEntry) => {
-      dispatch(timerEntryActions.delete(timerEntry));
+      dispatch(deleteTimerEntryAsync(timerEntry));
     },
     duplicateTimerEntry: (timerEntry) => {
-      dispatch(timerEntryActions.create(timerEntry));
+      dispatch(addTimerEntryAsync(timerEntry));
     },
     continueTimerEntry: (timer) => {
-      dispatch(currentTimerActions.start(timer));
+      dispatch(startTimerAsync(timer));
     },
   };
 };

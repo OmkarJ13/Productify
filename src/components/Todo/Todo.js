@@ -11,16 +11,19 @@ import { toast, ToastContainer } from "react-toastify";
 import { DatePicker } from "@mui/lab";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { v4 as uuid } from "uuid";
 import { DateTime } from "luxon";
 import { Duration } from "luxon";
 import React from "react";
 
 import TimerEntryOptionsSelector from "../TimeTracker/TimerEntryOptionsSelector";
 import { getRelativeDate } from "../../helpers/getRelativeDate";
-import { timerEntryActions } from "../../store/slices/timerEntrySlice";
-import { currentTimerActions } from "../../store/slices/currentTimerSlice";
-import { todoActions } from "../../store/slices/todoSlice";
+import { addTimerEntryAsync } from "../../store/slices/timerEntrySlice";
+import { startTimerAsync, stopTimerAsync } from "../../store/slices/timerSlice";
+import {
+  addTodoAsync,
+  deleteTodoAsync,
+  updateTodoAsync,
+} from "../../store/slices/todoSlice";
 import TagSelector from "../Tag/TagSelector";
 import MUIPickerHandler from "../UI/MUIPickerHandler";
 import PrioritySelector from "./PrioritySelector";
@@ -40,15 +43,16 @@ class Todo extends React.Component {
   }
 
   startTrackingTodo() {
-    const { id, task, tag, isBillable, date, ...otherProps } = this.props.todo;
+    const { id, task, tag, isBillable, date, ...otherData } = this.props.todo;
 
     const timer = {
-      id,
+      timerRef: id,
       task,
       tag,
       isBillable,
       date,
       startTime: DateTime.now(),
+      endTime: DateTime.now(),
       duration: Duration.fromMillis(0),
     };
 
@@ -57,36 +61,25 @@ class Todo extends React.Component {
   }
 
   stopTrackingTodo() {
-    if (!this.props.currentTimer?.id === this.props.todo.id) return;
+    if (!this.props.timer?.timerRef === this.props.todo.id) return;
 
-    const { task, tag, isBillable, date, startTime } = this.props.currentTimer;
-    const timer = {
-      id: uuid(),
-      task,
-      tag,
-      isBillable,
-      date,
-      startTime,
+    const { id, timerRef, ...otherData } = this.props.timer;
+
+    const timerEntry = {
+      ...otherData,
       endTime: DateTime.now(),
-      duration: DateTime.now().diff(startTime),
+      duration: DateTime.now().diff(otherData.startTime),
     };
 
-    this.props.stopTodoTimer();
-    this.props.createTimerEntry(timer);
-
-    localStorage.setItem("currentTimer", JSON.stringify(null));
-    localStorage.setItem(
-      "timerEntries",
-      JSON.stringify([timer, this.props.timerEntries])
-    );
+    this.props.stopTodoTimer(this.props.timer);
+    this.props.createTimerEntry(timerEntry);
   }
 
   manualTrackTodo(data) {
-    const { task, tag, isBillable, date, ...otherProps } = this.props.todo;
+    const { task, tag, isBillable, date, ...otherData } = this.props.todo;
     const { startTime, endTime } = data;
 
-    const timer = {
-      id: uuid(),
+    const timerEntry = {
       task,
       tag,
       isBillable,
@@ -96,11 +89,7 @@ class Todo extends React.Component {
       duration: endTime.diff(startTime),
     };
 
-    this.props.createTimerEntry(timer);
-    localStorage.setItem(
-      "timerEntries",
-      JSON.stringify([timer, this.props.timerEntries])
-    );
+    this.props.createTimerEntry(timerEntry);
   }
 
   getDueTime(duration) {
@@ -120,11 +109,10 @@ class Todo extends React.Component {
   }
 
   duplicateTodo() {
-    const { todo } = this.props;
+    const { id, ...todoData } = this.props.todo;
 
     const duplicatedTodo = {
-      ...todo,
-      id: uuid(),
+      ...todoData,
     };
 
     this.props.duplicateTodo(duplicatedTodo);
@@ -168,8 +156,10 @@ class Todo extends React.Component {
   }
 
   handleIsDone() {
-    if (this.props.currentTimer?.id === this.props.todo.id)
-      this.stopTrackingTodo();
+    if (this.props.timer?.timerRef === this.props.todo.id) {
+      this.stopTrackingTodo(this.props.timer);
+    }
+
     this.props.onDoneChanged();
   }
 
@@ -261,7 +251,7 @@ class Todo extends React.Component {
           </div>
 
           <div className="h-full flex justify-end items-center gap-2">
-            {this.props.currentTimer?.id === id ? (
+            {this.props.timer?.timerRef === id ? (
               <button
                 className="flex justify-center items-center text-white rounded-[50%] bg-red-500 animate-pulse"
                 onClick={this.stopTrackingTodo}
@@ -292,7 +282,7 @@ class Todo extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentTimer: state.currentTimerReducer.currentTimer,
+    timer: state.timerReducer.timer,
     timerEntries: state.timerEntryReducer.timerEntries,
   };
 };
@@ -300,27 +290,27 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     deleteTodo: (todo) => {
-      dispatch(todoActions.delete(todo));
+      dispatch(deleteTodoAsync(todo));
     },
 
     duplicateTodo: (todo) => {
-      dispatch(todoActions.create(todo));
+      dispatch(addTodoAsync(todo));
     },
 
     updateTodo: (todo) => {
-      dispatch(todoActions.update(todo));
+      dispatch(updateTodoAsync(todo));
     },
 
     startTodoTimer: (timer) => {
-      dispatch(currentTimerActions.start(timer));
+      dispatch(startTimerAsync(timer));
     },
 
-    stopTodoTimer: () => {
-      dispatch(currentTimerActions.stop());
+    stopTodoTimer: (timer) => {
+      dispatch(stopTimerAsync(timer));
     },
 
     createTimerEntry: (timer) => {
-      dispatch(timerEntryActions.create(timer));
+      dispatch(addTimerEntryAsync(timer));
     },
   };
 };

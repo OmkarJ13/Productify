@@ -1,5 +1,6 @@
 import React from "react";
-import { Redirect, Route, Switch } from "react-router";
+import { connect } from "react-redux";
+import { Redirect, Route, Switch, withRouter } from "react-router";
 
 import SideBar from "./SideBar";
 import TimeTracker from "./TimeTracker/TimeTracker";
@@ -8,12 +9,25 @@ import Tags from "./Tags/Tags";
 import Settings from "./Settings";
 import Account from "./Account";
 import TaskTracker from "./Todo/TaskTracker";
+import Welcome from "./Welcome/Welcome";
 
 class ProductivityApp extends React.Component {
+  componentDidUpdate(prevProps) {
+    if (prevProps.user || this.props.user) {
+      // if currently someone is logged in and this user is different than the one logged in before, redirect to to main content
+      if (
+        this.props.user !== null &&
+        prevProps.user?.uid !== this.props.user?.uid
+      )
+        // redirect to productify
+        this.props.history.push("/track");
+    }
+  }
+
   render() {
     return (
       <div className="flex">
-        <SideBar />
+        {this.props.location.pathname !== "/welcome" && <SideBar />}
 
         <Switch>
           <Route path="/track" exact component={TimeTracker} />
@@ -22,11 +36,19 @@ class ProductivityApp extends React.Component {
           <Route path="/tags" exact component={Tags} />
           <Route path="/account" exact component={Account} />
           <Route path="/settings" exact component={Settings} />
-          <Redirect to="/track" />
+          <Route path="/welcome" exact component={Welcome} />
+
+          <Redirect to="/welcome" />
         </Switch>
       </div>
     );
   }
 }
 
-export default ProductivityApp;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(ProductivityApp));

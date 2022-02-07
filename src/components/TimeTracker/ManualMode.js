@@ -10,9 +10,8 @@ import {
 } from "@mui/icons-material";
 import { DateTime } from "luxon";
 import { connect } from "react-redux";
-import { v4 as uuid } from "uuid";
 
-import { timerEntryActions } from "../../store/slices/timerEntrySlice";
+import { addTimerEntryAsync } from "../../store/slices/timerEntrySlice";
 import { getRelativeDate } from "../../helpers/getRelativeDate";
 import TagSelector from "../../components/Tag/TagSelector";
 import MUIPickerHandler from "../UI/MUIPickerHandler";
@@ -25,7 +24,6 @@ class ManualMode extends React.Component {
 
   saveTimerEntry() {
     const timerEntry = {
-      id: uuid(),
       ...this.props.timerEntry,
     };
 
@@ -181,14 +179,14 @@ class ManualMode extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentTimer: state.currentTimerReducer.currentTimer,
+    timer: state.timerReducer.timer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     saveTimerEntry: (timerEntry) => {
-      dispatch(timerEntryActions.create(timerEntry));
+      dispatch(addTimerEntryAsync(timerEntry));
     },
   };
 };

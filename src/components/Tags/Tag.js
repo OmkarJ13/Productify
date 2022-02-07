@@ -2,7 +2,11 @@ import React from "react";
 import { LocalOffer, MoreVert } from "@mui/icons-material";
 import { connect } from "react-redux";
 
-import { tagActions } from "../../store/slices/tagSlice";
+import {
+  deleteTagAsync,
+  tagActions,
+  updateTagAsync,
+} from "../../store/slices/tagSlice";
 import TagCreatorWindow from "../Tag/TagCreatorWindow";
 import TagOptionsWindow from "./TagOptionsWindow";
 import WindowHandler from "../UI/WindowHandler";
@@ -28,6 +32,7 @@ class Tag extends React.Component {
   }
 
   handleEdit(tag) {
+    console.log(tag);
     this.props.updateTag(tag);
   }
 
@@ -77,11 +82,11 @@ class Tag extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     deleteTag: (tag) => {
-      dispatch(tagActions.delete(tag));
+      dispatch(deleteTagAsync(tag));
     },
 
     updateTag: (tag) => {
-      dispatch(tagActions.update(tag));
+      dispatch(updateTagAsync(tag));
     },
   };
 };

@@ -10,7 +10,7 @@ class TodoStateManager extends React.Component {
         isDone: false,
         isBillable: false,
         task: "",
-        tag: undefined,
+        tag: null,
         priority: 0,
         date: DateTime.now().startOf("day"),
       },
@@ -91,8 +91,10 @@ class TodoStateManager extends React.Component {
   resetState() {
     this.setState({
       todo: {
+        isDone: false,
+        isBillable: false,
         task: "",
-        tag: undefined,
+        tag: null,
         priority: 0,
         date: DateTime.now().startOf("day"),
       },

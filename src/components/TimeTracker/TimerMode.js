@@ -11,10 +11,9 @@ import {
   Stop,
 } from "@mui/icons-material";
 import { DateTime, Duration } from "luxon";
-import { v4 as uuid } from "uuid";
 
-import { currentTimerActions } from "../../store/slices/currentTimerSlice";
-import { timerEntryActions } from "../../store/slices/timerEntrySlice";
+import { startTimerAsync, stopTimerAsync } from "../../store/slices/timerSlice";
+import { addTimerEntryAsync } from "../../store/slices/timerEntrySlice";
 import TagSelector from "../Tag/TagSelector";
 
 class TimerMode extends React.Component {
@@ -27,15 +26,16 @@ class TimerMode extends React.Component {
     this.stopTracking = this.stopTracking.bind(this);
     this.discardTimer = this.discardTimer.bind(this);
     this.updateTimer = this.updateTimer.bind(this);
-    this.reloadHandler = this.reloadHandler.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("beforeunload", this.reloadHandler);
-
     if (this.shouldRestore()) {
       this.restoreTimer();
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
   }
 
   componentDidUpdate() {
@@ -48,25 +48,19 @@ class TimerMode extends React.Component {
     return this.timerID !== undefined;
   }
 
-  reloadHandler() {
-    if (this.timerExists()) {
-      this.resetTimer();
-      this.storeCurrentTimer();
-    }
-  }
-
   startTracking(e) {
-    const timerEntry = {
+    const timer = {
       ...this.props.timerEntry,
       startTime: DateTime.now(),
     };
 
-    this.props.startTimer(timerEntry);
+    this.props.startTimer(timer);
     this.timerID = setInterval(this.updateTimer, 1000);
   }
 
   updateTimer() {
     const { timerEntry } = this.props;
+
     const prevDuration = timerEntry.duration;
     const newDuration = prevDuration.plus(Duration.fromMillis(1000));
 
@@ -76,66 +70,52 @@ class TimerMode extends React.Component {
   stopTracking(e) {
     this.resetTimer();
 
+    console.log(this.props.timerEntry);
+
     const timerEntry = {
       ...this.props.timerEntry,
-      id: uuid(),
       endTime: DateTime.now(),
     };
 
-    this.props.stopTimer(timerEntry);
-    this.props.resetState();
+    this.props.stopTimer(this.props.timer);
+    this.props.createTimerEntry(timerEntry);
 
-    localStorage.setItem("currentTimer", JSON.stringify(null));
+    this.props.resetState();
   }
 
   discardTimer(e) {
-    this.props.discardTimer();
-
     this.resetTimer();
-    this.props.resetState();
 
-    localStorage.setItem("currentTimer", JSON.stringify(null));
+    this.props.stopTimer(this.props.timer);
+    this.props.resetState();
   }
 
   shouldRestore() {
-    return this.props.currentTimer !== null && !this.timerExists();
+    return this.props.timer !== null && !this.timerExists();
   }
 
   restoreTimer() {
-    const { currentTimer } = this.props;
+    const { timer } = this.props;
 
-    if (currentTimer === null) {
+    if (timer === null) {
       console.error("Tried to restore a timer that did not exist");
       return;
     }
 
     this.timerID = setInterval(this.updateTimer, 1000);
+    const { id, ...timerData } = timer;
 
     this.props.updateState({
       timerEntry: {
-        ...currentTimer,
-        duration: DateTime.now().diff(currentTimer.startTime),
+        ...timerData,
+        duration: DateTime.now().diff(timer.startTime),
       },
     });
-  }
-
-  storeCurrentTimer() {
-    const { timerEntry } = this.props;
-    localStorage.setItem("currentTimer", JSON.stringify(timerEntry));
   }
 
   resetTimer() {
     clearInterval(this.timerID);
     this.timerID = undefined;
-  }
-
-  componentWillUnmount() {
-    if (this.timerExists()) {
-      this.resetTimer();
-      this.storeCurrentTimer();
-    }
-
-    window.removeEventListener("beforeunload", this.reloadHandler);
   }
 
   render() {
@@ -176,7 +156,7 @@ class TimerMode extends React.Component {
         </span>
 
         <div className="h-full flex items-center gap-2">
-          {this.props.currentTimer !== null ? (
+          {this.props.timer !== null ? (
             <button
               onClick={this.stopTracking}
               className="p-2 bg-gradient-to-br from-red-500 to-red-400 rounded-[50%] text-white uppercase"
@@ -193,7 +173,7 @@ class TimerMode extends React.Component {
           )}
 
           <div className="flex flex-col justify-center items-center">
-            {this.props.currentTimer !== null ? (
+            {this.props.timer !== null ? (
               <button title="Discard Timer" onClick={this.discardTimer}>
                 <Close fontSize="small" />
               </button>
@@ -234,23 +214,22 @@ class TimerMode extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentTimer: state.currentTimerReducer.currentTimer,
+    timer: state.timerReducer.timer,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    startTimer: (timerEntry) => {
-      dispatch(currentTimerActions.start(timerEntry));
+    startTimer: (timer) => {
+      dispatch(startTimerAsync(timer));
     },
 
-    stopTimer: (timerEntry) => {
-      dispatch(currentTimerActions.stop());
-      dispatch(timerEntryActions.create(timerEntry));
+    stopTimer: (timer) => {
+      dispatch(stopTimerAsync(timer));
     },
 
-    discardTimer: () => {
-      dispatch(currentTimerActions.stop());
+    createTimerEntry: (timerEntry) => {
+      dispatch(addTimerEntryAsync(timerEntry));
     },
   };
 };

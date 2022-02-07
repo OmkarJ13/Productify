@@ -8,8 +8,7 @@ class TimerEntryStateManager extends React.Component {
     this.state = {
       timerEntry: this.props.timerEntry ?? {
         task: "",
-        tag: undefined,
-        isProductive: false,
+        tag: null,
         isBillable: false,
         startTime: DateTime.now().startOf("minute"),
         endTime: DateTime.now().startOf("minute"),
@@ -144,12 +143,12 @@ class TimerEntryStateManager extends React.Component {
     this.setState({
       timerEntry: {
         task: "",
-        date: DateTime.now().startOf("day"),
+        tag: null,
+        isBillable: false,
         startTime: DateTime.now().startOf("minute"),
         endTime: DateTime.now().startOf("minute"),
+        date: DateTime.now().startOf("day"),
         duration: Duration.fromMillis(0),
-        isProductive: false,
-        isBillable: false,
       },
     });
   }

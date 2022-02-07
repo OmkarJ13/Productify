@@ -16,6 +16,7 @@ import ViewBySelector from "../UI/ViewBySelector";
 import GroupedEntries from "../UI/GroupedEntries";
 import PeriodChanger from "../UI/PeriodChanger";
 import NoData from "../UI/NoData";
+import { Sync } from "@mui/icons-material";
 
 class TimerEntries extends React.Component {
   constructor(props) {
@@ -159,7 +160,6 @@ class TimerEntries extends React.Component {
             date: timerEntry.date,
             startTime: timerEntry.startTime,
             endTime: timerEntry.endTime,
-            isProductive: timerEntry.isProductive,
             isBillable: timerEntry.isBillable,
           }}
           renderTimerEntry={(otherProps) => {
@@ -180,10 +180,6 @@ class TimerEntries extends React.Component {
     return timerEntries.filter((timerEntry) =>
       this.state.period.contains(timerEntry.date)
     );
-  }
-
-  componentDidUpdate() {
-    this.storeTimerEntries();
   }
 
   render() {
@@ -223,16 +219,17 @@ class TimerEntries extends React.Component {
         </div>
         <div className="w-full h-full flex flex-col gap-8">
           {timerEntries.length > 0 && timerEntries}
-          {timerEntries.length === 0 && <NoData text="No Time Tracked" />}
+          {timerEntries.length === 0 && this.props.loading && (
+            <Sync
+              className="animate-spin m-auto text-blue-500"
+              fontSize="large"
+            />
+          )}
+          {timerEntries.length === 0 && !this.props.loading && (
+            <NoData text="No Time Tracked" />
+          )}
         </div>
       </div>
-    );
-  }
-
-  storeTimerEntries() {
-    localStorage.setItem(
-      "timerEntries",
-      JSON.stringify(this.props.timerEntries)
     );
   }
 }
@@ -240,6 +237,7 @@ class TimerEntries extends React.Component {
 const mapStateToProps = (state) => {
   return {
     timerEntries: state.timerEntryReducer.timerEntries,
+    loading: state.timerEntryReducer.loading,
     tags: state.tagReducer.tags,
   };
 };

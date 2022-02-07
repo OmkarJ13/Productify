@@ -22,7 +22,7 @@ class TagSelector extends React.Component {
           <TagSelectorWindow onTagSelected={onChange} {...otherProps} />
         )}
       >
-        {tag === undefined ? (
+        {!tag ? (
           <div className="w-full flex justify-center items-center gap-2 px-2 py-1 rounded-full bg-gray-400 text-white">
             <LocalOffer fontSize="small" />
             <span className="text-xs">Add Tag</span>

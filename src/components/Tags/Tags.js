@@ -1,7 +1,7 @@
 import {
   Add,
   LocalOffer,
-  MoreVert,
+  Sync,
   Search,
   ArrowCircleDown,
   ArrowCircleUp,
@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { connect } from "react-redux";
 
-import { tagActions } from "../../store/slices/tagSlice";
+import { addTagAsync, tagActions } from "../../store/slices/tagSlice";
 import TagCreatorWindow from "../Tag/TagCreatorWindow";
 import WindowHandler from "../UI/WindowHandler";
 import NoData from "../UI/NoData";
@@ -170,15 +170,13 @@ class Tags extends React.Component {
     });
   }
 
-  componentDidUpdate() {
-    localStorage.setItem("tags", JSON.stringify(this.props.tags));
-  }
-
   filterTags(tags) {
     const { searchQuery } = this.state;
     if (searchQuery === "") return tags;
 
-    return tags.filter((tag) => tag.name === searchQuery);
+    return tags.filter(
+      (tag) => tag.name.toLowerCase() === searchQuery.toLowerCase()
+    );
   }
 
   render() {
@@ -218,7 +216,13 @@ class Tags extends React.Component {
 
         <div className="flex-grow flex flex-col">
           {tagsJSX && tagsJSX}
-          {!tagsJSX && <NoData text="No Tags" />}
+          {!tagsJSX && this.props.loading && (
+            <Sync
+              className="animate-spin m-auto text-blue-500"
+              fontSize="large"
+            />
+          )}
+          {!tagsJSX && !this.props.loading && <NoData text="No Tags" />}
         </div>
       </div>
     );
@@ -228,15 +232,14 @@ class Tags extends React.Component {
 const mapStateToProps = (state) => {
   return {
     tags: state.tagReducer.tags,
-    timerEntries: state.timerEntryReducer.timerEntries,
-    todos: state.todoReducer.todos,
+    loading: state.tagReducer.loading,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     addTag: (tag) => {
-      dispatch(tagActions.create(tag));
+      dispatch(addTagAsync(tag));
     },
   };
 };

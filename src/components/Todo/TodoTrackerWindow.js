@@ -105,7 +105,7 @@ class TodoTrackWindow extends React.Component {
               <button
                 onClick={this.handleStartTracking}
                 className="flex justify-center items-center gap-2 px-4 py-2 my-4 rounded bg-blue-500 text-white disabled:bg-gray-600"
-                disabled={this.props.currentTimer !== null}
+                disabled={this.props.timer !== null}
               >
                 <Timer /> Start Tracking
               </button>
@@ -176,7 +176,7 @@ class TodoTrackWindow extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentTimer: state.currentTimerReducer.currentTimer,
+    timer: state.timerReducer.timer,
   };
 };
 

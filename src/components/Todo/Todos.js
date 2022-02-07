@@ -1,5 +1,5 @@
 import { DateTime, Interval } from "luxon";
-import { CheckCircle } from "@mui/icons-material";
+import { CheckCircle, Sync } from "@mui/icons-material";
 import { connect } from "react-redux";
 import React from "react";
 
@@ -141,14 +141,6 @@ class Todos extends React.Component {
     return filteredPeriod;
   }
 
-  componentDidUpdate() {
-    this.storeTodos();
-  }
-
-  storeTodos() {
-    localStorage.setItem("todos", JSON.stringify(this.props.todos));
-  }
-
   render() {
     const { period, group, view, showDone } = this.state;
     const { todos } = this.props;
@@ -193,7 +185,15 @@ class Todos extends React.Component {
         </div>
         <div className="w-full flex-grow flex flex-col gap-8">
           {finalTodos.length > 0 && finalTodos}
-          {finalTodos.length === 0 && <NoData text="No Tasks To Do" />}
+          {finalTodos.length === 0 && this.props.loading && (
+            <Sync
+              className="animate-spin m-auto text-blue-500"
+              fontSize="large"
+            />
+          )}
+          {finalTodos.length === 0 && !this.props.loading && (
+            <NoData text="No Tasks To Do" />
+          )}
         </div>
       </div>
     );
@@ -203,6 +203,7 @@ class Todos extends React.Component {
 const mapStateToProps = (state) => {
   return {
     todos: state.todoReducer.todos,
+    loading: state.todoReducer.loading,
     tags: state.tagReducer.tags,
   };
 };

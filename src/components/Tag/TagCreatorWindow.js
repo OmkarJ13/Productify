@@ -1,5 +1,4 @@
 import React from "react";
-import { v4 as uuid } from "uuid";
 import {
   LocalOffer,
   Done,
@@ -9,6 +8,7 @@ import {
 
 import ModalWindow from "../UI/ModalWindow";
 import { colors } from "../../helpers/colors";
+import { connect } from "react-redux";
 
 class TagCreatorWindow extends React.Component {
   constructor(props) {
@@ -18,7 +18,6 @@ class TagCreatorWindow extends React.Component {
       isValid: true,
       billingOptionsOpen: false,
       tag: {
-        id: uuid(),
         name: "",
         billableAmount: 0,
         color: colors[0],
@@ -40,7 +39,7 @@ class TagCreatorWindow extends React.Component {
   }
 
   nameChangeHandler(e) {
-    const tags = JSON.parse(localStorage.getItem("tags"));
+    const { tags } = this.props;
     const exists = tags.some(
       (cur) => cur.name === e.target.value && cur.id !== this.state.tag.id
     );
@@ -188,4 +187,10 @@ class TagCreatorWindow extends React.Component {
   }
 }
 
-export default TagCreatorWindow;
+const mapStateToProps = (state) => {
+  return {
+    tags: state.tagReducer.tags,
+  };
+};
+
+export default connect(mapStateToProps)(TagCreatorWindow);
