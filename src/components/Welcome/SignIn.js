@@ -7,6 +7,7 @@ import {
 import { Lock, Person } from "@mui/icons-material";
 
 import { auth } from "../../firebase.config";
+import { firebaseErrors } from "../../helpers/firebaseErrors";
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class SignIn extends React.Component {
       email: "",
       password: "",
       rememberMe: false,
+      errorMessage: "",
     };
 
     this.handleSignInDetailsChanged =
@@ -27,6 +29,7 @@ class SignIn extends React.Component {
   handleSignInDetailsChanged(e) {
     this.setState({
       [e.target.name]: e.target.value,
+      errorMessage: "",
     });
   }
 
@@ -37,19 +40,25 @@ class SignIn extends React.Component {
   }
 
   async signIn() {
-    const { email, password, rememberMe } = this.state;
+    try {
+      const { email, password, rememberMe } = this.state;
 
-    if (!rememberMe) {
-      await auth.setPersistence(browserSessionPersistence);
-    } else {
-      await auth.setPersistence(browserLocalPersistence);
+      if (!rememberMe) {
+        await auth.setPersistence(browserSessionPersistence);
+      } else {
+        await auth.setPersistence(browserLocalPersistence);
+      }
+
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (e) {
+      this.setState({
+        errorMessage: firebaseErrors[e.code],
+      });
     }
-
-    await signInWithEmailAndPassword(auth, email, password);
   }
 
   render() {
-    const { email, password, rememberMe } = this.state;
+    const { email, password, rememberMe, errorMessage } = this.state;
 
     return (
       <div className="w-full h-full flex flex-col justify-center items-center">
@@ -97,11 +106,14 @@ class SignIn extends React.Component {
               Forgot Password?
             </button>
           </div>
+
+          <span className="w-[300px] text-sm text-red-500">{errorMessage}</span>
         </div>
 
         <button
-          className="w-[300px] px-4 py-2 mb-4 rounded-md bg-blue-500 text-white"
+          className="w-[300px] px-4 py-2 mb-4 rounded-md bg-blue-500 text-white disabled:bg-gray-500"
           onClick={this.signIn}
+          disabled={email === "" || password === ""}
         >
           Sign In
         </button>
