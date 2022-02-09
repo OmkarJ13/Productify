@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { auth } from "../../firebase.config";
+import { auth, db } from "../../firebase.config";
 import store from "../store.index";
 import { getTagsAsync } from "./tagSlice";
 import { getTimerEntriesAsync } from "./timerEntrySlice";
