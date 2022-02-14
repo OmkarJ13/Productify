@@ -107,7 +107,7 @@ class Tags extends React.Component {
     const tagsJSX = this.generateTags(sortedTags);
 
     return (
-      <div className="mb-auto flex h-[85%] w-full flex-col gap-4 overflow-y-auto p-6 text-gray-600 xl:mb-0 xl:ml-auto xl:min-h-screen xl:w-[85%] xl:gap-6">
+      <div className="mb-auto flex h-[90%] w-full flex-col gap-4 overflow-y-auto p-6 text-gray-600 xl:mb-0 xl:ml-auto xl:min-h-screen xl:w-[85%] xl:gap-6">
         <div className="flex w-full flex-col items-center gap-4 border border-gray-200 p-4 shadow-md sm:flex-row sm:justify-between">
           <h1 className="text-2xl font-bold uppercase">Tags</h1>
           <WindowHandler

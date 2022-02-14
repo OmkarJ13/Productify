@@ -19,7 +19,7 @@ class SideBar extends React.Component {
   render() {
     const path = this.props.location.pathname;
     return (
-      <div className="fixed bottom-0 left-0 flex h-[15%] w-full bg-blue-500 text-white xl:h-screen xl:w-[15%] xl:flex-col xl:py-8">
+      <div className="fixed bottom-0 left-0 flex h-[10%] w-full bg-blue-500 text-white xl:h-screen xl:w-[15%] xl:flex-col xl:py-8">
         <h1 className="hidden xl:mb-8 xl:flex xl:items-center xl:justify-center xl:gap-1 xl:text-2xl xl:font-black">
           <AlarmOn fontSize="large" />
           Productify
