@@ -19,61 +19,61 @@ class SideBar extends React.Component {
   render() {
     const path = this.props.location.pathname;
     return (
-      <div className="fixed bottom-0 left-0 flex h-[75px] w-full bg-blue-500 text-white lg:h-screen lg:w-[15%] lg:flex-col lg:py-8">
-        <h1 className="hidden lg:mb-8 lg:flex lg:items-center lg:justify-center lg:gap-1 lg:text-2xl lg:font-black">
+      <div className="fixed bottom-0 left-0 flex h-[15%] w-full bg-blue-500 text-white xl:h-screen xl:w-[15%] xl:flex-col xl:py-8">
+        <h1 className="hidden xl:mb-8 xl:flex xl:items-center xl:justify-center xl:gap-1 xl:text-2xl xl:font-black">
           <AlarmOn fontSize="large" />
           Productify
         </h1>
         <NavLink
           to="/track"
           exact
-          className="flex w-1/5 items-center justify-center gap-2 text-lg hover:bg-blue-400 lg:w-full lg:justify-start lg:px-4 lg:py-2"
+          className="flex w-1/5 items-center justify-center gap-2 text-lg hover:bg-blue-400 xl:w-full xl:justify-start xl:px-4 xl:py-2"
           activeClassName="bg-blue-400"
         >
           {path === "/track" ? <Timer /> : <TimerOutlined />}
-          <span className="hidden lg:inline">Time Tracked</span>
+          <span className="hidden xl:inline">Time Tracker</span>
         </NavLink>
         <NavLink
           to="/tasks"
           exact
-          className="flex w-1/5 items-center justify-center gap-2 text-lg hover:bg-blue-400 lg:w-full lg:justify-start lg:px-4 lg:py-2"
+          className="flex w-1/5 items-center justify-center gap-2 text-lg hover:bg-blue-400 xl:w-full xl:justify-start xl:px-4 xl:py-2"
           activeClassName="bg-blue-400"
         >
           {path === "/tasks" ? <StickyNote2 /> : <StickyNote2Outlined />}
-          <span className="hidden lg:inline">Tasks</span>
+          <span className="hidden xl:inline">Tasks</span>
         </NavLink>
-        <span className="my-4 hidden self-start px-4 text-xs font-light uppercase lg:inline">
+        <span className="my-4 hidden self-start px-4 text-xs font-light uppercase xl:inline">
           <span>Analyze</span>
         </span>
         <NavLink
           to="/analytics"
           exact
-          className="flex w-1/5 items-center justify-center gap-2 text-lg hover:bg-blue-400 lg:w-full lg:justify-start lg:px-4 lg:py-2"
+          className="flex w-1/5 items-center justify-center gap-2 text-lg hover:bg-blue-400 xl:w-full xl:justify-start xl:px-4 xl:py-2"
           activeClassName="bg-blue-400"
         >
           {path === "/analytics" ? <Analytics /> : <AnalyticsOutlined />}
-          <span className="hidden lg:inline">Analytics</span>
+          <span className="hidden xl:inline">Analytics</span>
         </NavLink>
-        <span className="my-4 hidden self-start px-4 text-xs font-light uppercase lg:inline">
+        <span className="my-4 hidden self-start px-4 text-xs font-light uppercase xl:inline">
           <span>Manage</span>
         </span>
         <NavLink
           to="/tags"
           exact
-          className="flex w-1/5 items-center justify-center gap-2 text-lg hover:bg-blue-400 lg:w-full lg:justify-start lg:px-4 lg:py-2"
+          className="flex w-1/5 items-center justify-center gap-2 text-lg hover:bg-blue-400 xl:w-full xl:justify-start xl:px-4 xl:py-2"
           activeClassName="bg-blue-400"
         >
           {path === "/tags" ? <LocalOffer /> : <LocalOfferOutlined />}
-          <span className="hidden lg:inline">Tags</span>
+          <span className="hidden xl:inline">Tags</span>
         </NavLink>
         <NavLink
           to="/account"
           exact
-          className="flex w-1/5 items-center justify-center gap-2 text-lg hover:bg-blue-400 lg:w-full lg:justify-start lg:px-4 lg:py-2"
+          className="flex w-1/5 items-center justify-center gap-2 text-lg hover:bg-blue-400 xl:w-full xl:justify-start xl:px-4 xl:py-2"
           activeClassName="bg-blue-400"
         >
           {path === "/account" ? <AccountCircle /> : <AccountCircleOutlined />}
-          <span className="hidden lg:inline">Account</span>
+          <span className="hidden xl:inline">Account</span>
         </NavLink>
       </div>
     );

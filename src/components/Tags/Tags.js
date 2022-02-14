@@ -43,9 +43,9 @@ class Tags extends React.Component {
     const { sortAscending } = this.state;
 
     return (
-      <div>
+      <>
         <div className="flex items-center gap-4 border-b border-gray-300 p-2">
-          <div className="group flex-grow">
+          <div className="group w-full">
             <button
               className="flex items-center gap-4 text-center"
               name="alpha"
@@ -55,7 +55,7 @@ class Tags extends React.Component {
                 <LocalOffer /> Name
               </span>
 
-              <div className="opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="xl:opacity-0 xl:transition-opacity xl:group-hover:opacity-100">
                 {sortAscending ? <ArrowCircleDown /> : <ArrowCircleUp />}
               </div>
             </button>
@@ -65,7 +65,7 @@ class Tags extends React.Component {
         {tags.map((tag) => {
           return <Tag key={tag.id} tag={tag} />;
         })}
-      </div>
+      </>
     );
   }
 
@@ -107,11 +107,11 @@ class Tags extends React.Component {
     const tagsJSX = this.generateTags(sortedTags);
 
     return (
-      <div className="ml-auto flex min-h-screen w-[85%] flex-col gap-6 p-6 text-gray-600">
-        <div className="flex h-[75px] w-full items-center justify-between border border-gray-200 p-4 shadow-md">
+      <div className="mb-auto flex h-[85%] w-full flex-col gap-4 overflow-y-auto p-6 text-gray-600 xl:mb-0 xl:ml-auto xl:min-h-screen xl:w-[85%] xl:gap-6">
+        <div className="flex w-full flex-col items-center gap-4 border border-gray-200 p-4 shadow-md sm:flex-row sm:justify-between">
           <h1 className="text-2xl font-bold uppercase">Tags</h1>
           <WindowHandler
-            className="rounded-md bg-gradient-to-br from-blue-500 to-blue-400 px-4 py-2 text-white"
+            className="rounded-md bg-blue-500 px-4 py-2 text-white"
             renderWindow={(otherProps) => {
               return (
                 <TagCreatorWindow
@@ -128,13 +128,13 @@ class Tags extends React.Component {
           <Search />
           <input
             type="text"
-            className="flex-grow outline-none"
+            className="w-full outline-none"
             placeholder="Search"
             onChange={this.handleSearchQuery}
           />
         </div>
 
-        <div className="flex flex-grow flex-col">
+        <div className="flex h-full flex-col">
           {tagsJSX && tagsJSX}
           {!tagsJSX && this.props.loading && (
             <Sync

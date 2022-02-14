@@ -25,7 +25,7 @@ class ProductivityApp extends React.Component {
 
   render() {
     return (
-      <div className="flex">
+      <div className="flex h-[100vh]">
         {this.props.location.pathname !== "/welcome" && <SideBar />}
 
         <Switch>
