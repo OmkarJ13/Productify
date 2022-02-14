@@ -18,7 +18,7 @@ class Overlay extends React.Component {
       <div
         style={style}
         onClick={onClick}
-        className="fixed top-0 left-0 w-screen h-screen animate-[fade_ease-in-out_250ms]"
+        className="fixed top-0 left-0 h-screen w-screen animate-[fade_ease-in-out_250ms]"
       />,
       this.overlayPortal
     );

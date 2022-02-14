@@ -61,12 +61,12 @@ class SignIn extends React.Component {
     const { email, password, rememberMe, errorMessage } = this.state;
 
     return (
-      <div className="w-full h-full flex flex-col justify-center items-center">
+      <div className="flex h-full w-full flex-col items-center justify-center">
         <h1 className="mb-4 text-2xl font-bold uppercase">
           Sign In to get started
         </h1>
-        <div className="flex flex-col gap-2 mb-8">
-          <div className="w-[300px] flex items-center gap-2 p-2 border border-gray-300">
+        <div className="mb-8 flex flex-col gap-2">
+          <div className="flex w-[300px] items-center gap-2 border border-gray-300 p-2">
             <input
               type="text"
               name="email"
@@ -77,7 +77,7 @@ class SignIn extends React.Component {
             />
             <Person fontSize="small" />
           </div>
-          <div className="w-[300px] flex items-center gap-2 p-2 border border-gray-300">
+          <div className="flex w-[300px] items-center gap-2 border border-gray-300 p-2">
             <input
               type="password"
               name="password"
@@ -89,7 +89,7 @@ class SignIn extends React.Component {
             <Lock fontSize="small" />
           </div>
 
-          <div className="flex justify-between items-center text-sm">
+          <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -111,7 +111,7 @@ class SignIn extends React.Component {
         </div>
 
         <button
-          className="w-[300px] px-4 py-2 mb-4 rounded-md bg-blue-500 text-white disabled:bg-gray-500"
+          className="mb-4 w-[300px] rounded-md bg-blue-500 px-4 py-2 text-white disabled:bg-gray-500"
           onClick={this.signIn}
           disabled={email === "" || password === ""}
         >

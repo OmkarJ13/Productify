@@ -1,8 +1,4 @@
-import {
-  EmailAuthCredential,
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-} from "firebase/auth";
+import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import React from "react";
 import { connect } from "react-redux";
 
@@ -62,15 +58,15 @@ class ReauthenticateWindow extends React.Component {
 
     return (
       <ModalWindow open={this.props.open} onClose={this.props.onClose}>
-        <div className="w-[25vw] flex flex-col gap-4">
-          <h2 className="flex gap-2 text-blue-500 text-2xl font-bold uppercase border-b border-gray-300">
+        <div className="flex w-[25vw] flex-col gap-4">
+          <h2 className="flex gap-2 border-b border-gray-300 text-2xl font-bold uppercase text-blue-500">
             Reauthenticate
           </h2>
           <div className="flex flex-col gap-2">
             <label>Re-Enter Password</label>
             <input
               type="password"
-              className="focus:outline-none p-2 border border-gray-300 rounded-md"
+              className="rounded-md border border-gray-300 p-2 focus:outline-none"
               value={password}
               name="password"
               onChange={this.handlePasswordChanged}
@@ -80,7 +76,7 @@ class ReauthenticateWindow extends React.Component {
             )}
           </div>
           <button
-            className="self-end px-4 py-2 bg-blue-500 text-white rounded-md"
+            className="self-end rounded-md bg-blue-500 px-4 py-2 text-white"
             onClick={this.handleUserAuthentication}
           >
             Authenticate

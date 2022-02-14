@@ -84,9 +84,9 @@ class TodoTrackWindow extends React.Component {
           <div className="flex items-center border-b border-gray-300">
             <button
               onClick={this.switchToAutomatic}
-              className={`flex items-center gap-2 px-4 py-2 border-r border-gray-300 ${
+              className={`flex items-center gap-2 border-r border-gray-300 px-4 py-2 ${
                 activeTab !== "automatic" ? "text-gray-400" : ""
-              } font-bold text-sm`}
+              } text-sm font-bold`}
             >
               <Alarm /> Automatic
             </button>
@@ -95,23 +95,23 @@ class TodoTrackWindow extends React.Component {
               onClick={this.switchToManual}
               className={`flex items-center gap-2 px-4 py-2 ${
                 activeTab !== "manual" ? "text-gray-400" : ""
-              } font-bold text-sm`}
+              } text-sm font-bold`}
             >
               <ListAlt /> Manual
             </button>
           </div>
-          <div className="flex flex-col justify-center items-center gap-2">
+          <div className="flex flex-col items-center justify-center gap-2">
             {activeTab === "automatic" ? (
               <button
                 onClick={this.handleStartTracking}
-                className="flex justify-center items-center gap-2 px-4 py-2 my-4 rounded bg-blue-500 text-white disabled:bg-gray-600"
+                className="my-4 flex items-center justify-center gap-2 rounded bg-blue-500 px-4 py-2 text-white disabled:bg-gray-600"
                 disabled={this.props.timer !== null}
               >
                 <Timer /> Start Tracking
               </button>
             ) : (
               <>
-                <div className="w-full flex items-center gap-2 my-4">
+                <div className="my-4 flex w-full items-center gap-2">
                   <MUIPickerHandler
                     renderPicker={(otherProps) => {
                       return (
@@ -123,7 +123,7 @@ class TodoTrackWindow extends React.Component {
                               <button
                                 ref={inputRef}
                                 onClick={InputProps.onClick}
-                                className="flex-grow p-1 border border-gray-300"
+                                className="flex-grow border border-gray-300 p-1"
                               >
                                 {startTime.toLocaleString(DateTime.TIME_SIMPLE)}
                               </button>
@@ -146,7 +146,7 @@ class TodoTrackWindow extends React.Component {
                               <button
                                 ref={inputRef}
                                 onClick={InputProps.onClick}
-                                className="flex-grow p-1 border border-gray-300"
+                                className="flex-grow border border-gray-300 p-1"
                               >
                                 {endTime.toLocaleString(DateTime.TIME_SIMPLE)}
                               </button>
@@ -160,7 +160,7 @@ class TodoTrackWindow extends React.Component {
                 </div>
                 <button
                   onClick={this.handleManualTimeEntered}
-                  className="self-end flex items-center gap-2 px-4 py-1 bg-blue-500 text-white rounded"
+                  className="flex items-center gap-2 self-end rounded bg-blue-500 px-4 py-1 text-white"
                 >
                   <Check fontSize="small" />
                   Save

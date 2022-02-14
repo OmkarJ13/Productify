@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-
 import {
   AttachMoney,
   CalendarToday,
@@ -9,7 +8,6 @@ import {
   Save,
 } from "@mui/icons-material";
 import { ToastContainer, toast } from "react-toastify";
-import { v4 as uuid } from "uuid";
 import { DateTime } from "luxon";
 import { TimePicker, DatePicker } from "@mui/lab";
 
@@ -128,17 +126,17 @@ class TimerEntry extends React.Component {
         />
 
         <div
-          className="group w-full flex items-center p-4 border-x border-b border-gray-300 text-sm"
+          className="group flex w-full items-center border-x border-b border-gray-300 p-4 text-sm"
           onClick={isCombined ? this.toggleAllEntries : null}
         >
-          <div className="flex-grow h-full flex items-center">
-            <div className="flex-grow flex items-center gap-4">
+          <div className="flex h-full flex-grow items-center">
+            <div className="flex flex-grow items-center gap-4">
               {isCombined && (
-                <div className="w-[35px] h-[35px] flex justify-center items-center bg-blue-500 text-white rounded-[50%]">
+                <div className="flex h-[35px] w-[35px] items-center justify-center rounded-[50%] bg-blue-500 text-white">
                   {this.props.allEntries.length}
                 </div>
               )}
-              {isDuplicate && <div className="w-[35px] h-[35px]"></div>}
+              {isDuplicate && <div className="h-[35px] w-[35px]"></div>}
               <input
                 type="text"
                 name="task"
@@ -147,13 +145,13 @@ class TimerEntry extends React.Component {
                 readOnly={isCombined}
                 autoComplete="off"
                 onChange={this.props.onTaskChanged}
-                className="transition-colors flex-grow p-1 border border-transparent group-hover:border-gray-300 focus:outline-none text-ellipsis"
+                className="flex-grow text-ellipsis border border-transparent p-1 transition-colors focus:outline-none group-hover:border-gray-300"
               />
             </div>
 
-            <div className="w-[150px] flex justify-center items-center mx-4">
+            <div className="mx-4 flex w-[150px] items-center justify-center">
               <TagSelector
-                className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 max-w-[125px] h-full flex justify-center items-center"
+                className="flex h-full max-w-[125px] items-center justify-center opacity-0 transition-opacity focus:opacity-100 group-hover:opacity-100"
                 disabled={isCombined}
                 value={tag}
                 onChange={this.props.onTagSelected}
@@ -163,7 +161,7 @@ class TimerEntry extends React.Component {
             <button
               title="Is Billable?"
               onClick={this.props.onBillableChanged}
-              className={`transition-opacity opacity-0 group-hover:opacity-100 h-full px-2 border-x border-gray-300 text-gray-500`}
+              className={`h-full border-x border-gray-300 px-2 text-gray-500 opacity-0 transition-opacity group-hover:opacity-100`}
               disabled={isCombined}
             >
               {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
@@ -182,7 +180,7 @@ class TimerEntry extends React.Component {
                           <button
                             ref={inputRef}
                             onClick={InputProps.onClick}
-                            className="transition-colors w-[80px] p-1 border border-transparent group-hover:border-gray-300"
+                            className="w-[80px] border border-transparent p-1 transition-colors group-hover:border-gray-300"
                             disabled={isCombined}
                           >
                             {startTime.toLocaleString(DateTime.TIME_SIMPLE)}
@@ -206,7 +204,7 @@ class TimerEntry extends React.Component {
                           <button
                             ref={inputRef}
                             onClick={InputProps.onClick}
-                            className="transition-colors w-[80px] p-1 border border-transparent group-hover:border-gray-300"
+                            className="w-[80px] border border-transparent p-1 transition-colors group-hover:border-gray-300"
                             disabled={isCombined}
                           >
                             {endTime.toLocaleString(DateTime.TIME_SIMPLE)}
@@ -233,7 +231,7 @@ class TimerEntry extends React.Component {
                           ref={inputRef}
                           onClick={InputProps.onClick}
                           disabled={isCombined}
-                          className="transition-opacity w-[125px] mr-4 opacity-0 group-hover:opacity-100 capitalize flex items-center gap-2 border border-gray-300 p-1"
+                          className="mr-4 flex w-[125px] items-center gap-2 border border-gray-300 p-1 capitalize opacity-0 transition-opacity group-hover:opacity-100"
                         >
                           <span className="flex-grow text-center">
                             {getRelativeDate(date, "day")}
@@ -248,15 +246,15 @@ class TimerEntry extends React.Component {
             />
           </div>
 
-          <div className="w-[150px] h-full flex justify-center items-center text-base border-x border-gray-300">
+          <div className="flex h-full w-[150px] items-center justify-center border-x border-gray-300 text-base">
             <span>{duration.toFormat("hh:mm:ss")}</span>
           </div>
 
-          <div className="h-full flex items-center gap-1 ml-4">
+          <div className="ml-4 flex h-full items-center gap-1">
             <button
               title="Continue Timer Entry"
               onClick={this.continueTimerEntry}
-              className="bg-blue-500 text-white rounded-[50%] disabled:bg-gray-600"
+              className="rounded-[50%] bg-blue-500 text-white disabled:bg-gray-600"
               disabled={isCombined || this.props.timer !== null}
             >
               <PlayArrow fontSize="small" />

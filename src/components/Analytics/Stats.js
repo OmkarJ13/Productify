@@ -1,6 +1,5 @@
 import React from "react";
-
-import { Duration, DateTime, Interval } from "luxon";
+import { Duration, DateTime } from "luxon";
 
 class Stats extends React.Component {
   getAverageTrackedHours(timerEntries, totalTrackedHours) {
@@ -165,18 +164,18 @@ class Stats extends React.Component {
 
     return (
       <div className="flex items-center gap-4">
-        <div className="w-1/4 p-4 flex flex-col gap-1 border border-gray-300 rounded-md">
+        <div className="flex w-1/4 flex-col gap-1 rounded-md border border-gray-300 p-4">
           <h1 className="text-lg font-light">Current Streak</h1>
-          <span className="text-blue-500 font-black text-2xl">
+          <span className="text-2xl font-black text-blue-500">
             {currentStreak}
           </span>
           <span>
             Longest Streak - <span className="text-lg">{longestStreak}</span>
           </span>
         </div>
-        <div className="w-1/4 p-4 flex flex-col gap-1 border border-gray-300 rounded-md">
+        <div className="flex w-1/4 flex-col gap-1 rounded-md border border-gray-300 p-4">
           <h1 className="text-lg font-light">Tracked Hours</h1>
-          <span className="text-blue-500 font-black text-2xl">
+          <span className="text-2xl font-black text-blue-500">
             {totalTrackedHours.toFormat("h'h' mm'm'")}
           </span>
           <span>
@@ -186,18 +185,18 @@ class Stats extends React.Component {
             </span>
           </span>
         </div>
-        <div className="w-1/4 p-4 flex flex-col gap-1 border border-gray-300 rounded-md">
+        <div className="flex w-1/4 flex-col gap-1 rounded-md border border-gray-300 p-4">
           <h1 className="text-lg font-light">Tasks Done</h1>
-          <span className="text-blue-500 font-black text-2xl">
+          <span className="text-2xl font-black text-blue-500">
             {totalTasksDone}
           </span>
           <span>
             Daily Average - <span className="text-lg">{averageTasksDone}</span>
           </span>
         </div>
-        <div className="w-1/4 p-4 flex flex-col gap-1 border border-gray-300 rounded-md">
+        <div className="flex w-1/4 flex-col gap-1 rounded-md border border-gray-300 p-4">
           <h1 className="text-lg font-light">Revenue Earned</h1>
-          <span className="text-blue-500 font-black text-2xl">
+          <span className="text-2xl font-black text-blue-500">
             {totalRevenueEarned.toFixed(1)}$
           </span>
           <span>

@@ -1,6 +1,7 @@
 import { updateProfile } from "firebase/auth";
 import React from "react";
 import { connect } from "react-redux";
+
 import { firebaseErrors } from "../../helpers/firebaseErrors";
 import ModalWindow from "../UI/ModalWindow";
 
@@ -65,15 +66,15 @@ class UsernameEditWindow extends React.Component {
 
     return (
       <ModalWindow open={this.props.open} onClose={this.props.onClose}>
-        <div className="w-[25vw] flex flex-col gap-4">
-          <h2 className="flex gap-2 text-blue-500 text-2xl font-bold uppercase border-b border-gray-300">
+        <div className="flex w-[25vw] flex-col gap-4">
+          <h2 className="flex gap-2 border-b border-gray-300 text-2xl font-bold uppercase text-blue-500">
             Change Username
           </h2>
           <div className="flex flex-col gap-2">
             <label>Enter New Username</label>
             <input
               type="text"
-              className="focus:outline-none p-2 border border-gray-300 rounded-md"
+              className="rounded-md border border-gray-300 p-2 focus:outline-none"
               value={username}
               onChange={this.handleUsernameChanged}
             />
@@ -83,7 +84,7 @@ class UsernameEditWindow extends React.Component {
           </div>
 
           <button
-            className="self-end px-4 py-2 bg-blue-500 text-white rounded-md"
+            className="self-end rounded-md bg-blue-500 px-4 py-2 text-white"
             onClick={this.handleUsernameSave}
           >
             Save

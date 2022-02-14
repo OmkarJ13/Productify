@@ -26,15 +26,15 @@ class PrioritySelectorWindow extends React.Component {
         onClose={this.props.onClose}
         buttonRef={this.props.buttonRef}
       >
-        <div className="p-4 flex flex-col items-start gap-4 text-sm">
+        <div className="flex flex-col items-start gap-4 p-4 text-sm">
           <span>Select Priority</span>
-          <div className="min-w-[15vw] flex flex-col">
+          <div className="flex min-w-[15vw] flex-col">
             {priorities.map((priority, i) => {
               return (
                 <button
                   key={i}
                   data-idx={i}
-                  className={`w-full p-2 flex items-center gap-2 hover:bg-gray-200`}
+                  className={`flex w-full items-center gap-2 p-2 hover:bg-gray-200`}
                   onClick={this.prioritySelectedHandler}
                   style={{ color: priority.color }}
                 >

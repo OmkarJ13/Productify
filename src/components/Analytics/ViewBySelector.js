@@ -1,5 +1,6 @@
 import { ViewList } from "@mui/icons-material";
 import React from "react";
+
 import ViewByWindow from "./ViewByWindow";
 import WindowHandler from "../UI/WindowHandler";
 
@@ -9,7 +10,7 @@ class ViewBySelector extends React.Component {
 
     return (
       <WindowHandler
-        className="h-full flex items-center gap-2"
+        className="flex h-full items-center gap-2"
         {...otherProps}
         renderWindow={(otherProps) => {
           return (

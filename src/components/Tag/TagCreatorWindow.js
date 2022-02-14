@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import {
   LocalOffer,
   Done,
@@ -8,7 +9,6 @@ import {
 
 import ModalWindow from "../UI/ModalWindow";
 import { colors } from "../../helpers/colors";
-import { connect } from "react-redux";
 
 class TagCreatorWindow extends React.Component {
   constructor(props) {
@@ -101,7 +101,7 @@ class TagCreatorWindow extends React.Component {
     return (
       <ModalWindow open={this.props.open} onClose={this.props.onClose}>
         <div className="flex flex-col gap-4">
-          <h2 className="w-full flex gap-2 text-blue-500 text-2xl font-bold uppercase border-b border-gray-300">
+          <h2 className="flex w-full gap-2 border-b border-gray-300 text-2xl font-bold uppercase text-blue-500">
             Create / Edit
           </h2>
           <div className="flex flex-col items-start gap-2">
@@ -111,7 +111,7 @@ class TagCreatorWindow extends React.Component {
               value={this.state.tag.name}
               placeholder="e.g. Study"
               onChange={this.nameChangeHandler}
-              className={`w-full p-1 border border-gray-300 focus:outline-none ${
+              className={`w-full border border-gray-300 p-1 focus:outline-none ${
                 !this.state.isValid && "border-red-500"
               }`}
             />
@@ -134,7 +134,7 @@ class TagCreatorWindow extends React.Component {
                     key={color}
                     onClick={this.colorChangeHandler}
                     data-color={color}
-                    className={"relative w-[35px] h-[35px]"}
+                    className={"relative h-[35px] w-[35px]"}
                     style={{ backgroundColor: `${color}` }}
                   >
                     <Done
@@ -151,7 +151,7 @@ class TagCreatorWindow extends React.Component {
 
           <div className="flex flex-col gap-2">
             <button
-              className="flex justify-start items-center gap-2"
+              className="flex items-center justify-start gap-2"
               onClick={this.toggleBillingOptions}
             >
               {this.state.billingOptionsOpen ? (
@@ -168,14 +168,14 @@ class TagCreatorWindow extends React.Component {
                 <input
                   type="number"
                   value={this.state.tag.billableAmount}
-                  className="p-2 border border-gray-300 outline-none"
+                  className="border border-gray-300 p-2 outline-none"
                   onChange={this.handleBillableAmountChanged}
                 />
               </div>
             )}
           </div>
           <button
-            className="px-4 py-2 bg-blue-500 text-white disabled:bg-gray-400"
+            className="bg-blue-500 px-4 py-2 text-white disabled:bg-gray-400"
             onClick={this.tagCreatedHandler}
             disabled={this.state.tag.name === "" || !this.state.isValid}
           >

@@ -11,7 +11,7 @@ class TaskTracker extends React.Component {
 
   render() {
     return (
-      <div className="w-[85%] min-h-screen flex flex-col gap-6 ml-auto p-6 text-gray-600">
+      <div className="ml-auto flex min-h-screen w-[85%] flex-col gap-6 p-6 text-gray-600">
         <TodoStateManager
           renderTodo={(otherProps) => {
             return <TodoCreator {...otherProps} />;

@@ -1,6 +1,7 @@
 import React from "react";
 import { Interval, DateTime } from "luxon";
 import CalendarHeatmap from "react-calendar-heatmap";
+
 import PeriodChanger from "../UI/PeriodChanger";
 
 class CalendarChart extends React.Component {
@@ -75,8 +76,8 @@ class CalendarChart extends React.Component {
     const yearlyData = this.getYearlyData(filteredTimerEntries, filteredTodos);
 
     return (
-      <div className="w-full flex flex-col gap-6">
-        <div className="flex justify-between items-center">
+      <div className="flex w-full flex-col gap-6">
+        <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <h1 className="text-xl font-bold">Productivity</h1>
             <h2 className="text-sm">

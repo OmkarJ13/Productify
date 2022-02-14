@@ -1,9 +1,9 @@
 import React from "react";
-import { connect } from "react-redux";
 import { DateTime, Interval, Info, Duration } from "luxon";
+import { Bar } from "react-chartjs-2";
+
 import PeriodChanger from "../UI/PeriodChanger";
 import ViewBySelector from "./ViewBySelector";
-import { Bar, Line } from "react-chartjs-2";
 
 class BarChart extends React.Component {
   constructor(props) {
@@ -100,8 +100,8 @@ class BarChart extends React.Component {
     );
 
     return (
-      <div className="w-full flex flex-col items-center gap-8 p-4 rounded-md">
-        <div className="self-stretch flex items-center justify-between">
+      <div className="flex h-full w-full flex-col items-center gap-8 rounded-md p-4">
+        <div className="flex items-center justify-between self-stretch">
           <PeriodChanger
             unit="week"
             value={period}
@@ -111,7 +111,7 @@ class BarChart extends React.Component {
         </div>
 
         <div className="w-full">
-          <Line
+          <Bar
             data={{
               labels: Info.weekdays(),
               datasets: [

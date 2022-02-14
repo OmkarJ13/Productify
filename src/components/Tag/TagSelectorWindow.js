@@ -69,29 +69,29 @@ class TagSelectorWindow extends React.Component {
         buttonRef={this.props.buttonRef}
       >
         <div className="flex flex-col gap-4 p-4 text-sm">
-          <div className="px-1 py-2 flex gap-1 items-center border border-gray-300">
+          <div className="flex items-center gap-1 border border-gray-300 px-1 py-2">
             <Search />
             <input
               type="text"
               placeholder="Search"
-              className="focus:outline-none flex-grow"
+              className="flex-grow focus:outline-none"
               onChange={this.handleSearchQuery}
             ></input>
           </div>
 
-          <div className="w-[20vw] max-h-[25vh] py-2 flex flex-col overflow-y-auto">
+          <div className="flex max-h-[25vh] w-[20vw] flex-col overflow-y-auto py-2">
             {results.length === 0 && "No Tags Found"}
             {results.length > 0 &&
               results.map((tag) => {
                 return (
                   <button
                     key={tag.id}
-                    className="p-2 flex items-center gap-2 hover:bg-gray-200"
+                    className="flex items-center gap-2 p-2 hover:bg-gray-200"
                     onClick={this.handleTagSelected}
                     data-id={tag.id}
                   >
                     <LocalOffer htmlColor={tag.color} />
-                    <span className="text-md w-full text-left overflow-hidden overflow-ellipsis">
+                    <span className="text-md w-full overflow-hidden overflow-ellipsis text-left">
                       {tag.name}
                     </span>
                   </button>
@@ -100,7 +100,7 @@ class TagSelectorWindow extends React.Component {
           </div>
 
           <WindowHandler
-            className="w-full flex justify-center items-center gap-2 text-blue-500"
+            className="flex w-full items-center justify-center gap-2 text-blue-500"
             renderWindow={(otherProps) => {
               return (
                 <TagCreatorWindow

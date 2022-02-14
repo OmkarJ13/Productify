@@ -162,12 +162,12 @@ class Todo extends React.Component {
           hideProgressBar={true}
         />
 
-        <div className="group w-full h-[65px] flex items-center p-4 border-x border-b border-gray-300 text-sm">
-          <div className="flex-grow-[2] h-full flex items-center">
+        <div className="group flex h-[65px] w-full items-center border-x border-b border-gray-300 p-4 text-sm">
+          <div className="flex h-full flex-grow-[2] items-center">
             <button
               onClick={this.handleIsDone}
-              className={`transition-colors w-[30px] h-[30px] mr-4 border border-gray-300 text-white ${
-                isDone && "bg-blue-500 border-blue-500"
+              className={`mr-4 h-[30px] w-[30px] border border-gray-300 text-white transition-colors ${
+                isDone && "border-blue-500 bg-blue-500"
               }`}
             >
               {isDone ? <Check /> : null}
@@ -180,31 +180,31 @@ class Todo extends React.Component {
               placeholder="Add Task Name"
               autoComplete="off"
               onChange={this.props.onTaskChanged}
-              className="transition-colors flex-grow p-1 border border-transparent group-hover:border-gray-300 focus:outline-none text-ellipsis"
+              className="flex-grow text-ellipsis border border-transparent p-1 transition-colors focus:outline-none group-hover:border-gray-300"
             />
 
-            <div className="w-[250px] flex justify-center items-center gap-4 mx-4">
+            <div className="mx-4 flex w-[250px] items-center justify-center gap-4">
               <TagSelector
-                className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 max-w-[125px] h-full flex justify-center items-center"
+                className="flex h-full max-w-[125px] items-center justify-center opacity-0 transition-opacity focus:opacity-100 group-hover:opacity-100"
                 value={tag}
                 onChange={this.props.onTagSelected}
               />
 
               <PrioritySelector
-                className="transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100"
+                className="opacity-0 transition-opacity focus:opacity-100 group-hover:opacity-100"
                 value={priority}
                 onChange={this.props.onPrioritySelected}
               />
             </div>
 
             <button
-              className={`transition-opacity opacity-0 group-hover:opacity-100 p-1 h-full border-x border-gray-300 text-gray-500 px-2`}
+              className={`h-full border-x border-gray-300 p-1 px-2 text-gray-500 opacity-0 transition-opacity group-hover:opacity-100`}
               onClick={this.props.onBillableChanged}
             >
               {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
             </button>
 
-            <div className="flex-grow flex justify-center">
+            <div className="flex flex-grow justify-center">
               <MUIPickerHandler
                 renderPicker={(otherProps) => {
                   return (
@@ -219,9 +219,9 @@ class Todo extends React.Component {
                           <button
                             ref={inputRef}
                             onClick={InputProps.onClick}
-                            className="w-[125px] flex justify-center items-center gap-2 p-1 transition-opacity opacity-0 group-hover:opacity-100 capitalize border border-gray-300"
+                            className="flex w-[125px] items-center justify-center gap-2 border border-gray-300 p-1 capitalize opacity-0 transition-opacity group-hover:opacity-100"
                           >
-                            <span className="text-center flex-grow">
+                            <span className="flex-grow text-center">
                               {getRelativeDate(date, "day")}
                             </span>
                             <CalendarToday fontSize="small" />
@@ -235,17 +235,17 @@ class Todo extends React.Component {
             </div>
           </div>
 
-          <div className="h-full flex justify-end items-center gap-2">
+          <div className="flex h-full items-center justify-end gap-2">
             {this.props.timer?.timerRef === id ? (
               <button
-                className="flex justify-center items-center text-white rounded-[50%] bg-red-500 animate-pulse"
+                className="flex animate-pulse items-center justify-center rounded-[50%] bg-red-500 text-white"
                 onClick={this.stopTrackingTodo}
               >
                 <Stop fontSize="small" />
               </button>
             ) : (
               <TodoTracker
-                className="flex justify-center items-center disabled:bg-gray-600 text-white rounded-[50%] bg-blue-500"
+                className="flex items-center justify-center rounded-[50%] bg-blue-500 text-white disabled:bg-gray-600"
                 disabled={isDone}
                 onStartTracking={this.startTrackingTodo}
                 onManualTimeEntered={this.manualTrackTodo}

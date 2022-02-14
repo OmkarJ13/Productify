@@ -2,11 +2,7 @@ import React from "react";
 import { LocalOffer, MoreVert } from "@mui/icons-material";
 import { connect } from "react-redux";
 
-import {
-  deleteTagAsync,
-  tagActions,
-  updateTagAsync,
-} from "../../store/slices/tagSlice";
+import { deleteTagAsync, updateTagAsync } from "../../store/slices/tagSlice";
 import TagCreatorWindow from "../Tag/TagCreatorWindow";
 import TagOptionsWindow from "./TagOptionsWindow";
 import WindowHandler from "../UI/WindowHandler";
@@ -53,8 +49,8 @@ class Tag extends React.Component {
             onTagCreated={this.handleEdit}
           />
         )}
-        <div className="flex items-center gap-4 p-2 border-b border-gray-200">
-          <div className="flex-grow flex items-center gap-2">
+        <div className="flex items-center gap-4 border-b border-gray-200 p-2">
+          <div className="flex flex-grow items-center gap-2">
             <LocalOffer htmlColor={tag.color} />
             {tag.name}
           </div>

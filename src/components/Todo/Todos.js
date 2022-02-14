@@ -6,13 +6,11 @@ import React from "react";
 import { groupObjectArrayBy } from "../../helpers/groupObjectArrayBy";
 import { getRelativeDate } from "../../helpers/getRelativeDate";
 import { priorities } from "../../helpers/priorities";
-
 import ViewBySelector from "../UI/ViewBySelector";
 import GroupBySelector from "../UI/GroupBySelector";
 import PeriodChanger from "../UI/PeriodChanger";
 import GroupedEntries from "../UI/GroupedEntries";
 import NoData from "../UI/NoData";
-
 import GroupByWindow from "./GroupByWindow";
 import TodoStateManager from "./TodoStateManager";
 import Todo from "./Todo";
@@ -152,9 +150,9 @@ class Todos extends React.Component {
     const dueTodos = filteredTodos.filter((todo) => !todo.isDone);
 
     return (
-      <div className="flex-grow w-full flex flex-col gap-8">
-        <div className="w-full flex justify-between items-center">
-          <div className="font-light flex gap-4">
+      <div className="flex w-full flex-grow flex-col gap-8">
+        <div className="flex w-full items-center justify-between">
+          <div className="flex gap-4 font-light">
             <span className="flex items-baseline gap-2">
               Completed
               <strong className="text-lg">{completedTodos.length}</strong>
@@ -170,7 +168,7 @@ class Todos extends React.Component {
               onChange={this.periodChangeHandler}
             />
             <button
-              className="w-[120px] flex justify-center items-center gap-2"
+              className="flex w-[120px] items-center justify-center gap-2"
               onClick={this.toggleShowDone}
             >
               <CheckCircle /> {showDone ? "Hide Done" : "Show Done"}
@@ -183,11 +181,11 @@ class Todos extends React.Component {
             <ViewBySelector value={view} onChange={this.viewChangeHandler} />
           </div>
         </div>
-        <div className="w-full flex-grow flex flex-col gap-8">
+        <div className="flex w-full flex-grow flex-col gap-8">
           {finalTodos.length > 0 && finalTodos}
           {finalTodos.length === 0 && this.props.loading && (
             <Sync
-              className="animate-spin m-auto text-blue-500"
+              className="m-auto animate-spin text-blue-500"
               fontSize="large"
             />
           )}

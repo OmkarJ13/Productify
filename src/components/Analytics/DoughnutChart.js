@@ -39,6 +39,7 @@ class DoughnutChart extends React.Component {
   }
 
   getTrackedHoursPerTag(timerEntries, tags) {
+    if (timerEntries.length === 0) return [];
     const timerEntriesPerTag = groupObjectArrayBy(timerEntries, ["tag"]);
 
     const trackedHoursPerTag = timerEntriesPerTag.map((timerEntriesGrouped) => {
@@ -72,28 +73,36 @@ class DoughnutChart extends React.Component {
   }
 
   getRevenueEarnedPerTag(timerEntries, tags) {
-    const timerEntriesPerTag = groupObjectArrayBy(timerEntries, ["tag"]);
-
-    const billableTimerEntriesPerTag = timerEntriesPerTag.map((timerEntries) =>
-      timerEntries.filter((timerEntry) => timerEntry.isBillable)
+    const billableTimerEntries = timerEntries.filter(
+      (timerEntry) => timerEntry.isBillable
     );
+    if (!billableTimerEntries.length) return [];
 
-    const revenueEarnedPerTag = billableTimerEntriesPerTag.map(
+    const timerEntriesPerTag = groupObjectArrayBy(billableTimerEntries, [
+      "tag",
+    ]);
+
+    const revenueEarnedPerTag = timerEntriesPerTag.map(
       (timerEntriesGrouped) => {
+        const revenueEarned = timerEntriesGrouped.reduce((acc, timerEntry) => {
+          const tag = tags.find((x) => x.id === timerEntry.tag);
+          if (tag) {
+            return acc + tag.billableAmount * timerEntry.duration.as("hours");
+          }
+        }, 0);
+
         return {
           tag: tags.find((x) => x.id === timerEntriesGrouped[0].tag),
-          revenueEarned: timerEntriesGrouped.reduce(
-            (acc, timerEntry) =>
-              acc +
-              timerEntry.duration.as("hours") *
-                tags.find((x) => x.id === timerEntry.tag)?.billableAmount,
-            0
-          ),
+          revenueEarned,
         };
       }
     );
 
-    return revenueEarnedPerTag;
+    const filteredRevenueEarnedPerTag = revenueEarnedPerTag.filter(
+      (revenuePerTag) => revenuePerTag.revenueEarned > 0
+    );
+
+    return filteredRevenueEarnedPerTag;
   }
 
   getData(view, timerEntries, todos, tags) {
@@ -122,8 +131,8 @@ class DoughnutChart extends React.Component {
     const data = this.getData(view, filteredTimerEntries, filteredTodos, tags);
 
     return (
-      <div className="w-full h-full flex flex-col items-center gap-8 p-4">
-        <div className="self-stretch flex justify-between items-center">
+      <div className="flex h-full w-full flex-col items-center gap-8 p-4">
+        <div className="flex items-center justify-between self-stretch">
           <PeriodChanger
             unit="day"
             value={period}
@@ -132,7 +141,7 @@ class DoughnutChart extends React.Component {
           <ViewBySelector value={view} onChange={this.handleViewChanged} />
         </div>
 
-        <div className="w-full h-full">
+        <div className="h-full w-11/12">
           {data.length === 0 && <NoData text="No Data To Display" />}
           {data.length > 0 && (
             <Doughnut

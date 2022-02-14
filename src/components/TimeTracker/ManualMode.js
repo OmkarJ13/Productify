@@ -36,21 +36,21 @@ class ManualMode extends React.Component {
       this.props.timerEntry;
 
     return (
-      <div className="w-full h-[75px] flex items-center p-4 shadow-md border border-gray-200 text-sm">
-        <div className="flex-grow h-full flex items-center border-r border-gray-300">
+      <div className="flex h-[75px] w-full items-center border border-gray-200 p-4 text-sm shadow-md">
+        <div className="flex h-full flex-grow items-center border-r border-gray-300">
           <input
             name="task"
             type="text"
             value={task}
             placeholder="What have you done?"
             autoComplete="off"
-            className="flex-grow p-2 border border-gray-300 focus:outline-none"
+            className="flex-grow border border-gray-300 p-2 focus:outline-none"
             onChange={this.props.onTaskChanged}
           />
 
-          <div className="w-[150px] flex justify-center items-center mx-4">
+          <div className="mx-4 flex w-[150px] items-center justify-center">
             <TagSelector
-              className="max-w-[125px] h-full flex justify-center items-center"
+              className="flex h-full max-w-[125px] items-center justify-center"
               value={tag}
               onChange={this.props.onTagSelected}
             />
@@ -59,7 +59,7 @@ class ManualMode extends React.Component {
           <button
             title="Is Billable?"
             onClick={this.props.onBillableChanged}
-            className={`h-full mr-4 px-2 border-x border-gray-300`}
+            className={`mr-4 h-full border-x border-gray-300 px-2`}
           >
             {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
           </button>
@@ -77,7 +77,7 @@ class ManualMode extends React.Component {
                         <button
                           ref={inputRef}
                           onClick={InputProps.onClick}
-                          className="w-[80px] p-2 border border-gray-300"
+                          className="w-[80px] border border-gray-300 p-2"
                         >
                           {startTime.toLocaleString(DateTime.TIME_SIMPLE)}
                         </button>
@@ -100,7 +100,7 @@ class ManualMode extends React.Component {
                         <button
                           ref={inputRef}
                           onClick={InputProps.onClick}
-                          className="w-[80px] p-2 border border-gray-300"
+                          className="w-[80px] border border-gray-300 p-2"
                         >
                           {endTime.toLocaleString(DateTime.TIME_SIMPLE)}
                         </button>
@@ -124,7 +124,7 @@ class ManualMode extends React.Component {
                   renderInput={({ inputRef, InputProps }) => {
                     return (
                       <button
-                        className="w-[125px] flex justify-between items-center gap-2 p-2 mr-4 border border-gray-300 capitalize"
+                        className="mr-4 flex w-[125px] items-center justify-between gap-2 border border-gray-300 p-2 capitalize"
                         ref={inputRef}
                         onClick={InputProps.onClick}
                       >
@@ -141,14 +141,14 @@ class ManualMode extends React.Component {
           />
         </div>
 
-        <div className="w-[135px] h-full flex justify-center items-center mr-4 text-base">
+        <div className="mr-4 flex h-full w-[135px] items-center justify-center text-base">
           <span>{duration.toFormat("hh:mm:ss")}</span>
         </div>
 
-        <div className="h-full flex items-center gap-2">
+        <div className="flex h-full items-center gap-2">
           <button
             onClick={this.saveTimerEntry}
-            className="p-2 bg-gradient-to-br from-blue-500 to-blue-400 rounded-[50%] text-white uppercase"
+            className="rounded-[50%] bg-gradient-to-br from-blue-500 to-blue-400 p-2 uppercase text-white"
           >
             <Done />
           </button>

@@ -32,7 +32,7 @@ class TimerEntryOptionsWindow extends React.Component {
           <li>
             <button
               onClick={this.onDuplicate}
-              className="w-full flex items-center gap-2 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
+              className="flex w-full items-center gap-2 bg-white px-6 py-2 text-left text-gray-600 hover:bg-gray-200"
             >
               <ContentCopy fontSize="small" />
               Duplicate
@@ -41,7 +41,7 @@ class TimerEntryOptionsWindow extends React.Component {
           <li>
             <button
               onClick={this.onDelete}
-              className="w-full flex items-center gap-2 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
+              className="flex w-full items-center gap-2 bg-white px-6 py-2 text-left text-gray-600 hover:bg-gray-200"
             >
               <Delete fontSize="small" />
               Delete

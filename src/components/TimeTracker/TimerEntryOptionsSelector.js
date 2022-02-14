@@ -1,5 +1,6 @@
 import { MoreVert } from "@mui/icons-material";
 import React from "react";
+
 import FloatingWindowHandler from "../UI/WindowHandler";
 import TimerEntryOptionsWindow from "./TimerEntryOptionsWindow";
 

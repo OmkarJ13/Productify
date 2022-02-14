@@ -4,7 +4,6 @@
 // Selected day should be today, instead of previously selected.
 
 import React from "react";
-
 import { ArrowBack, ArrowForward, Today, Close } from "@mui/icons-material";
 import { DatePicker, PickersDay } from "@mui/lab";
 import { DateTime, Interval } from "luxon";
@@ -111,11 +110,11 @@ class PeriodChanger extends React.Component {
         <button
           name="minus"
           onClick={this.handlePeriodChanged}
-          className="px-2 rounded-l-full border border-gray-300"
+          className="rounded-l-full border border-gray-300 px-2"
         >
           <ArrowBack />
         </button>
-        <span className="flex justify-between items-center gap-4 px-4 py-2 border-y border-gray-300 capitalize">
+        <span className="flex items-center justify-between gap-4 border-y border-gray-300 px-4 py-2 capitalize">
           <MUIPickerHandler
             renderPicker={(otherProps) => {
               return (
@@ -163,7 +162,7 @@ class PeriodChanger extends React.Component {
         <button
           name="plus"
           onClick={this.handlePeriodChanged}
-          className="px-2 rounded-r-full border border-gray-300"
+          className="rounded-r-full border border-gray-300 px-2"
         >
           <ArrowForward />
         </button>

@@ -1,10 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-
 import { v4 as uuid } from "uuid";
 import { Duration } from "luxon";
 import { DateTime } from "luxon";
 import { Interval } from "luxon";
+import { Sync } from "@mui/icons-material";
 
 import { groupObjectArrayBy } from "../../helpers/groupObjectArrayBy";
 import { getRelativeDate } from "../../helpers/getRelativeDate";
@@ -16,7 +16,6 @@ import ViewBySelector from "../UI/ViewBySelector";
 import GroupedEntries from "../UI/GroupedEntries";
 import PeriodChanger from "../UI/PeriodChanger";
 import NoData from "../UI/NoData";
-import { Sync } from "@mui/icons-material";
 
 class TimerEntries extends React.Component {
   constructor(props) {
@@ -189,8 +188,8 @@ class TimerEntries extends React.Component {
     const timerEntries = this.getTimerEntries(filteredEntries);
 
     return (
-      <div className="w-full flex-grow flex flex-col gap-8">
-        <div className="w-full flex justify-between items-center">
+      <div className="flex w-full flex-grow flex-col gap-8">
+        <div className="flex w-full items-center justify-between">
           <span className="flex items-baseline gap-2 text-base">
             Time Tracked
             <span className="text-lg">
@@ -217,11 +216,11 @@ class TimerEntries extends React.Component {
             />
           </div>
         </div>
-        <div className="w-full h-full flex flex-col gap-8">
+        <div className="flex h-full w-full flex-col gap-8">
           {timerEntries.length > 0 && timerEntries}
           {timerEntries.length === 0 && this.props.loading && (
             <Sync
-              className="animate-spin m-auto text-blue-500"
+              className="m-auto animate-spin text-blue-500"
               fontSize="large"
             />
           )}

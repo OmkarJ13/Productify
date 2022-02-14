@@ -9,7 +9,7 @@ class GroupBySelector extends React.Component {
 
     return (
       <WindowHandler
-        className="h-full flex items-center gap-2"
+        className="flex h-full items-center gap-2"
         {...otherProps}
         renderWindow={(otherProps) => {
           return (

@@ -1,5 +1,6 @@
 import { Delete, Edit } from "@mui/icons-material";
 import React from "react";
+
 import FloatingWindow from "../UI/FloatingWindow";
 
 class TagOptionsWindow extends React.Component {
@@ -13,7 +14,7 @@ class TagOptionsWindow extends React.Component {
         <ul>
           <li>
             <button
-              className="w-full px-6 py-2 flex items-center gap-2 text-left hover:bg-gray-200"
+              className="flex w-full items-center gap-2 px-6 py-2 text-left hover:bg-gray-200"
               onClick={() => {
                 this.props.onEdit();
                 this.props.onClose();
@@ -25,7 +26,7 @@ class TagOptionsWindow extends React.Component {
           </li>
           <li>
             <button
-              className="w-full px-6 py-2 flex items-center gap-2 text-left hover:bg-gray-200"
+              className="flex w-full items-center gap-2 px-6 py-2 text-left hover:bg-gray-200"
               onClick={() => {
                 this.props.onDelete();
                 this.props.onClose();

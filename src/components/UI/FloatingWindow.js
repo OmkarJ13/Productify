@@ -81,7 +81,7 @@ class FloatingWindow extends React.Component {
           <div
             style={{ top: `${y}px`, left: `${x}px` }}
             ref={this.floatingWindow}
-            className={`absolute z-10 bg-white shadow-lg animate-[fade_ease-in-out_250ms] border border-gray-200`}
+            className={`absolute z-10 animate-[fade_ease-in-out_250ms] border border-gray-200 bg-white shadow-lg`}
           >
             {this.props.children}
           </div>,

@@ -3,16 +3,17 @@ import { withRouter } from "react-router";
 import { connect } from "react-redux";
 import { signOut, updateProfile } from "firebase/auth";
 import { ImagePicker } from "react-file-picker";
+import { Edit, FileUpload, Logout } from "@mui/icons-material";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
 import { auth, storage } from "../../firebase.config";
-import { Edit, FileUpload, Logout } from "@mui/icons-material";
-import DefaultProfile from "../../Images/DefaultProfile.png";
 import WindowHandler from "../UI/WindowHandler";
 import EmailEditWindow from "./EmailEditWindow";
 import UsernameEditWindow from "./UsernameEditWindow";
 import ChangePasswordWindow from "./ChangePasswordWindow";
 import DeleteAccountWindow from "./DeleteAccountWindow";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+
+import DefaultProfile from "../../Images/DefaultProfile.png";
 
 class Account extends React.Component {
   constructor(props) {
@@ -70,11 +71,11 @@ class Account extends React.Component {
     const { username, email, photoURL } = this.state;
 
     return (
-      <div className="w-[85%] min-h-screen flex flex-col ml-auto p-6 text-gray-600">
-        <div className="w-full h-[75px] flex justify-between items-center p-4 border border-gray-200 shadow-md">
+      <div className="ml-auto flex min-h-screen w-[85%] flex-col p-6 text-gray-600">
+        <div className="flex h-[75px] w-full items-center justify-between border border-gray-200 p-4 shadow-md">
           <h1 className="text-2xl font-bold uppercase">Account</h1>
           <button
-            className="flex items-center gap-2 px-4 py-2 rounded-md bg-red-500 text-white"
+            className="flex items-center gap-2 rounded-md bg-red-500 px-4 py-2 text-white"
             onClick={this.handleSignOut}
           >
             <Logout />
@@ -82,9 +83,9 @@ class Account extends React.Component {
           </button>
         </div>
 
-        <div className="flex-grow flex flex-col justify-between">
-          <div className="flex-grow flex flex-col gap-4 justify-center items-center py-4 border-b border-gray-300">
-            <div className="flex justify-center items-center gap-8">
+        <div className="flex flex-grow flex-col justify-between">
+          <div className="flex flex-grow flex-col items-center justify-center gap-4 border-b border-gray-300 py-4">
+            <div className="flex items-center justify-center gap-8">
               <ImagePicker
                 extensions={["jpg", "jpeg", "png"]}
                 dims={{
@@ -97,7 +98,7 @@ class Account extends React.Component {
                 onError={(errorMessage) => this.setState({ errorMessage })}
               >
                 <div className="group relative">
-                  <button className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] w-full h-full transition-opacity opacity-0 group-hover:opacity-100 text-6xl bg-black bg-opacity-20 text-white rounded-[50%]">
+                  <button className="absolute top-1/2 left-1/2 h-full w-full translate-x-[-50%] translate-y-[-50%] rounded-[50%] bg-black bg-opacity-20 text-6xl text-white opacity-0 transition-opacity group-hover:opacity-100">
                     <FileUpload fontSize="inherit" />
                   </button>
 
@@ -107,7 +108,7 @@ class Account extends React.Component {
                         ? this.props.user.photoURL ?? DefaultProfile
                         : DefaultProfile
                     }
-                    className="w-[200px] h-[200px] object-cover border border-gray-300 rounded-[50%]"
+                    className="h-[200px] w-[200px] rounded-[50%] border border-gray-300 object-cover"
                   />
                 </div>
               </ImagePicker>
@@ -115,12 +116,12 @@ class Account extends React.Component {
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   <label>Username</label>
-                  <div className="flex justify-between items-center">
-                    <span className="w-[250px] px-4 py-2 border-l border-y border-gray-300 rounded-l-md">
+                  <div className="flex items-center justify-between">
+                    <span className="w-[250px] rounded-l-md border-y border-l border-gray-300 px-4 py-2">
                       {username}
                     </span>
                     <WindowHandler
-                      className="bg-blue-500 text-white p-2 rounded-r-md"
+                      className="rounded-r-md bg-blue-500 p-2 text-white"
                       renderWindow={(otherProps) => {
                         return (
                           <UsernameEditWindow
@@ -137,12 +138,12 @@ class Account extends React.Component {
 
                 <div className="flex flex-col gap-2">
                   <label>Your Email</label>
-                  <div className="flex justify-between items-center">
-                    <span className="w-[250px] px-4 py-2 border-l border-y border-gray-300 rounded-l-md">
+                  <div className="flex items-center justify-between">
+                    <span className="w-[250px] rounded-l-md border-y border-l border-gray-300 px-4 py-2">
                       {email}
                     </span>
                     <WindowHandler
-                      className="bg-blue-500 text-white p-2 rounded-r-md"
+                      className="rounded-r-md bg-blue-500 p-2 text-white"
                       renderWindow={(otherProps) => {
                         return (
                           <EmailEditWindow
@@ -162,13 +163,13 @@ class Account extends React.Component {
           </div>
 
           <div className="flex flex-col">
-            <div className="flex justify-between items-center p-2 border-b border-gray-300 last-of-type:border-none">
+            <div className="flex items-center justify-between border-b border-gray-300 p-2 last-of-type:border-none">
               <div className="flex flex-col">
                 <h1 className="text-lg font-bold">Change Password</h1>
                 <h2>Update your old password</h2>
               </div>
               <WindowHandler
-                className="w-[200px] px-4 py-2 bg-blue-500 text-white rounded-md"
+                className="w-[200px] rounded-md bg-blue-500 px-4 py-2 text-white"
                 renderWindow={(otherProps) => {
                   return <ChangePasswordWindow {...otherProps} />;
                 }}
@@ -176,7 +177,7 @@ class Account extends React.Component {
                 Change Password
               </WindowHandler>
             </div>
-            <div className="flex justify-between items-center p-2 border-b border-gray-300 last-of-type:border-none">
+            <div className="flex items-center justify-between border-b border-gray-300 p-2 last-of-type:border-none">
               <div className="flex flex-col">
                 <h1 className="text-lg font-bold">Delete Account</h1>
                 <h2>
@@ -184,7 +185,7 @@ class Account extends React.Component {
                 </h2>
               </div>
               <WindowHandler
-                className="w-[200px] px-4 py-2 bg-blue-500 text-white rounded-md"
+                className="w-[200px] rounded-md bg-blue-500 px-4 py-2 text-white"
                 renderWindow={(otherProps) => {
                   return (
                     <DeleteAccountWindow

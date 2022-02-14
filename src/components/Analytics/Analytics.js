@@ -1,15 +1,16 @@
 import React from "react";
+import { Duration } from "luxon";
 import { connect } from "react-redux";
+import { LocalOffer } from "@mui/icons-material";
 import "chart.js/auto";
 
 import Stats from "./Stats";
 import BarChart from "./BarChart";
 import DoughnutChart from "./DoughnutChart";
-import { groupObjectArrayBy } from "../../helpers/groupObjectArrayBy";
-import { LocalOffer } from "@mui/icons-material";
-import { Duration } from "luxon";
 import CalendarChart from "./CalendarChart";
 import NoData from "../UI/NoData";
+
+import { groupObjectArrayBy } from "../../helpers/groupObjectArrayBy";
 
 class Analytics extends React.Component {
   componentDidMount() {
@@ -104,29 +105,29 @@ class Analytics extends React.Component {
     const tasksDoneForTags = this.getTasksDoneForTags(tags);
 
     return (
-      <div className="w-[85%] min-h-screen ml-auto p-6 text-gray-600">
+      <div className="ml-auto min-h-screen w-[85%] p-6 text-gray-600">
         <Stats timerEntries={timerEntries} todos={todos} tags={tags} />
-        <div className="flex h-screen items-center gap-4 mt-6 border border-gray-300 rounded-md">
+        <div className="mt-6 flex h-screen items-center gap-4 rounded-md border border-gray-300">
           <BarChart timerEntries={timerEntries} todos={todos} tags={tags} />
         </div>
-        <div className="h-[75vh] flex gap-4 mt-6">
-          <div className="w-[40%] h-full border border-gray-300 rounded-md">
+        <div className="mt-6 flex h-[75vh] gap-4">
+          <div className="h-full w-[40%] rounded-md border border-gray-300">
             <DoughnutChart
               timerEntries={timerEntries}
               todos={todos}
               tags={tags}
             />
           </div>
-          <div className="w-[60%] h-full flex flex-col border border-gray-300 rounded-md overflow-auto">
+          <div className="flex h-full w-[60%] flex-col overflow-auto rounded-md border border-gray-300">
             {tags.length === 0 && <NoData text="No Tags To Display" />}
             {tags.length > 0 && (
-              <div className="w-full h-full flex flex-col overflow-auto">
-                <div className="p-4 flex items-center justify-between border-b border-gray-300">
-                  <div className="w-[60%] flex items-center gap-4">
+              <div className="flex h-full w-full flex-col overflow-auto">
+                <div className="flex items-center justify-between border-b border-gray-300 p-4">
+                  <div className="flex w-[60%] items-center gap-4">
                     <LocalOffer />
                     <span>Name</span>
                   </div>
-                  <div className="w-[40%] flex items-center gap-6">
+                  <div className="flex w-[40%] items-center gap-6">
                     <span className="w-1/3 text-center">Duration</span>
                     <span className="w-1/3 text-center">Revenue</span>
                     <span className="w-1/3 text-center">Tasks</span>
@@ -134,13 +135,13 @@ class Analytics extends React.Component {
                 </div>
                 {tags.map((tag, i) => {
                   return (
-                    <div className="p-4 flex items-center justify-between border-b border-gray-300 ">
-                      <div className="w-[60%] flex items-center gap-4">
+                    <div className="flex items-center justify-between border-b border-gray-300 p-4 ">
+                      <div className="flex w-[60%] items-center gap-4">
                         <LocalOffer htmlColor={tag.color} />
                         <span>{tag.name}</span>
                       </div>
 
-                      <div className="w-[40%] flex items-center gap-6">
+                      <div className="flex w-[40%] items-center gap-6">
                         <span className="w-1/3 text-center">
                           {durationForTags[i].toFixed(1)}h
                         </span>
@@ -159,7 +160,7 @@ class Analytics extends React.Component {
           </div>
         </div>
 
-        <div className="p-4 mt-6 border border-gray-300 rounded-md">
+        <div className="mt-6 rounded-md border border-gray-300 p-4">
           <CalendarChart
             timerEntries={timerEntries}
             todos={todos}

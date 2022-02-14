@@ -62,7 +62,7 @@ class TimerEntryStateManager extends React.Component {
       {
         timerEntry: {
           ...this.state.timerEntry,
-          startTime: e,
+          startTime: e.set({ second: 0, millisecond: 0 }),
           endTime: endTime.set({ second: 0, millisecond: 0 }),
         },
       },
@@ -90,7 +90,7 @@ class TimerEntryStateManager extends React.Component {
             second: 0,
             millisecond: 0,
           }),
-          endTime: e,
+          endTime: e.set({ second: 0, millisecond: 0 }),
         },
       },
       () => {

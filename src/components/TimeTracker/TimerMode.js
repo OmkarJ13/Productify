@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-
 import {
   AttachMoney,
   Close,
@@ -122,21 +121,21 @@ class TimerMode extends React.Component {
     const { task, isBillable, tag, duration } = this.props.timerEntry;
 
     return (
-      <div className="w-full h-[75px] flex items-center p-4 shadow-md border border-gray-200 text-sm">
-        <div className="flex-grow h-full flex items-center">
+      <div className="flex h-[75px] w-full items-center border border-gray-200 p-4 text-sm shadow-md">
+        <div className="flex h-full flex-grow items-center">
           <input
             name="task"
             type="text"
-            className="flex-grow p-2 border border-gray-300 focus:outline-none"
+            className="flex-grow border border-gray-300 p-2 focus:outline-none"
             value={task}
             placeholder="What are you doing?"
             autoComplete="off"
             onChange={this.props.onTaskChanged}
           />
 
-          <div className="w-[150px] mx-4 flex justify-center items-center">
+          <div className="mx-4 flex w-[150px] items-center justify-center">
             <TagSelector
-              className="max-w-[125px] h-full flex justify-center items-center"
+              className="flex h-full max-w-[125px] items-center justify-center"
               value={tag}
               onChange={this.props.onTagSelected}
             />
@@ -145,34 +144,34 @@ class TimerMode extends React.Component {
           <button
             title="Is Billable?"
             onClick={this.props.onBillableChanged}
-            className={`h-full px-2 mr-4 border-x border-gray-300 text-gray-500`}
+            className={`mr-4 h-full border-x border-gray-300 px-2 text-gray-500`}
           >
             {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
           </button>
         </div>
 
-        <span className="w-[135px] h-full mr-4 flex justify-center items-center text-base">
+        <span className="mr-4 flex h-full w-[135px] items-center justify-center text-base">
           {duration.toFormat("hh:mm:ss")}
         </span>
 
-        <div className="h-full flex items-center gap-2">
+        <div className="flex h-full items-center gap-2">
           {this.props.timer !== null ? (
             <button
               onClick={this.stopTracking}
-              className="p-2 bg-gradient-to-br from-red-500 to-red-400 rounded-[50%] text-white uppercase"
+              className="rounded-[50%] bg-gradient-to-br from-red-500 to-red-400 p-2 uppercase text-white"
             >
               <Stop />
             </button>
           ) : (
             <button
               onClick={this.startTracking}
-              className="p-2 bg-gradient-to-br from-blue-500 to-blue-400 rounded-[50%] text-white uppercase"
+              className="rounded-[50%] bg-gradient-to-br from-blue-500 to-blue-400 p-2 uppercase text-white"
             >
               <PlayArrow />
             </button>
           )}
 
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col items-center justify-center">
             {this.props.timer !== null ? (
               <button title="Discard Timer" onClick={this.discardTimer}>
                 <Close fontSize="small" />

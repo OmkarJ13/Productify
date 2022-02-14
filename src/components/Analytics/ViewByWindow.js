@@ -1,5 +1,6 @@
 import { Alarm, AttachMoney, Task, Check } from "@mui/icons-material";
 import React from "react";
+
 import FloatingWindow from "../UI/FloatingWindow";
 
 class ViewByWindow extends React.Component {
@@ -30,7 +31,7 @@ class ViewByWindow extends React.Component {
               <li>
                 <button
                   data-option={view}
-                  className="w-[250px] flex justify-between items-center gap-4 px-6 py-2 bg-white hover:bg-gray-200 text-gray-600 text-left"
+                  className="flex w-[250px] items-center justify-between gap-4 bg-white px-6 py-2 text-left text-gray-600 hover:bg-gray-200"
                 >
                   <div className="flex items-center gap-4">
                     {view === "trackedHours" && (
