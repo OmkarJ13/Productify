@@ -92,22 +92,6 @@ class Todo extends React.Component {
     this.props.createTimerEntry(timerEntry);
   }
 
-  getDueTime(duration) {
-    const diff = duration.diffNow(["days", "hours", "minutes"]);
-
-    const days = Math.floor(diff.days);
-    const hours = Math.floor(diff.hours);
-    const minutes = Math.floor(diff.minutes);
-
-    const dayString = days !== 0 ? Math.abs(days) + "d" : "";
-    const hourString = hours !== 0 || days !== 0 ? Math.abs(hours) + "h" : "";
-    const minuteString = minutes !== 0 ? Math.abs(minutes) + "m" : "";
-
-    return days >= 0 && hours >= 0 && minutes >= 0
-      ? `Due In ${dayString} ${hourString} ${minuteString}`
-      : `Due ${dayString} ${hourString} ${minuteString} Ago`;
-  }
-
   duplicateTodo() {
     const { id, ...todoData } = this.props.todo;
 
@@ -228,6 +212,7 @@ class Todo extends React.Component {
                       {...otherProps}
                       value={date.toJSDate()}
                       onChange={this.props.onDateChanged}
+                      disablePast
                       showToolbar={false}
                       renderInput={({ inputRef, InputProps }) => {
                         return (

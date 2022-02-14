@@ -119,6 +119,7 @@ class ManualMode extends React.Component {
                   {...otherProps}
                   value={date.toJSDate()}
                   onChange={this.props.onDateChanged}
+                  disableFuture
                   showToolbar={false}
                   renderInput={({ inputRef, InputProps }) => {
                     return (

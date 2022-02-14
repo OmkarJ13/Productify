@@ -13,6 +13,7 @@ class TodoStateManager extends React.Component {
         tag: null,
         priority: 0,
         date: DateTime.now().startOf("day"),
+        doneTime: null,
       },
     };
 
@@ -32,6 +33,7 @@ class TodoStateManager extends React.Component {
         todo: {
           ...this.state.todo,
           isDone: !prevState.todo.isDone,
+          doneTime: prevState.todo.isDone ? null : DateTime.now(),
         },
       };
     });
@@ -96,6 +98,7 @@ class TodoStateManager extends React.Component {
         task: "",
         tag: null,
         priority: 0,
+        doneTime: null,
         date: DateTime.now().startOf("day"),
       },
     });

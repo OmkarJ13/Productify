@@ -1,5 +1,6 @@
 @import "react-datepicker/dist/react-datepicker.css";
 @import "react-toastify/dist/ReactToastify.css";
+@import "react-calendar-heatmap/dist/styles.css";
 
 @tailwind base;
 @tailwind components;

@@ -23,7 +23,7 @@ export const getRelativeDate = (date, unit) => {
         return Interval.fromDateTimes(
           date.startOf("week"),
           date.endOf("week")
-        ).toFormat("dd/MM/yyyy");
+        ).toFormat("dd MMM");
 
       case "month":
         return `${Info.months()[date.month - 1]}, ${date.year}`;

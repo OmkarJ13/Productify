@@ -12810,6 +12810,11 @@
   dependencies:
     "fs-monkey" "1.0.3"
 
+"memoize-one@^5.0.0":
+  "integrity" "sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q=="
+  "resolved" "https://registry.npmjs.org/memoize-one/-/memoize-one-5.2.1.tgz"
+  "version" "5.2.1"
+
 "memoize-one@^6.0.0":
   "integrity" "sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw=="
   "resolved" "https://registry.npmjs.org/memoize-one/-/memoize-one-6.0.0.tgz"
@@ -13111,6 +13116,11 @@
   dependencies:
     "fast-equals" "^2.0.1"
     "micro-memoize" "^4.0.9"
+
+"moment@^2.24.0", "moment@^2.29.1":
+  "integrity" "sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ=="
+  "resolved" "https://registry.npmjs.org/moment/-/moment-2.29.1.tgz"
+  "version" "2.29.1"
 
 "move-file@^2.0.0":
   "integrity" "sha512-i9qLW6gqboJ5Ht8bauZi7KlTnQ3QFpBCvMvFfEcHADKgHGeJ9BZMO7SFCTwHPV9Qa0du9DYY1Yx3oqlGt30nXA=="
@@ -15445,6 +15455,14 @@
     "regenerator-runtime" "^0.13.9"
     "whatwg-fetch" "^3.6.2"
 
+"react-calendar-heatmap@^1.8.1":
+  "integrity" "sha512-4Hbq/pDMJoCPzZnyIWFfHgokLlLXzKyGsDcMgNhYpi7zcKHcvsK9soLEPvhW2dBBqgDrQOSp/uG4wtifaDg4eQ=="
+  "resolved" "https://registry.npmjs.org/react-calendar-heatmap/-/react-calendar-heatmap-1.8.1.tgz"
+  "version" "1.8.1"
+  dependencies:
+    "memoize-one" "^5.0.0"
+    "prop-types" "^15.6.2"
+
 "react-chartjs-2@^4.0.0":
   "integrity" "sha512-0kx41EVO6wIoeU6zvdwovX9kKcdrs7O62DGTSNmwAXZeLGJ3U+n4XijO1kxcMmAi4I6PQJWGD5oRwxVixHSp6g=="
   "resolved" "https://registry.npmjs.org/react-chartjs-2/-/react-chartjs-2-4.0.0.tgz"
@@ -15676,7 +15694,7 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0", "react@^15.5.x || ^16.x || ^17.x", "react@^16.8.0 || ^17", "react@^16.8.0 || ^17.0.0", "react@^16.8.3 || ^17", "react@^16.9.0 || ^17", "react@^16.9.0 || ^17.0.0 || 18.0.0-beta", "react@^17.0.0", "react@^17.0.2", "react@>= 16", "react@>=15", "react@>=16", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0", "react@17.0.2":
+"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0", "react@^15.5.x || ^16.x || ^17.x", "react@^16.8.0 || ^17", "react@^16.8.0 || ^17.0.0", "react@^16.8.3 || ^17", "react@^16.9.0 || ^17", "react@^16.9.0 || ^17.0.0 || 18.0.0-beta", "react@^17.0.0", "react@^17.0.2", "react@>= 16", "react@>=15", "react@>=16", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"

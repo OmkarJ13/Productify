@@ -6,9 +6,9 @@ class NoData extends React.Component {
     const { text } = this.props;
 
     return (
-      <div className="flex flex-col gap-4 m-auto">
-        <img src={NoDataImg} className="w-[200px]" />
-        <span className="text-center text-2xl font-light">{text}</span>
+      <div className="w-full h-full flex flex-col justify-center items-center gap-4">
+        <img src={NoDataImg} className="max-w-[200px]" />
+        <span className="text-2xl font-light">{text}</span>
       </div>
     );
   }

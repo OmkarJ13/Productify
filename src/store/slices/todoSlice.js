@@ -66,6 +66,7 @@ export const updateTodoAsync = createAsyncThunk(
     const flattenedTodo = {
       ...todo,
       date: todo.date.toISO(),
+      doneTime: todo.doneTime && todo.doneTime.toISO(),
     };
 
     const { id, ...updatedStuff } = flattenedTodo;

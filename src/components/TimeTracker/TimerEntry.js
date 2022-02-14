@@ -225,6 +225,7 @@ class TimerEntry extends React.Component {
                   <DatePicker
                     {...otherProps}
                     value={date}
+                    disableFuture
                     onChange={this.props.onDateChanged}
                     renderInput={({ inputRef, InputProps }) => {
                       return (

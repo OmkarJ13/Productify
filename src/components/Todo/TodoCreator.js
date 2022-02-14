@@ -72,6 +72,7 @@ class TodoCreator extends React.Component {
                   <DatePicker
                     {...otherProps}
                     value={date.toJSDate()}
+                    disablePast
                     onChange={this.props.onDateChanged}
                     showToolbar={false}
                     renderInput={({ inputRef, InputProps }) => {
