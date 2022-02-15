@@ -77,8 +77,8 @@ class CalendarChart extends React.Component {
 
     return (
       <div className="flex w-full flex-col gap-6">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
+        <div className="flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-between">
+          <div className="flex flex-col items-center sm:items-start">
             <h1 className="text-xl font-bold">Productivity</h1>
             <h2 className="text-sm">
               Your productivity depends upon the tasks you complete each day and
@@ -92,38 +92,40 @@ class CalendarChart extends React.Component {
             onChange={this.handlePeriodChanged}
           />
         </div>
-        <CalendarHeatmap
-          startDate={period.start.toJSDate()}
-          endDate={period.end.toJSDate()}
-          values={yearlyData}
-          classForValue={(value) => {
-            if (!value || value.count === 0) return "fill-gray-200";
-            switch (value.count) {
-              case 1:
-                return "fill-blue-200";
-              case 2:
-              case 3:
-                return "fill-blue-300";
-              case 4:
-              case 5:
-              case 6:
-                return "fill-blue-400";
-              case 7:
-              case 8:
-              case 9:
-              case 10:
-                return "fill-blue-500";
-              case 11:
-              case 12:
-              case 13:
-              case 14:
-              case 15:
-                return "fill-blue-500";
-              default:
-                return "fill-blue-600";
-            }
-          }}
-        />
+        <div className="overflow-auto">
+          <CalendarHeatmap
+            startDate={period.start.toJSDate()}
+            endDate={period.end.toJSDate()}
+            values={yearlyData}
+            classForValue={(value) => {
+              if (!value || value.count === 0) return "fill-gray-200";
+              switch (value.count) {
+                case 1:
+                  return "fill-blue-200";
+                case 2:
+                case 3:
+                  return "fill-blue-300";
+                case 4:
+                case 5:
+                case 6:
+                  return "fill-blue-400";
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                  return "fill-blue-500";
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                  return "fill-blue-500";
+                default:
+                  return "fill-blue-600";
+              }
+            }}
+          />
+        </div>
       </div>
     );
   }

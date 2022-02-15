@@ -105,50 +105,54 @@ class Analytics extends React.Component {
     const tasksDoneForTags = this.getTasksDoneForTags(tags);
 
     return (
-      <div className="ml-auto min-h-screen w-[85%] p-6 text-gray-600">
+      <div className="mb-auto flex h-[90%] w-full flex-col gap-4 overflow-y-auto p-6 text-gray-600 xl:mb-0 xl:ml-auto xl:min-h-screen xl:w-[85%] xl:gap-6">
         <Stats timerEntries={timerEntries} todos={todos} tags={tags} />
-        <div className="mt-6 flex h-screen items-center gap-4 rounded-md border border-gray-300">
+        <div className="mt-6 max-h-screen rounded-md border border-gray-300">
           <BarChart timerEntries={timerEntries} todos={todos} tags={tags} />
         </div>
-        <div className="mt-6 flex h-[75vh] gap-4">
-          <div className="h-full w-[40%] rounded-md border border-gray-300">
+        <div className="mt-6 flex flex-col gap-4 lg:flex-row">
+          <div className="rounded-md border border-gray-300 lg:w-[40%]">
             <DoughnutChart
               timerEntries={timerEntries}
               todos={todos}
               tags={tags}
             />
           </div>
-          <div className="flex h-full w-[60%] flex-col overflow-auto rounded-md border border-gray-300">
+          <div className="flex h-[65vh] w-full flex-col overflow-auto rounded-md border border-gray-300 lg:w-[60%]">
             {tags.length === 0 && <NoData text="No Tags To Display" />}
             {tags.length > 0 && (
-              <div className="flex h-full w-full flex-col overflow-auto">
-                <div className="flex items-center justify-between border-b border-gray-300 p-4">
-                  <div className="flex w-[60%] items-center gap-4">
+              <div className="flex h-full min-w-fit flex-col">
+                <div className="flex items-center justify-between gap-12 border-b border-gray-300 p-2 sm:p-4">
+                  <div className="flex items-center gap-4">
                     <LocalOffer />
-                    <span>Name</span>
+                    <span className="w-[200px] overflow-clip text-ellipsis">
+                      Name
+                    </span>
                   </div>
-                  <div className="flex w-[40%] items-center gap-6">
-                    <span className="w-1/3 text-center">Duration</span>
-                    <span className="w-1/3 text-center">Revenue</span>
-                    <span className="w-1/3 text-center">Tasks</span>
+                  <div className="flex items-center gap-6">
+                    <span className="w-[100px] text-center">Duration</span>
+                    <span className="w-[100px] text-center">Revenue</span>
+                    <span className="w-[100px] text-center">Tasks</span>
                   </div>
                 </div>
                 {tags.map((tag, i) => {
                   return (
-                    <div className="flex items-center justify-between border-b border-gray-300 p-4 ">
-                      <div className="flex w-[60%] items-center gap-4">
+                    <div className="flex items-center justify-between gap-12 border-b border-gray-300 p-2 sm:p-4 ">
+                      <div className="flex items-center gap-4">
                         <LocalOffer htmlColor={tag.color} />
-                        <span>{tag.name}</span>
+                        <span className="w-[200px] overflow-clip text-ellipsis">
+                          {tag.name}
+                        </span>
                       </div>
 
-                      <div className="flex w-[40%] items-center gap-6">
-                        <span className="w-1/3 text-center">
+                      <div className="flex items-center gap-6">
+                        <span className="w-[100px] text-center">
                           {durationForTags[i].toFixed(1)}h
                         </span>
-                        <span className="w-1/3 text-center">
+                        <span className="w-[100px] text-center">
                           {revenueEarnedForTags[i].toFixed(1)}$
                         </span>
-                        <span className="w-1/3 text-center">
+                        <span className="w-[100px] text-center">
                           {tasksDoneForTags[i][0]} / {tasksDoneForTags[i][1]}
                         </span>
                       </div>

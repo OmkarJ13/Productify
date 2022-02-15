@@ -163,8 +163,8 @@ class Stats extends React.Component {
     );
 
     return (
-      <div className="flex items-center gap-4">
-        <div className="flex w-1/4 flex-col gap-1 rounded-md border border-gray-300 p-4">
+      <div className="flex w-full flex-col items-center gap-4 sm:grid sm:grid-cols-2 lg:flex lg:flex-row">
+        <div className="flex w-full flex-col gap-1 rounded-md border border-gray-300 p-4 lg:w-1/4">
           <h1 className="text-lg font-light">Current Streak</h1>
           <span className="text-2xl font-black text-blue-500">
             {currentStreak}
@@ -173,7 +173,7 @@ class Stats extends React.Component {
             Longest Streak - <span className="text-lg">{longestStreak}</span>
           </span>
         </div>
-        <div className="flex w-1/4 flex-col gap-1 rounded-md border border-gray-300 p-4">
+        <div className="flex w-full flex-col gap-1 rounded-md border border-gray-300 p-4 lg:w-1/4">
           <h1 className="text-lg font-light">Tracked Hours</h1>
           <span className="text-2xl font-black text-blue-500">
             {totalTrackedHours.toFormat("h'h' mm'm'")}
@@ -185,7 +185,7 @@ class Stats extends React.Component {
             </span>
           </span>
         </div>
-        <div className="flex w-1/4 flex-col gap-1 rounded-md border border-gray-300 p-4">
+        <div className="flex w-full flex-col gap-1 rounded-md border border-gray-300 p-4 lg:w-1/4">
           <h1 className="text-lg font-light">Tasks Done</h1>
           <span className="text-2xl font-black text-blue-500">
             {totalTasksDone}
@@ -194,7 +194,7 @@ class Stats extends React.Component {
             Daily Average - <span className="text-lg">{averageTasksDone}</span>
           </span>
         </div>
-        <div className="flex w-1/4 flex-col gap-1 rounded-md border border-gray-300 p-4">
+        <div className="flex w-full flex-col gap-1 rounded-md border border-gray-300 p-4 lg:w-1/4">
           <h1 className="text-lg font-light">Revenue Earned</h1>
           <span className="text-2xl font-black text-blue-500">
             {totalRevenueEarned.toFixed(1)}$

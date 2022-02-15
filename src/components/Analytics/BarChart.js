@@ -101,7 +101,7 @@ class BarChart extends React.Component {
 
     return (
       <div className="flex h-full w-full flex-col items-center gap-8 rounded-md p-4">
-        <div className="flex items-center justify-between self-stretch">
+        <div className="flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-between">
           <PeriodChanger
             unit="week"
             value={period}

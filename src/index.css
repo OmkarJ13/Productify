@@ -9,3 +9,8 @@
 html {
   @apply font-inter text-gray-600;
 }
+
+.react-calendar-heatmap {
+  width: 1000px;
+  margin: auto;
+}

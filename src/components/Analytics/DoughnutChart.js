@@ -132,7 +132,7 @@ class DoughnutChart extends React.Component {
 
     return (
       <div className="flex h-full w-full flex-col items-center gap-8 p-4">
-        <div className="flex items-center justify-between self-stretch">
+        <div className="flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-between">
           <PeriodChanger
             unit="day"
             value={period}
@@ -141,7 +141,7 @@ class DoughnutChart extends React.Component {
           <ViewBySelector value={view} onChange={this.handleViewChanged} />
         </div>
 
-        <div className="h-full w-11/12">
+        <div className="h-full w-full">
           {data.length === 0 && <NoData text="No Data To Display" />}
           {data.length > 0 && (
             <Doughnut

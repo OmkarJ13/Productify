@@ -110,11 +110,11 @@ class PeriodChanger extends React.Component {
         <button
           name="minus"
           onClick={this.handlePeriodChanged}
-          className="rounded-l-full border border-gray-300 px-2"
+          className="rounded-l-full border border-gray-300 px-1 sm:px-2"
         >
           <ArrowBack />
         </button>
-        <span className="flex items-center justify-between gap-4 border-y border-gray-300 px-4 py-2 capitalize">
+        <span className="flex items-center gap-2 border-y border-gray-300 px-2 py-1 capitalize sm:justify-between sm:gap-4 sm:px-4 sm:py-2">
           <MUIPickerHandler
             renderPicker={(otherProps) => {
               return (
@@ -135,9 +135,11 @@ class PeriodChanger extends React.Component {
                       <button
                         ref={inputRef}
                         onClick={InputProps.onClick}
-                        className="flex items-center gap-2 capitalize"
+                        className="flex items-center capitalize sm:gap-2"
                       >
-                        <Today />
+                        <span className="hidden sm:inline">
+                          <Today />
+                        </span>
                         {getRelativeDate(
                           this.state.period.start,
                           this.props.unit
