@@ -51,7 +51,7 @@ class Tags extends React.Component {
               name="alpha"
               onClick={this.handleSort}
             >
-              <span className="flex items-center gap-2">
+              <span className="flex w-full items-center gap-2">
                 <LocalOffer /> Name
               </span>
 

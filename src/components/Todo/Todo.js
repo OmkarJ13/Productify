@@ -162,11 +162,11 @@ class Todo extends React.Component {
           hideProgressBar={true}
         />
 
-        <div className="group flex h-[65px] w-full items-center border-x border-b border-gray-300 p-4 text-sm">
-          <div className="flex h-full flex-grow-[2] items-center">
+        <div className="group flex w-full flex-wrap gap-2 border-x border-b border-gray-300 p-2">
+          <div className="flex w-full items-center gap-2">
             <button
               onClick={this.handleIsDone}
-              className={`mr-4 h-[30px] w-[30px] border border-gray-300 text-white transition-colors ${
+              className={`h-[30px] w-[30px] border border-gray-300 text-white transition-colors ${
                 isDone && "border-blue-500 bg-blue-500"
               }`}
             >
@@ -180,62 +180,59 @@ class Todo extends React.Component {
               placeholder="Add Task Name"
               autoComplete="off"
               onChange={this.props.onTaskChanged}
-              className="flex-grow text-ellipsis border border-transparent p-1 transition-colors focus:outline-none group-hover:border-gray-300"
+              className="flex-grow text-ellipsis border border-gray-300 p-1 focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-grow items-center justify-start gap-2 sm:gap-4">
+            <TagSelector
+              className="max-w-[125px]"
+              value={tag}
+              onChange={this.props.onTagSelected}
             />
 
-            <div className="mx-4 flex w-[250px] items-center justify-center gap-4">
-              <TagSelector
-                className="flex h-full max-w-[125px] items-center justify-center opacity-0 transition-opacity focus:opacity-100 group-hover:opacity-100"
-                value={tag}
-                onChange={this.props.onTagSelected}
-              />
+            <PrioritySelector
+              value={priority}
+              onChange={this.props.onPrioritySelected}
+            />
+          </div>
 
-              <PrioritySelector
-                className="opacity-0 transition-opacity focus:opacity-100 group-hover:opacity-100"
-                value={priority}
-                onChange={this.props.onPrioritySelected}
-              />
-            </div>
-
+          <div className="flex flex-grow items-center justify-end gap-2 sm:gap-4">
             <button
-              className={`h-full border-x border-gray-300 p-1 px-2 text-gray-500 opacity-0 transition-opacity group-hover:opacity-100`}
+              className="border-x border-gray-300 py-1 px-2 text-gray-500"
               onClick={this.props.onBillableChanged}
             >
               {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
             </button>
 
-            <div className="flex flex-grow justify-center">
-              <MUIPickerHandler
-                renderPicker={(otherProps) => {
-                  return (
-                    <DatePicker
-                      {...otherProps}
-                      value={date.toJSDate()}
-                      onChange={this.props.onDateChanged}
-                      disablePast
-                      showToolbar={false}
-                      renderInput={({ inputRef, InputProps }) => {
-                        return (
-                          <button
-                            ref={inputRef}
-                            onClick={InputProps.onClick}
-                            className="flex w-[125px] items-center justify-center gap-2 border border-gray-300 p-1 capitalize opacity-0 transition-opacity group-hover:opacity-100"
-                          >
-                            <span className="flex-grow text-center">
-                              {getRelativeDate(date, "day")}
-                            </span>
-                            <CalendarToday fontSize="small" />
-                          </button>
-                        );
-                      }}
-                    />
-                  );
-                }}
-              />
-            </div>
-          </div>
+            <MUIPickerHandler
+              renderPicker={(otherProps) => {
+                return (
+                  <DatePicker
+                    {...otherProps}
+                    value={date.toJSDate()}
+                    onChange={this.props.onDateChanged}
+                    disablePast
+                    showToolbar={false}
+                    renderInput={({ inputRef, InputProps }) => {
+                      return (
+                        <button
+                          ref={inputRef}
+                          onClick={InputProps.onClick}
+                          className="flex w-[130px] items-center justify-between gap-2 border border-gray-300 p-2"
+                        >
+                          <span className="flex flex-grow justify-center capitalize">
+                            {getRelativeDate(date, "day")}
+                          </span>
+                          <CalendarToday fontSize="small" />
+                        </button>
+                      );
+                    }}
+                  />
+                );
+              }}
+            />
 
-          <div className="flex h-full items-center justify-end gap-2">
             {this.props.timer?.timerRef === id ? (
               <button
                 className="flex animate-pulse items-center justify-center rounded-[50%] bg-red-500 text-white"

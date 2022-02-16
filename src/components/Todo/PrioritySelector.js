@@ -12,7 +12,7 @@ class PrioritySelector extends React.Component {
 
     return (
       <div
-        className={`flex h-full w-full items-center justify-center gap-2 rounded-full px-2 py-1 text-white`}
+        className={`flex w-full items-center justify-center gap-2 rounded-full px-2 py-1 text-white`}
         style={{ backgroundColor: priorityColor }}
       >
         <Error fontSize="small" />

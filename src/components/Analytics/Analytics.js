@@ -107,18 +107,18 @@ class Analytics extends React.Component {
     return (
       <div className="mb-auto flex h-[90%] w-full flex-col gap-4 overflow-y-auto p-6 text-gray-600 xl:mb-0 xl:ml-auto xl:min-h-screen xl:w-[85%] xl:gap-6">
         <Stats timerEntries={timerEntries} todos={todos} tags={tags} />
-        <div className="mt-6 max-h-screen rounded-md border border-gray-300">
+        <div className="mt-6  rounded-md border border-gray-300">
           <BarChart timerEntries={timerEntries} todos={todos} tags={tags} />
         </div>
         <div className="mt-6 flex flex-col gap-4 lg:flex-row">
-          <div className="rounded-md border border-gray-300 lg:w-[40%]">
+          <div className="h-[500px] rounded-md border border-gray-300 lg:w-[40%]">
             <DoughnutChart
               timerEntries={timerEntries}
               todos={todos}
               tags={tags}
             />
           </div>
-          <div className="flex h-[65vh] w-full flex-col overflow-auto rounded-md border border-gray-300 lg:w-[60%]">
+          <div className="flex max-h-[500px] w-full flex-col overflow-auto rounded-md border border-gray-300 py-4 lg:h-full lg:w-[60%]">
             {tags.length === 0 && <NoData text="No Tags To Display" />}
             {tags.length > 0 && (
               <div className="flex h-full min-w-fit flex-col">

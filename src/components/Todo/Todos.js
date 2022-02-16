@@ -151,8 +151,8 @@ class Todos extends React.Component {
 
     return (
       <div className="flex w-full flex-grow flex-col gap-8">
-        <div className="flex w-full items-center justify-between">
-          <div className="flex gap-4 font-light">
+        <div className="flex flex-col gap-4 lg:flex-row">
+          <div className="flex items-center justify-between gap-4">
             <span className="flex items-baseline gap-2">
               Completed
               <strong className="text-lg">{completedTodos.length}</strong>
@@ -161,24 +161,29 @@ class Todos extends React.Component {
               Due <strong className="text-lg">{dueTodos.length}</strong>
             </span>
           </div>
-          <div className="flex items-center gap-8">
+
+          <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap lg:ml-auto lg:gap-6">
             <PeriodChanger
               unit={this.state.view}
               value={period}
               onChange={this.periodChangeHandler}
+              className="w-full sm:w-fit"
             />
-            <button
-              className="flex w-[120px] items-center justify-center gap-2"
-              onClick={this.toggleShowDone}
-            >
-              <CheckCircle /> {showDone ? "Hide Done" : "Show Done"}
-            </button>
-            <GroupBySelector
-              Window={GroupByWindow}
-              value={group}
-              onChange={this.groupChangeHandler}
-            />
-            <ViewBySelector value={view} onChange={this.viewChangeHandler} />
+
+            <div className="flex items-center justify-between gap-2 sm:ml-auto sm:gap-4 lg:gap-6">
+              <button
+                className="flex items-center gap-1"
+                onClick={this.toggleShowDone}
+              >
+                <CheckCircle /> {showDone ? "Hide Done" : "Show Done"}
+              </button>
+              <GroupBySelector
+                Window={GroupByWindow}
+                value={group}
+                onChange={this.groupChangeHandler}
+              />
+              <ViewBySelector value={view} onChange={this.viewChangeHandler} />
+            </div>
           </div>
         </div>
         <div className="flex w-full flex-grow flex-col gap-8">

@@ -102,11 +102,11 @@ class PeriodChanger extends React.Component {
   }
 
   render() {
-    const { unit } = this.props;
+    const { unit, className } = this.props;
     const { period } = this.state;
 
     return (
-      <div className="inline-flex">
+      <div className={"flex " + className}>
         <button
           name="minus"
           onClick={this.handlePeriodChanged}
@@ -114,7 +114,7 @@ class PeriodChanger extends React.Component {
         >
           <ArrowBack />
         </button>
-        <span className="flex items-center gap-2 border-y border-gray-300 px-2 py-1 capitalize sm:justify-between sm:gap-4 sm:px-4 sm:py-2">
+        <span className="flex flex-grow items-center justify-center gap-2 border-y border-gray-300 px-2 py-1 capitalize sm:gap-4 sm:px-4 sm:py-2">
           <MUIPickerHandler
             renderPicker={(otherProps) => {
               return (

@@ -49,10 +49,12 @@ class Tag extends React.Component {
             onTagCreated={this.handleEdit}
           />
         )}
-        <div className="flex items-center gap-4 border-b border-gray-200 p-2">
-          <div className="flex flex-grow items-center gap-2">
+        <div className="flex items-center justify-between gap-4 border-b border-gray-200 p-2">
+          <div className="flex items-center gap-2">
             <LocalOffer htmlColor={tag.color} />
-            {tag.name}
+            <span className="w-[200px] overflow-x-clip overflow-ellipsis">
+              {tag.name}
+            </span>
           </div>
           <div>
             <WindowHandler

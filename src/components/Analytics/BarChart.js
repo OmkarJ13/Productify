@@ -110,7 +110,7 @@ class BarChart extends React.Component {
           <ViewBySelector value={view} onChange={this.handleViewChanged} />
         </div>
 
-        <div className="w-full">
+        <div className="h-full w-full">
           <Bar
             data={{
               labels: Info.weekdays(),

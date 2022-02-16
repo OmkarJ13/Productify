@@ -33,70 +33,66 @@ class TodoCreator extends React.Component {
     const { task, tag, priority, isBillable, date } = this.props.todo;
 
     return (
-      <div className="flex h-[75px] w-full items-center border border-gray-200 p-4 text-sm shadow-md">
-        <div className="flex h-full flex-grow-[2] items-center">
-          <input
-            type="text"
-            value={task}
-            className="flex-grow border border-gray-300 p-2 focus:outline-none"
-            placeholder="What are you planning to do?"
-            onChange={this.props.onTaskChanged}
+      <div className="flex w-full flex-wrap gap-2 border border-gray-200 p-2 shadow-md">
+        <input
+          type="text"
+          value={task}
+          className="w-full border border-gray-300 p-2 focus:outline-none"
+          placeholder="What are you planning to do?"
+          onChange={this.props.onTaskChanged}
+        />
+
+        <div className="flex flex-grow items-center justify-start gap-2">
+          <TagSelector
+            className="max-w-[125px]"
+            value={tag}
+            onChange={this.props.onTagSelected}
           />
 
-          <div className="mx-4 flex h-full w-[250px] items-center justify-center gap-4">
-            <TagSelector
-              className="h-full max-w-[125px]"
-              value={tag}
-              onChange={this.props.onTagSelected}
-            />
+          <PrioritySelector
+            value={priority}
+            onChange={this.props.onPrioritySelected}
+          />
+        </div>
 
-            <PrioritySelector
-              value={priority}
-              onChange={this.props.onPrioritySelected}
-            />
-          </div>
-
+        <div className="flex flex-grow items-center justify-end gap-2">
           <button
-            className={`h-full border-x border-gray-300 p-1 px-2 text-gray-500`}
+            className="border-x border-gray-300 py-1 px-2 text-gray-500"
             onClick={this.props.onBillableChanged}
           >
             {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
           </button>
-        </div>
 
-        <div className="flex h-full flex-grow items-center justify-end gap-4">
-          <div className="flex flex-grow justify-center">
-            <MUIPickerHandler
-              renderPicker={(otherProps) => {
-                return (
-                  <DatePicker
-                    {...otherProps}
-                    value={date.toJSDate()}
-                    disablePast
-                    onChange={this.props.onDateChanged}
-                    showToolbar={false}
-                    renderInput={({ inputRef, InputProps }) => {
-                      return (
-                        <button
-                          ref={inputRef}
-                          onClick={InputProps.onClick}
-                          className="flex w-[125px] items-center justify-between gap-2 border border-gray-300 p-2"
-                        >
-                          <span className="flex flex-grow justify-center capitalize">
-                            {getRelativeDate(date, "day")}
-                          </span>
-                          <CalendarToday fontSize="small" />
-                        </button>
-                      );
-                    }}
-                  />
-                );
-              }}
-            />
-          </div>
+          <MUIPickerHandler
+            renderPicker={(otherProps) => {
+              return (
+                <DatePicker
+                  {...otherProps}
+                  value={date.toJSDate()}
+                  disablePast
+                  onChange={this.props.onDateChanged}
+                  showToolbar={false}
+                  renderInput={({ inputRef, InputProps }) => {
+                    return (
+                      <button
+                        ref={inputRef}
+                        onClick={InputProps.onClick}
+                        className="flex w-[130px] items-center justify-between gap-2 border border-gray-300 p-2"
+                      >
+                        <span className="flex flex-grow justify-center capitalize">
+                          {getRelativeDate(date, "day")}
+                        </span>
+                        <CalendarToday fontSize="small" />
+                      </button>
+                    );
+                  }}
+                />
+              );
+            }}
+          />
 
           <button
-            className="rounded-[50%] bg-gradient-to-br from-blue-500 to-blue-400 p-2 uppercase text-white"
+            className="rounded-[50%] bg-blue-500 p-2 uppercase text-white"
             onClick={this.createTodo}
           >
             <AddTask />
