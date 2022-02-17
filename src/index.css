@@ -8,6 +8,7 @@
 
 html {
   @apply font-inter text-gray-600;
+  @apply text-sm sm:text-base;
 }
 
 .react-calendar-heatmap {

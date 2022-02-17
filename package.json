@@ -13,7 +13,6 @@
     "chart.js": "^3.6.2",
     "firebase": "^9.6.6",
     "luxon": "^2.3.0",
-    "netlify-cli": "^8.15.3",
     "react": "^17.0.2",
     "react-calendar-heatmap": "^1.8.1",
     "react-chartjs-2": "^4.0.0",

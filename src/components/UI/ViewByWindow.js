@@ -31,10 +31,10 @@ class ViewByWindow extends React.Component {
               <li>
                 <button
                   data-option={view}
-                  className="flex w-[250px] items-center justify-between gap-10 bg-white px-6 py-2 text-left text-gray-600 hover:bg-gray-200"
+                  className="flex w-[200px] items-center justify-between gap-10 bg-white px-6 py-2 text-left text-gray-600 hover:bg-gray-200"
                 >
                   <div className="flex items-center gap-4 capitalize">
-                    <span className="w-[20px] text-lg font-bold">
+                    <span className="w-[20px] font-semibold">
                       {view.slice(0, 1)}
                     </span>
                     {view}

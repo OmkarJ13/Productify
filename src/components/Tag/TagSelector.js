@@ -33,7 +33,7 @@ class TagSelector extends React.Component {
             style={{ backgroundColor: tag.color }}
           >
             <LocalOffer fontSize="small" />
-            <span className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-xs">
+            <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-xs">
               {tag.name}
             </span>
           </div>

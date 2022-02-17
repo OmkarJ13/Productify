@@ -34,10 +34,6 @@ class DoughnutChart extends React.Component {
     });
   }
 
-  filterData(data, period) {
-    return data.filter((ele) => period.contains(ele.date));
-  }
-
   getTrackedHoursPerTag(timerEntries, tags) {
     if (timerEntries.length === 0) return [];
     const timerEntriesPerTag = groupObjectArrayBy(timerEntries, ["tag"]);
@@ -125,8 +121,12 @@ class DoughnutChart extends React.Component {
     const { period, view } = this.state;
     const { timerEntries, todos, tags } = this.props;
 
-    const filteredTimerEntries = this.filterData(timerEntries, period);
-    const filteredTodos = this.filterData(todos, period);
+    const filteredTimerEntries = timerEntries.filter((timerEntry) =>
+      period.contains(timerEntry.date)
+    );
+    const filteredTodos = todos.filter((todo) =>
+      period.contains(todo.doneTime)
+    );
 
     const data = this.getData(view, filteredTimerEntries, filteredTodos, tags);
 

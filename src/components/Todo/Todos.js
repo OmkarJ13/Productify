@@ -116,13 +116,13 @@ class Todos extends React.Component {
           break;
       }
 
-      const complete = todos.filter((todo) => todo.isDone);
+      const complete = todoGroup.filter((todo) => todo.isDone);
       const data = this.generateTodos(todoGroup);
 
       return (
         <GroupedEntries
           heading={heading}
-          subHeading={`${complete.length}/${todos.length}`}
+          subHeading={`${complete.length}/${todoGroup.length}`}
           data={data}
         />
       );
@@ -155,10 +155,10 @@ class Todos extends React.Component {
           <div className="flex items-center justify-between gap-4">
             <span className="flex items-baseline gap-2">
               Completed
-              <strong className="text-lg">{completedTodos.length}</strong>
+              <span className="text-lg">{completedTodos.length}</span>
             </span>
             <span className="flex items-baseline gap-2">
-              Due <strong className="text-lg">{dueTodos.length}</strong>
+              Due <span className="text-lg">{dueTodos.length}</span>
             </span>
           </div>
 

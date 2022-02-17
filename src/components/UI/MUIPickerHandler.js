@@ -28,6 +28,7 @@ class MUIPickerHandler extends React.Component {
       InputProps: {
         onClick: this.openPicker,
       },
+      showToolbar: false,
     });
   }
 }

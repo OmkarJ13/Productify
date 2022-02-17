@@ -43,14 +43,21 @@ class FloatingWindow extends React.Component {
     const screenY = window.innerHeight;
 
     let x =
-      anchorBounds.left -
-      (windowBounds.width - anchorBounds.width) +
+      anchorBounds.left +
+      anchorBounds.width * 0.5 -
+      windowBounds.width * 0.5 +
       window.scrollX;
-
     let y = anchorBounds.bottom + window.scrollY;
 
-    if (x + windowBounds.width < 0) {
+    if (x < window.screenLeft) {
       x = anchorBounds.left + window.scrollX;
+    }
+
+    if (x + windowBounds.width > screenX) {
+      x =
+        anchorBounds.left -
+        (windowBounds.width - anchorBounds.width) +
+        window.scrollX;
     }
 
     if (y + windowBounds.height > screenY) {
@@ -81,7 +88,7 @@ class FloatingWindow extends React.Component {
           <div
             style={{ top: `${y}px`, left: `${x}px` }}
             ref={this.floatingWindow}
-            className={`absolute z-10 animate-[fade_ease-in-out_250ms] border border-gray-200 bg-white shadow-lg`}
+            className={`absolute z-10 max-w-full animate-[fade_ease-in-out_250ms] border border-gray-200 bg-white shadow-lg`}
           >
             {this.props.children}
           </div>,

@@ -26,9 +26,9 @@ class PrioritySelectorWindow extends React.Component {
         onClose={this.props.onClose}
         buttonRef={this.props.buttonRef}
       >
-        <div className="flex flex-col items-start gap-4 p-4 text-sm">
+        <div className="flex w-[200px] flex-col items-start gap-4 p-4">
           <span>Select Priority</span>
-          <div className="flex min-w-[15vw] flex-col">
+          <div className="flex w-full flex-col">
             {priorities.map((priority, i) => {
               return (
                 <button

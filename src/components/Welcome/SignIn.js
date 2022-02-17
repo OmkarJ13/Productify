@@ -61,7 +61,7 @@ class SignIn extends React.Component {
     const { email, password, rememberMe, errorMessage } = this.state;
 
     return (
-      <div className="flex h-full w-full flex-col items-center justify-center">
+      <div className="flex flex-col items-center">
         <h1 className="mb-4 text-2xl font-bold uppercase">
           Sign In to get started
         </h1>
@@ -89,7 +89,7 @@ class SignIn extends React.Component {
             <Lock fontSize="small" />
           </div>
 
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"

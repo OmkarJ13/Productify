@@ -38,6 +38,24 @@ class TagCreatorWindow extends React.Component {
     }
   }
 
+  resetState() {
+    this.setState({
+      isValid: true,
+      billingOptionsOpen: false,
+      tag: {
+        name: "",
+        billableAmount: 0,
+        color: colors[0],
+      },
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.open && !this.props.open) {
+      this.resetState();
+    }
+  }
+
   nameChangeHandler(e) {
     const { tags } = this.props;
     const exists = tags.some(
@@ -100,8 +118,8 @@ class TagCreatorWindow extends React.Component {
   render() {
     return (
       <ModalWindow open={this.props.open} onClose={this.props.onClose}>
-        <div className="flex flex-col gap-4">
-          <h2 className="flex w-full gap-2 border-b border-gray-300 text-2xl font-bold uppercase text-blue-500">
+        <div className="flex w-[280px] flex-col gap-4">
+          <h2 className="flex w-full gap-2 border-b border-gray-300 text-2xl font-semibold uppercase text-blue-500">
             Create / Edit
           </h2>
           <div className="flex flex-col items-start gap-2">
@@ -117,7 +135,7 @@ class TagCreatorWindow extends React.Component {
             />
 
             <span
-              className={`self-start text-xs text-red-500 ${
+              className={`self-start text-sm text-red-500 ${
                 this.state.isValid ? "hidden" : "block"
               }`}
             >

@@ -50,7 +50,7 @@ class Todo extends React.Component {
       task,
       tag,
       isBillable,
-      date,
+      date: DateTime.now().startOf("day"),
       startTime: DateTime.now(),
       endTime: DateTime.now(),
       duration: Duration.fromMillis(0),
@@ -79,14 +79,19 @@ class Todo extends React.Component {
     const { task, tag, isBillable, date, ...otherData } = this.props.todo;
     const { startTime, endTime } = data;
 
+    let difference = endTime.diff(startTime);
+    if (difference.toMillis() < 0) {
+      difference = difference.plus({ day: 1 });
+    }
+
     const timerEntry = {
       task,
       tag,
       isBillable,
-      date,
+      date: DateTime.now().startOf("day"),
       startTime,
       endTime,
-      duration: endTime.diff(startTime),
+      duration: difference,
     };
 
     this.props.createTimerEntry(timerEntry);
@@ -98,6 +103,8 @@ class Todo extends React.Component {
     const duplicatedTodo = {
       ...todoData,
     };
+
+    console.log(duplicatedTodo);
 
     this.props.duplicateTodo(duplicatedTodo);
   }
@@ -162,7 +169,7 @@ class Todo extends React.Component {
           hideProgressBar={true}
         />
 
-        <div className="group flex w-full flex-wrap gap-2 border-x border-b border-gray-300 p-2">
+        <div className="group flex w-full flex-wrap justify-center gap-4 border-x border-b border-gray-300 py-4 px-2 xs:justify-between xs:gap-2">
           <div className="flex w-full items-center gap-2">
             <button
               onClick={this.handleIsDone}
@@ -184,7 +191,7 @@ class Todo extends React.Component {
             />
           </div>
 
-          <div className="flex flex-grow items-center justify-start gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <TagSelector
               className="max-w-[125px]"
               value={tag}
@@ -197,7 +204,7 @@ class Todo extends React.Component {
             />
           </div>
 
-          <div className="flex flex-grow items-center justify-end gap-2 sm:gap-4">
+          <div className="flex w-full items-center justify-between gap-2 xs:w-fit xs:flex-grow xs:justify-end sm:gap-4">
             <button
               className="border-x border-gray-300 py-1 px-2 text-gray-500"
               onClick={this.props.onBillableChanged}
@@ -233,28 +240,30 @@ class Todo extends React.Component {
               }}
             />
 
-            {this.props.timer?.timerRef === id ? (
-              <button
-                className="flex animate-pulse items-center justify-center rounded-[50%] bg-red-500 text-white"
-                onClick={this.stopTrackingTodo}
-              >
-                <Stop fontSize="small" />
-              </button>
-            ) : (
-              <TodoTracker
-                className="flex items-center justify-center rounded-[50%] bg-blue-500 text-white disabled:bg-gray-600"
-                disabled={isDone}
-                onStartTracking={this.startTrackingTodo}
-                onManualTimeEntered={this.manualTrackTodo}
-              >
-                <PlayArrow fontSize="small" />
-              </TodoTracker>
-            )}
+            <div className="flex items-center gap-2 sm:gap-4">
+              {this.props.timer?.timerRef === id ? (
+                <button
+                  className="flex h-[25px] w-[25px] animate-pulse items-center justify-center rounded-[50%] bg-red-500 text-white"
+                  onClick={this.stopTrackingTodo}
+                >
+                  <Stop fontSize="small" />
+                </button>
+              ) : (
+                <TodoTracker
+                  className="flex h-[25px] w-[25px] items-center justify-center rounded-[50%] bg-blue-500 text-white disabled:bg-gray-600"
+                  disabled={isDone}
+                  onStartTracking={this.startTrackingTodo}
+                  onManualTimeEntered={this.manualTrackTodo}
+                >
+                  <PlayArrow fontSize="small" />
+                </TodoTracker>
+              )}
 
-            <TimerEntryOptionsSelector
-              onDuplicate={this.duplicateTodo}
-              onDelete={this.deleteTodo}
-            />
+              <TimerEntryOptionsSelector
+                onDuplicate={this.duplicateTodo}
+                onDelete={this.deleteTodo}
+              />
+            </div>
           </div>
         </div>
       </>

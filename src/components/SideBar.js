@@ -42,7 +42,7 @@ class SideBar extends React.Component {
           {path === "/tasks" ? <StickyNote2 /> : <StickyNote2Outlined />}
           <span className="hidden xl:inline">Tasks</span>
         </NavLink>
-        <span className="my-4 hidden self-start px-4 text-xs font-light uppercase xl:inline">
+        <span className="my-4 hidden self-start px-4 text-xs font-medium uppercase xl:inline">
           <span>Analyze</span>
         </span>
         <NavLink
@@ -54,7 +54,7 @@ class SideBar extends React.Component {
           {path === "/analytics" ? <Analytics /> : <AnalyticsOutlined />}
           <span className="hidden xl:inline">Analytics</span>
         </NavLink>
-        <span className="my-4 hidden self-start px-4 text-xs font-light uppercase xl:inline">
+        <span className="mt-auto hidden self-start px-4 text-xs font-medium uppercase xl:inline">
           <span>Manage</span>
         </span>
         <NavLink

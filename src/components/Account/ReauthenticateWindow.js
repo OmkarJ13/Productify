@@ -58,15 +58,15 @@ class ReauthenticateWindow extends React.Component {
 
     return (
       <ModalWindow open={this.props.open} onClose={this.props.onClose}>
-        <div className="flex w-[25vw] flex-col gap-4">
-          <h2 className="flex gap-2 border-b border-gray-300 text-2xl font-bold uppercase text-blue-500">
+        <div className="flex w-[280px] flex-col gap-4">
+          <h2 className="flex gap-2 border-b border-gray-300 text-2xl font-semibold uppercase text-blue-500">
             Reauthenticate
           </h2>
           <div className="flex flex-col gap-2">
             <label>Re-Enter Password</label>
             <input
               type="password"
-              className="rounded-md border border-gray-300 p-2 focus:outline-none"
+              className="border border-gray-300 p-2 focus:outline-none"
               value={password}
               name="password"
               onChange={this.handlePasswordChanged}
@@ -76,7 +76,7 @@ class ReauthenticateWindow extends React.Component {
             )}
           </div>
           <button
-            className="self-end rounded-md bg-blue-500 px-4 py-2 text-white"
+            className="self-end bg-blue-500 px-4 py-2 text-white"
             onClick={this.handleUserAuthentication}
           >
             Authenticate

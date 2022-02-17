@@ -67,8 +67,8 @@ class DeleteAccountWindow extends React.Component {
         />
 
         <ModalWindow open={userAuthenticated} onClose={this.props.onClose}>
-          <div className="flex w-[25vw] flex-col gap-4">
-            <h2 className="flex gap-2 border-b border-gray-300 text-2xl font-bold uppercase text-blue-500">
+          <div className="flex w-[280px] flex-col gap-4">
+            <h2 className="flex gap-2 border-b border-gray-300 text-2xl font-semibold uppercase text-blue-500">
               Delete Account
             </h2>
             <h3>
@@ -76,7 +76,7 @@ class DeleteAccountWindow extends React.Component {
               data, this action is not reversible
             </h3>
             <button
-              className="self-end rounded-md bg-blue-500 px-4 py-2 text-white"
+              className="self-end bg-blue-500 px-4 py-2 text-white"
               onClick={this.handleAccountDelete}
             >
               Delete

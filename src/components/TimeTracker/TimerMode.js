@@ -121,89 +121,88 @@ class TimerMode extends React.Component {
     const { task, isBillable, tag, duration } = this.props.timerEntry;
 
     return (
-      <div className="flex h-[75px] w-full items-center border border-gray-200 p-4 text-sm shadow-md">
-        <div className="flex h-full flex-grow items-center">
-          <input
-            name="task"
-            type="text"
-            className="flex-grow border border-gray-300 p-2 focus:outline-none"
-            value={task}
-            placeholder="What are you doing?"
-            autoComplete="off"
-            onChange={this.props.onTaskChanged}
-          />
+      <div className="flex w-full flex-wrap justify-center gap-4 border border-gray-200 p-2 shadow-md xs:justify-between xs:gap-2">
+        <input
+          name="task"
+          type="text"
+          className="w-full border border-gray-300 p-2 focus:outline-none"
+          value={task}
+          placeholder="What are you doing?"
+          autoComplete="off"
+          onChange={this.props.onTaskChanged}
+        />
 
-          <div className="mx-4 flex w-[150px] items-center justify-center">
-            <TagSelector
-              className="flex h-full max-w-[125px] items-center justify-center"
-              value={tag}
-              onChange={this.props.onTagSelected}
-            />
-          </div>
+        <div className="flex flex-grow items-center justify-center gap-4 xs:flex-grow-0 xs:justify-start">
+          <TagSelector
+            className="flex max-w-[125px] items-center justify-center"
+            value={tag}
+            onChange={this.props.onTagSelected}
+          />
 
           <button
             title="Is Billable?"
             onClick={this.props.onBillableChanged}
-            className={`mr-4 h-full border-x border-gray-300 px-2 text-gray-500`}
+            className={`border-x border-gray-300 px-2 py-1 text-gray-500`}
           >
             {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
           </button>
         </div>
 
-        <span className="mr-4 flex h-full w-[135px] items-center justify-center text-base">
-          {duration.toFormat("hh:mm:ss")}
-        </span>
-
-        <div className="flex h-full items-center gap-2">
-          {this.props.timer !== null ? (
-            <button
-              onClick={this.stopTracking}
-              className="rounded-[50%] bg-gradient-to-br from-red-500 to-red-400 p-2 uppercase text-white"
-            >
-              <Stop />
-            </button>
-          ) : (
-            <button
-              onClick={this.startTracking}
-              className="rounded-[50%] bg-gradient-to-br from-blue-500 to-blue-400 p-2 uppercase text-white"
-            >
-              <PlayArrow />
-            </button>
-          )}
-
-          <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-grow items-center gap-2 xs:flex-grow-0">
+          {" "}
+          <span className="mx-auto flex w-[135px] items-center justify-center xs:mx-0">
+            {duration.toFormat("hh:mm:ss")}
+          </span>
+          <div className="flex items-center gap-2">
             {this.props.timer !== null ? (
-              <button title="Discard Timer" onClick={this.discardTimer}>
-                <Close fontSize="small" />
+              <button
+                onClick={this.stopTracking}
+                className="flex h-[40px] w-[40px] items-center justify-center rounded-[50%] bg-red-500 p-2 uppercase text-white"
+              >
+                <Stop />
               </button>
             ) : (
-              <>
-                <button
-                  title="Timer Mode"
-                  onClick={() => {
-                    this.props.resetState();
-                    this.props.onSwitchTimerMode();
-                  }}
-                  className={`${
-                    this.props.trackingMode === "timer"
-                      ? "text-gray-600"
-                      : "text-gray-400"
-                  }`}
-                >
-                  <Schedule fontSize="small" />
-                </button>
-                <button
-                  title="Manual Mode"
-                  onClick={() => {
-                    this.props.resetState();
-                    this.props.onSwitchManualMode();
-                  }}
-                  className="text-gray-400"
-                >
-                  <Menu fontSize="small" />
-                </button>
-              </>
+              <button
+                onClick={this.startTracking}
+                className="flex h-[40px] w-[40px] items-center justify-center rounded-[50%] bg-blue-500 p-2 uppercase text-white"
+              >
+                <PlayArrow />
+              </button>
             )}
+            <div className="flex flex-col items-center justify-center">
+              {this.props.timer !== null ? (
+                <button title="Discard Timer" onClick={this.discardTimer}>
+                  <Close fontSize="small" />
+                </button>
+              ) : (
+                <>
+                  <button
+                    title="Timer Mode"
+                    onClick={() => {
+                      this.props.resetState();
+                      this.props.onSwitchTimerMode();
+                    }}
+                    className={`${
+                      this.props.trackingMode === "timer"
+                        ? "text-gray-600"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    <Schedule fontSize="small" />
+                  </button>
+                  <button
+                    title="Manual Mode"
+                    onClick={() => {
+                      this.props.resetState();
+                      this.props.onSwitchManualMode();
+                    }}
+                    className="text-gray-400"
+                  >
+                    <Menu fontSize="small" />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

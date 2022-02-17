@@ -49,6 +49,7 @@ export const addTodoAsync = createAsyncThunk(
     const flattenedTodo = {
       ...todo,
       date: todo.date.toISO(),
+      doneTime: todo.doneTime && todo.doneTime.toISO(),
     };
 
     const addedDoc = await addDoc(todosCollectionRef, flattenedTodo);

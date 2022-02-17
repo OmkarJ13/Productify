@@ -84,18 +84,18 @@ class TodoTrackWindow extends React.Component {
           <div className="flex items-center border-b border-gray-300">
             <button
               onClick={this.switchToAutomatic}
-              className={`flex items-center gap-2 border-r border-gray-300 px-4 py-2 ${
+              className={`flex items-center gap-2 border-r border-gray-300 p-2 ${
                 activeTab !== "automatic" ? "text-gray-400" : ""
-              } text-sm font-bold`}
+              } font-semibold`}
             >
               <Alarm /> Automatic
             </button>
 
             <button
               onClick={this.switchToManual}
-              className={`flex items-center gap-2 px-4 py-2 ${
+              className={`flex items-center gap-2 p-2 ${
                 activeTab !== "manual" ? "text-gray-400" : ""
-              } text-sm font-bold`}
+              } font-semibold`}
             >
               <ListAlt /> Manual
             </button>
@@ -117,6 +117,7 @@ class TodoTrackWindow extends React.Component {
                       return (
                         <TimePicker
                           value={startTime}
+                          ampmInClock
                           onChange={this.handleStartTimeChanged}
                           renderInput={({ inputRef, InputProps }) => {
                             return (
@@ -140,6 +141,7 @@ class TodoTrackWindow extends React.Component {
                       return (
                         <TimePicker
                           value={endTime}
+                          ampmInClock
                           onChange={this.handleEndTimeChanged}
                           renderInput={({ inputRef, InputProps }) => {
                             return (

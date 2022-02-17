@@ -23,11 +23,15 @@ class Stats extends React.Component {
     if (!todos.length) return 0;
     const earliestTodo = todos
       .slice()
-      .sort((a, b) => a.date.toMillis() - b.date.toMillis())[0];
+      .sort((a, b) => a.doneTime.toMillis() - b.doneTime.toMillis())[0];
 
     const dayDifference = Math.round(
-      DateTime.now().diff(earliestTodo.date).as("days")
+      DateTime.now().diff(earliestTodo.doneTime).as("days")
     );
+
+    if (dayDifference === 0) {
+      return totalTasksDone;
+    }
 
     const averageTasksDone = Math.round(totalTasksDone / dayDifference);
 
@@ -165,43 +169,43 @@ class Stats extends React.Component {
     return (
       <div className="flex w-full flex-col items-center gap-4 sm:grid sm:grid-cols-2 lg:flex lg:flex-row">
         <div className="flex w-full flex-col gap-1 rounded-md border border-gray-300 p-4 lg:w-1/4">
-          <h1 className="text-lg font-light">Current Streak</h1>
-          <span className="text-2xl font-black text-blue-500">
+          <h1 className="">Current Streak</h1>
+          <span className="text-xl font-black text-blue-500 sm:text-2xl">
             {currentStreak}
           </span>
-          <span>
-            Longest Streak - <span className="text-lg">{longestStreak}</span>
+          <span className="italic">
+            Longest Streak - <span className="">{longestStreak}</span>
           </span>
         </div>
         <div className="flex w-full flex-col gap-1 rounded-md border border-gray-300 p-4 lg:w-1/4">
-          <h1 className="text-lg font-light">Tracked Hours</h1>
-          <span className="text-2xl font-black text-blue-500">
+          <h1 className="">Tracked Hours</h1>
+          <span className="text-xl font-black text-blue-500 sm:text-2xl">
             {totalTrackedHours.toFormat("h'h' mm'm'")}
           </span>
-          <span>
+          <span className="italic">
             Daily Average -{" "}
-            <span className="text-lg">
+            <span className="">
               {averageTrackedHours.toFormat("h'h' mm'm'")}
             </span>
           </span>
         </div>
         <div className="flex w-full flex-col gap-1 rounded-md border border-gray-300 p-4 lg:w-1/4">
-          <h1 className="text-lg font-light">Tasks Done</h1>
-          <span className="text-2xl font-black text-blue-500">
+          <h1 className="">Tasks Done</h1>
+          <span className="text-xl font-black text-blue-500 sm:text-2xl">
             {totalTasksDone}
           </span>
-          <span>
-            Daily Average - <span className="text-lg">{averageTasksDone}</span>
+          <span className="italic">
+            Daily Average - <span className="">{averageTasksDone}</span>
           </span>
         </div>
         <div className="flex w-full flex-col gap-1 rounded-md border border-gray-300 p-4 lg:w-1/4">
-          <h1 className="text-lg font-light">Revenue Earned</h1>
-          <span className="text-2xl font-black text-blue-500">
+          <h1 className="">Revenue Earned</h1>
+          <span className="text-xl font-black text-blue-500 sm:text-2xl">
             {totalRevenueEarned.toFixed(1)}$
           </span>
-          <span>
+          <span className="italic">
             Daily Average -{" "}
-            <span className="text-lg">{averageRevenueEarned.toFixed(1)}$</span>
+            <span className="">{averageRevenueEarned.toFixed(1)}$</span>
           </span>
         </div>
       </div>

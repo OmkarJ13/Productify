@@ -33,7 +33,7 @@ class TodoCreator extends React.Component {
     const { task, tag, priority, isBillable, date } = this.props.todo;
 
     return (
-      <div className="flex w-full flex-wrap gap-2 border border-gray-200 p-2 shadow-md">
+      <div className="flex w-full flex-wrap justify-center gap-4 border border-gray-200 p-2 shadow-md xs:justify-between xs:gap-2">
         <input
           type="text"
           value={task}
@@ -42,7 +42,7 @@ class TodoCreator extends React.Component {
           onChange={this.props.onTaskChanged}
         />
 
-        <div className="flex flex-grow items-center justify-start gap-2">
+        <div className="flex items-center gap-2 sm:gap-4">
           <TagSelector
             className="max-w-[125px]"
             value={tag}
@@ -55,7 +55,7 @@ class TodoCreator extends React.Component {
           />
         </div>
 
-        <div className="flex flex-grow items-center justify-end gap-2">
+        <div className="flex w-full items-center justify-between gap-2 xs:w-fit xs:flex-grow xs:justify-end sm:gap-4">
           <button
             className="border-x border-gray-300 py-1 px-2 text-gray-500"
             onClick={this.props.onBillableChanged}
@@ -92,7 +92,7 @@ class TodoCreator extends React.Component {
           />
 
           <button
-            className="rounded-[50%] bg-blue-500 p-2 uppercase text-white"
+            className="flex h-[40px] w-[40px] items-center justify-center rounded-[50%] bg-blue-500 p-2 uppercase text-white"
             onClick={this.createTodo}
           >
             <AddTask />

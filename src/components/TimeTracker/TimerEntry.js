@@ -126,53 +126,57 @@ class TimerEntry extends React.Component {
         />
 
         <div
-          className="group flex w-full items-center border-x border-b border-gray-300 p-4 text-sm"
+          className="flex w-full flex-col items-center gap-4 border-x border-b border-gray-300 px-2 py-4 xs:gap-2 md:flex-row md:flex-wrap"
           onClick={isCombined ? this.toggleAllEntries : null}
         >
-          <div className="flex h-full flex-grow items-center">
-            <div className="flex flex-grow items-center gap-4">
-              {isCombined && (
-                <div className="flex h-[35px] w-[35px] items-center justify-center rounded-[50%] bg-blue-500 text-white">
-                  {this.props.allEntries.length}
-                </div>
-              )}
-              {isDuplicate && <div className="h-[35px] w-[35px]"></div>}
-              <input
-                type="text"
-                name="task"
-                value={task}
-                placeholder="Add Task Name"
-                readOnly={isCombined}
-                autoComplete="off"
-                onChange={this.props.onTaskChanged}
-                className="flex-grow text-ellipsis border border-transparent p-1 transition-colors focus:outline-none group-hover:border-gray-300"
-              />
-            </div>
+          <div className="flex w-full items-center gap-2">
+            {isCombined && (
+              <div className="flex h-[35px] w-[35px] items-center justify-center rounded-[50%] bg-blue-500 text-white">
+                {this.props.allEntries.length}
+              </div>
+            )}
+            {isDuplicate && <div className="h-[35px] w-[35px]"></div>}
+            <input
+              type="text"
+              name="task"
+              value={task}
+              placeholder="Add Task Name"
+              readOnly={isCombined}
+              autoComplete="off"
+              onChange={this.props.onTaskChanged}
+              className="flex-grow text-ellipsis border border-gray-300 p-1 focus:outline-none"
+            />
+          </div>
 
-            <div className="mx-4 flex w-[150px] items-center justify-center">
+          {(isDuplicate || isCombined) && (
+            <div className="h-[35px] w-[35px]"></div>
+          )}
+          <div className="flex flex-col items-center gap-2 xs:w-full xs:flex-row xs:justify-between md:w-fit md:flex-grow md:justify-between">
+            <div className="flex items-center gap-2 sm:gap-4">
               <TagSelector
-                className="flex h-full max-w-[125px] items-center justify-center opacity-0 transition-opacity focus:opacity-100 group-hover:opacity-100"
+                className="max-w-[125px]"
                 disabled={isCombined}
                 value={tag}
                 onChange={this.props.onTagSelected}
               />
+
+              <button
+                title="Is Billable?"
+                onClick={this.props.onBillableChanged}
+                className={`border-x border-gray-300 py-1 px-2 text-gray-500`}
+                disabled={isCombined}
+              >
+                {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
+              </button>
             </div>
 
-            <button
-              title="Is Billable?"
-              onClick={this.props.onBillableChanged}
-              className={`h-full border-x border-gray-300 px-2 text-gray-500 opacity-0 transition-opacity group-hover:opacity-100`}
-              disabled={isCombined}
-            >
-              {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
-            </button>
-
-            <div className="mx-4 flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <MUIPickerHandler
                 renderPicker={(otherProps) => {
                   return (
                     <TimePicker
                       {...otherProps}
+                      ampmInClock
                       value={startTime}
                       onChange={this.props.onStartTimeChanged}
                       renderInput={({ inputRef, InputProps }) => {
@@ -180,7 +184,7 @@ class TimerEntry extends React.Component {
                           <button
                             ref={inputRef}
                             onClick={InputProps.onClick}
-                            className="w-[80px] border border-transparent p-1 transition-colors group-hover:border-gray-300"
+                            className="w-[90px] border border-gray-300 p-2"
                             disabled={isCombined}
                           >
                             {startTime.toLocaleString(DateTime.TIME_SIMPLE)}
@@ -197,6 +201,7 @@ class TimerEntry extends React.Component {
                   return (
                     <TimePicker
                       {...otherProps}
+                      ampmInClock
                       value={endTime}
                       onChange={this.props.onEndTimeChanged}
                       renderInput={({ inputRef, InputProps }) => {
@@ -204,7 +209,7 @@ class TimerEntry extends React.Component {
                           <button
                             ref={inputRef}
                             onClick={InputProps.onClick}
-                            className="w-[80px] border border-transparent p-1 transition-colors group-hover:border-gray-300"
+                            className="w-[90px] border border-gray-300 p-2"
                             disabled={isCombined}
                           >
                             {endTime.toLocaleString(DateTime.TIME_SIMPLE)}
@@ -216,57 +221,64 @@ class TimerEntry extends React.Component {
                 }}
               />
             </div>
-
-            <MUIPickerHandler
-              renderPicker={(otherProps) => {
-                return (
-                  <DatePicker
-                    {...otherProps}
-                    value={date}
-                    disableFuture
-                    onChange={this.props.onDateChanged}
-                    renderInput={({ inputRef, InputProps }) => {
-                      return (
-                        <button
-                          ref={inputRef}
-                          onClick={InputProps.onClick}
-                          disabled={isCombined}
-                          className="mr-4 flex w-[125px] items-center gap-2 border border-gray-300 p-1 capitalize opacity-0 transition-opacity group-hover:opacity-100"
-                        >
-                          <span className="flex-grow text-center">
-                            {getRelativeDate(date, "day")}
-                          </span>
-                          <CalendarToday fontSize="small" />
-                        </button>
-                      );
-                    }}
-                  />
-                );
-              }}
-            />
           </div>
 
-          <div className="flex h-full w-[150px] items-center justify-center border-x border-gray-300 text-base">
-            <span>{duration.toFormat("hh:mm:ss")}</span>
-          </div>
+          <div className="flex w-full flex-col items-center gap-2 xs:w-full xs:flex-row xs:justify-between md:w-fit">
+            <div className="flex items-center">
+              <MUIPickerHandler
+                renderPicker={(otherProps) => {
+                  return (
+                    <DatePicker
+                      {...otherProps}
+                      value={date}
+                      disableFuture
+                      onChange={this.props.onDateChanged}
+                      renderInput={({ inputRef, InputProps }) => {
+                        return (
+                          <button
+                            ref={inputRef}
+                            onClick={InputProps.onClick}
+                            disabled={isCombined}
+                            className="flex w-[130px] items-center gap-2 border border-gray-300 p-2 "
+                          >
+                            <span className="flex-grow text-center capitalize">
+                              {getRelativeDate(date, "day")}
+                            </span>
+                            <CalendarToday fontSize="small" />
+                          </button>
+                        );
+                      }}
+                    />
+                  );
+                }}
+              />
+            </div>
 
-          <div className="ml-4 flex h-full items-center gap-1">
-            <button
-              title="Continue Timer Entry"
-              onClick={this.continueTimerEntry}
-              className="rounded-[50%] bg-blue-500 text-white disabled:bg-gray-600"
-              disabled={isCombined || this.props.timer !== null}
-            >
-              <PlayArrow fontSize="small" />
-            </button>
+            <div className="flex w-full items-center xs:w-fit">
+              <span className="mx-auto flex w-[135px] items-center justify-center">
+                {duration.toFormat("hh:mm:ss")}
+              </span>
 
-            <TimerEntryOptionsSelector
-              onDuplicate={this.duplicateEntry}
-              onDelete={this.deleteEntry}
-              disabled={isCombined}
-            />
+              <div className="flex items-center gap-2">
+                <button
+                  title="Continue Timer Entry"
+                  onClick={this.continueTimerEntry}
+                  className="flex h-[25px] w-[25px] items-center justify-center rounded-[50%] bg-blue-500 text-white disabled:bg-gray-600"
+                  disabled={isCombined || this.props.timer !== null}
+                >
+                  <PlayArrow fontSize="small" />
+                </button>
+
+                <TimerEntryOptionsSelector
+                  onDuplicate={this.duplicateEntry}
+                  onDelete={this.deleteEntry}
+                  disabled={isCombined}
+                />
+              </div>
+            </div>
           </div>
         </div>
+
         {showAllEntries && this.props.allEntries}
       </>
     );

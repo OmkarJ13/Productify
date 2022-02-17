@@ -40,7 +40,7 @@ class GroupByWindow extends React.Component {
               <li>
                 <button
                   data-option={group}
-                  className="flex w-[250px] items-center justify-between gap-4 bg-white px-6 py-2 text-left text-gray-600 hover:bg-gray-200"
+                  className="flex w-[200px] items-center justify-between gap-4 bg-white px-6 py-2 text-left text-gray-600 hover:bg-gray-200"
                 >
                   <div className="flex items-center gap-4">
                     {group === "task" && (

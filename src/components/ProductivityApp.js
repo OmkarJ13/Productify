@@ -12,20 +12,21 @@ import Welcome from "./Welcome/Welcome";
 
 class ProductivityApp extends React.Component {
   componentDidUpdate(prevProps) {
-    if (prevProps.user || this.props.user) {
-      // if currently someone is logged in and this user is different than the one logged in before, redirect to to main content
-      if (
-        this.props.user !== null &&
-        prevProps.user?.uid !== this.props.user?.uid
-      )
-        // redirect to productify
-        this.props.history.push("/track");
+    if (
+      (this.props.user === null) &
+      (this.props.location.pathname !== "/welcome")
+    ) {
+      this.props.history.replace("/welcome");
+    }
+
+    if (prevProps.user?.uid !== this.props.user?.uid && this.props.user) {
+      this.props.history.replace("/track");
     }
   }
 
   render() {
     return (
-      <div className="flex h-[100vh] text-sm sm:text-base">
+      <div className="flex h-[100vh]">
         {this.props.location.pathname !== "/welcome" && <SideBar />}
 
         <Switch>

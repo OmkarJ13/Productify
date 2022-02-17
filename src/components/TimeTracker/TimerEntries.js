@@ -189,31 +189,34 @@ class TimerEntries extends React.Component {
 
     return (
       <div className="flex w-full flex-grow flex-col gap-8">
-        <div className="flex w-full items-center justify-between">
-          <span className="flex items-baseline gap-2 text-base">
+        <div className="flex flex-col gap-4 lg:flex-row">
+          <span className="flex items-baseline gap-2">
             Time Tracked
             <span className="text-lg">
               {filteredTotal.toFormat("h'h' m'm'")}
             </span>
           </span>
 
-          <div className="flex items-center gap-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap lg:ml-auto lg:gap-6">
             <PeriodChanger
               unit={this.state.view}
               value={this.state.period}
               onChange={this.handlePeriodChanged}
+              className="w-full sm:w-fit"
             />
 
-            <GroupBySelector
-              Window={GroupByWindow}
-              value={this.state.group}
-              onChange={this.handleGroupChanged}
-            />
+            <div className="flex items-center justify-between gap-2 sm:ml-auto sm:gap-4 lg:gap-6">
+              <GroupBySelector
+                Window={GroupByWindow}
+                value={this.state.group}
+                onChange={this.handleGroupChanged}
+              />
 
-            <ViewBySelector
-              value={this.state.view}
-              onChange={this.handleViewChanged}
-            />
+              <ViewBySelector
+                value={this.state.view}
+                onChange={this.handleViewChanged}
+              />
+            </div>
           </div>
         </div>
         <div className="flex h-full w-full flex-col gap-8">

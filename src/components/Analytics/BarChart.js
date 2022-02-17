@@ -32,10 +32,6 @@ class BarChart extends React.Component {
     });
   }
 
-  filterData(data, period) {
-    return data.filter((ele) => period.contains(ele.date));
-  }
-
   getWeeklyTrackedHours(timerEntries) {
     const weekdays = Info.weekdays();
     const weeklyTrackedHours = weekdays.map((weekday, i) => {
@@ -54,7 +50,7 @@ class BarChart extends React.Component {
   getWeeklyTasksDone(todos) {
     const weekdays = Info.weekdays();
     const weeklyTasksDone = weekdays.map((_, i) => {
-      const todosForDay = todos.filter((todo) => todo.date.weekday === i);
+      const todosForDay = todos.filter((todo) => todo.doneTime.weekday === i);
 
       return todosForDay.filter((todo) => todo.isDone).length;
     });
@@ -89,8 +85,12 @@ class BarChart extends React.Component {
     const { view, period } = this.state;
     const { timerEntries, todos, tags } = this.props;
 
-    const filteredTimerEntries = this.filterData(timerEntries, period);
-    const filteredTodos = this.filterData(todos, period);
+    const filteredTimerEntries = timerEntries.filter((timerEntry) =>
+      period.contains(timerEntry.date)
+    );
+    const filteredTodos = todos.filter((todo) =>
+      period.contains(todo.doneTime)
+    );
 
     const trackedHours = this.getWeeklyTrackedHours(filteredTimerEntries);
     const tasksDone = this.getWeeklyTasksDone(filteredTodos);
@@ -125,9 +125,17 @@ class BarChart extends React.Component {
                       : view === "revenueEarned"
                       ? revenueEarned
                       : [],
-                  backgroundColor: "skyblue",
+                  backgroundColor: "#3b82f6",
                 },
               ],
+            }}
+            options={{
+              scales: {
+                y: {
+                  suggestedMin: 0,
+                  suggestedMax: 8,
+                },
+              },
             }}
           />
         </div>

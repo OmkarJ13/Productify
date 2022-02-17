@@ -41,7 +41,7 @@ class SignUp extends React.Component {
   render() {
     const { email, password, errorMessage } = this.state;
     return (
-      <div className="flex h-full w-full flex-col items-center justify-center">
+      <div className="flex flex-col items-center">
         <h1 className="mb-4 text-2xl font-bold uppercase">
           Sign Up on Productify
         </h1>

@@ -79,10 +79,10 @@ class CalendarChart extends React.Component {
       <div className="flex w-full flex-col gap-6">
         <div className="flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-between">
           <div className="flex flex-col items-center sm:items-start">
-            <h1 className="text-xl font-bold">Productivity</h1>
+            <h1 className="text-lg font-semibold">Productivity</h1>
             <h2 className="text-sm">
               Your productivity depends upon the tasks you complete each day and
-              the amount of hours you track.
+              the amount of hours you track every day.
             </h2>
           </div>
 

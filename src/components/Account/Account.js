@@ -64,7 +64,7 @@ class Account extends React.Component {
 
   async handleSignOut() {
     await signOut(auth);
-    this.props.history.push("/welcome");
+    this.props.history.replace("/welcome");
   }
 
   render() {
@@ -120,7 +120,7 @@ class Account extends React.Component {
           <div className="flex w-full flex-col gap-4 sm:w-fit">
             <div className="flex w-full flex-col gap-2 sm:w-fit">
               <label>Username</label>
-              <div className="flex items-center justify-between">
+              <div className="flex">
                 <span className="w-full overflow-x-hidden text-ellipsis rounded-l-md border-y border-l border-gray-300 px-4 py-2 sm:w-[250px]">
                   {username}
                 </span>
@@ -142,7 +142,7 @@ class Account extends React.Component {
 
             <div className="flex w-full flex-col gap-2 sm:w-fit">
               <label>Your Email</label>
-              <div className="flex items-center justify-between">
+              <div className="flex">
                 <span className="w-full overflow-x-hidden text-ellipsis rounded-l-md border-y border-l border-gray-300 px-4 py-2 sm:w-[250px]">
                   {email}
                 </span>
@@ -167,7 +167,7 @@ class Account extends React.Component {
         <div className="flex w-full flex-col border-y border-gray-300">
           <div className="flex flex-col gap-4 border-b border-gray-300 py-2 last-of-type:border-none sm:flex-row sm:justify-between">
             <div className="flex flex-col sm:w-4/5">
-              <h1 className="text-lg font-bold">Change Password</h1>
+              <h1 className="font-semibold">Change Password</h1>
               <h2>Update your old password</h2>
             </div>
             <WindowHandler
@@ -181,7 +181,7 @@ class Account extends React.Component {
           </div>
           <div className="flex flex-col gap-4 py-2 last-of-type:border-none sm:flex-row sm:justify-between">
             <div className="flex flex-col sm:w-4/5">
-              <h1 className="text-lg font-bold">Delete Account</h1>
+              <h1 className="font-bold">Delete Account</h1>
               <h2>
                 Deleting your account will permanently delete all of your data
               </h2>
@@ -189,12 +189,7 @@ class Account extends React.Component {
             <WindowHandler
               className="w-full rounded-md bg-blue-500 px-4 py-2 text-white sm:w-1/5"
               renderWindow={(otherProps) => {
-                return (
-                  <DeleteAccountWindow
-                    onUserDeleted={() => this.props.history.push("/welcome")}
-                    {...otherProps}
-                  />
-                );
+                return <DeleteAccountWindow {...otherProps} />;
               }}
             >
               Delete Account

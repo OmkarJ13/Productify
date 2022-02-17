@@ -135,9 +135,9 @@ class PeriodChanger extends React.Component {
                       <button
                         ref={inputRef}
                         onClick={InputProps.onClick}
-                        className="flex items-center capitalize sm:gap-2"
+                        className="flex items-center gap-2 capitalize"
                       >
-                        <span className="hidden sm:inline">
+                        <span>
                           <Today />
                         </span>
                         {getRelativeDate(

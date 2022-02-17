@@ -68,19 +68,23 @@ class TagSelectorWindow extends React.Component {
         onClose={this.props.onClose}
         buttonRef={this.props.buttonRef}
       >
-        <div className="flex flex-col gap-4 p-4 text-sm">
+        <div className="flex h-[270px] w-[240px] flex-col gap-4 p-4 xs:w-[270px]">
           <div className="flex items-center gap-1 border border-gray-300 px-1 py-2">
             <Search />
             <input
               type="text"
               placeholder="Search"
-              className="flex-grow focus:outline-none"
+              className="w-full focus:outline-none"
               onChange={this.handleSearchQuery}
             ></input>
           </div>
 
-          <div className="flex max-h-[25vh] w-[20vw] flex-col overflow-y-auto py-2">
-            {results.length === 0 && "No Tags Found"}
+          <div className="flex h-full flex-col overflow-y-auto py-2">
+            {results.length === 0 && (
+              <span className="m-auto flex h-full items-center justify-center">
+                No Tags Found
+              </span>
+            )}
             {results.length > 0 &&
               results.map((tag) => {
                 return (
@@ -91,7 +95,7 @@ class TagSelectorWindow extends React.Component {
                     data-id={tag.id}
                   >
                     <LocalOffer htmlColor={tag.color} />
-                    <span className="text-md w-full overflow-hidden overflow-ellipsis text-left">
+                    <span className="w-full overflow-hidden overflow-ellipsis text-left">
                       {tag.name}
                     </span>
                   </button>
