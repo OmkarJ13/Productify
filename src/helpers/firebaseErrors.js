@@ -1,3 +1,4 @@
+// User friendly error messages for firebase
 export const firebaseErrors = {
   "auth/wrong-password":
     "The password is invalid or the user does not have a password.",

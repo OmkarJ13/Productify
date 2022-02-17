@@ -48,16 +48,6 @@ class TagSelectorWindow extends React.Component {
     }
   }
 
-  hasMadeChanges(prevProps) {
-    return JSON.stringify(prevProps.tags) !== JSON.stringify(this.props.tags);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.hasMadeChanges(prevProps)) {
-      localStorage.setItem("tags", JSON.stringify(this.props.tags));
-    }
-  }
-
   render() {
     const { tags } = this.props;
     const results = this.filterTags(tags);

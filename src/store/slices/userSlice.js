@@ -11,6 +11,7 @@ const initialState = {
   user: null,
 };
 
+// Sets state when auth is changed
 const handleAuthChanged = (user) => {
   store.dispatch(setUserAsync(user));
 };

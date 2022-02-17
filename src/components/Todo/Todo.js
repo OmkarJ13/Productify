@@ -42,6 +42,7 @@ class Todo extends React.Component {
     this.handleIsDone = this.handleIsDone.bind(this);
   }
 
+  // Starts a new timer with the data from this todo
   startTrackingTodo() {
     const { id, task, tag, isBillable, date, ...otherData } = this.props.todo;
 
@@ -60,6 +61,7 @@ class Todo extends React.Component {
     this.props.history.push("/track");
   }
 
+  // Stops currently tracking todo
   stopTrackingTodo() {
     if (!this.props.timer?.timerRef === this.props.todo.id) return;
 
@@ -75,6 +77,7 @@ class Todo extends React.Component {
     this.props.createTimerEntry(timerEntry);
   }
 
+  // Manually adds timer entry from the data given by the user
   manualTrackTodo(data) {
     const { task, tag, isBillable, date, ...otherData } = this.props.todo;
     const { startTime, endTime } = data;
@@ -111,8 +114,6 @@ class Todo extends React.Component {
     const duplicatedTodo = {
       ...todoData,
     };
-
-    console.log(duplicatedTodo);
 
     this.props.duplicateTodo(duplicatedTodo);
   }
@@ -154,6 +155,7 @@ class Todo extends React.Component {
     }
   }
 
+  // When the user clicks on done, closes currently tracking todo if any.
   handleIsDone() {
     if (this.props.timer?.timerRef === this.props.todo.id) {
       this.stopTrackingTodo(this.props.timer);

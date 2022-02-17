@@ -30,6 +30,7 @@ class PeriodChanger extends React.Component {
     return Interval.fromDateTimes(date.startOf(unit), date.endOf(unit));
   }
 
+  // Decreases or increases the period depending upon the button click
   handlePeriodChanged(e) {
     const clicked = e.target.closest("button");
     if (clicked) {
@@ -76,6 +77,7 @@ class PeriodChanger extends React.Component {
     });
   }
 
+  // Assigns 'selected' classes to every day in the week to generate week picker
   pickersDayWeek(date, selectedDates, pickersDayProps) {
     if (this.props.unit !== "week") return <PickersDay {...pickersDayProps} />;
     const dayInWeek = this.state.period.contains(date);

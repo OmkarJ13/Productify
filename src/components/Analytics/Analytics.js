@@ -17,6 +17,7 @@ class Analytics extends React.Component {
     document.title = "Analytics | Productify";
   }
 
+  // Gets durations to show for tags
   getDurationsForTags(tags) {
     let { timerEntries } = this.props;
 
@@ -43,6 +44,7 @@ class Analytics extends React.Component {
     return durations;
   }
 
+  // Gets revenue to show for tag
   getRevenueForTags(tags) {
     let { timerEntries } = this.props;
 
@@ -75,6 +77,7 @@ class Analytics extends React.Component {
     return revenue;
   }
 
+  // Gets todos done for tags
   getTasksDoneForTags(tags) {
     let { todos } = this.props;
 

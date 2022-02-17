@@ -49,8 +49,6 @@ export const startTimerAsync = createAsyncThunk(
       duration: timer.duration.toISO(),
     };
 
-    console.log(flattenedTimer);
-
     const addedDoc = await addDoc(timerCollectionRef, flattenedTimer);
 
     return { id: addedDoc.id, ...timer };
@@ -61,8 +59,6 @@ export const stopTimerAsync = createAsyncThunk(
   "timer/stopTimerAsync",
   async (timer, thunkAPI) => {
     thunkAPI.dispatch(timerSlice.actions.stopTimer());
-
-    console.log(timer);
 
     const { userReducer } = thunkAPI.getState();
     const userID = userReducer.user.uid;

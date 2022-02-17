@@ -2,6 +2,7 @@ import { Interval } from "luxon";
 import { DateTime } from "luxon";
 import { Info } from "luxon";
 
+// Returns relative date based on the provided unit, e.g. if provided date in last week and unit is 'week', returns 'last week',
 export const getRelativeDate = (date, unit) => {
   const recentPeriod = Interval.fromDateTimes(
     DateTime.now()

@@ -1,5 +1,6 @@
 import React from "react";
 
+// Handles open-close state for MUI Pickers
 class MUIPickerHandler extends React.Component {
   constructor(props) {
     super(props);

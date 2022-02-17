@@ -28,7 +28,6 @@ class Tag extends React.Component {
   }
 
   handleEdit(tag) {
-    console.log(tag);
     this.props.updateTag(tag);
   }
 

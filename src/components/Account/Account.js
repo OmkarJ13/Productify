@@ -47,6 +47,7 @@ class Account extends React.Component {
     });
   }
 
+  // Gets base64 string from selected image, uplaods it to Firebase storage and gets the download URL to update profile
   async handlePhotoURLChanged(base64) {
     const { user } = this.props;
 

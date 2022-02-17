@@ -1,5 +1,6 @@
 import { DateTime, Duration } from "luxon";
 
+// Restores Luxon Objects after retrieved from db
 export const restoreTimerEntry = (timerEntry) => {
   const restoredTimerEntry = {
     ...timerEntry,

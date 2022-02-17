@@ -59,6 +59,7 @@ class TimerEntries extends React.Component {
     }, Duration.fromMillis(0));
   }
 
+  // Returns combined timer entry for each duplicate timer entry
   getCombinedTimerEntry(timerEntries) {
     const allStartTimes = timerEntries.map((cur) => cur.startTime);
     const minStartTime = DateTime.min(...allStartTimes);
@@ -91,6 +92,7 @@ class TimerEntries extends React.Component {
     return tags.find((x) => x.id === id);
   }
 
+  // Gets timer entry object array and returns processed JSX to display on the DOM
   getTimerEntries(timerEntries) {
     const groupedByGroup = groupObjectArrayBy(timerEntries, [this.state.group]);
 
@@ -146,6 +148,7 @@ class TimerEntries extends React.Component {
     return JSX;
   }
 
+  // Generates JSX from object array
   generateTimerEntries(timerEntries, isDuplicates = false) {
     return timerEntries.map((timerEntry) => {
       return (
@@ -175,6 +178,7 @@ class TimerEntries extends React.Component {
     });
   }
 
+  // Filters data for the current period
   filterEntries(timerEntries) {
     return timerEntries.filter((timerEntry) =>
       this.state.period.contains(timerEntry.date)

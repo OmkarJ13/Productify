@@ -1,5 +1,6 @@
 import React from "react";
 
+// Handles open-close state for Floating and Modal Windows
 class WindowHandler extends React.Component {
   constructor(props) {
     super(props);

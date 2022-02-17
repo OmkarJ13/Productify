@@ -11,6 +11,7 @@ import TaskTracker from "./Todo/TaskTracker";
 import Welcome from "./Welcome/Welcome";
 import { toast } from "react-toastify";
 
+// Configure toast to mount without specifying ToastContains each time
 toast.configure({
   position: "bottom-right",
   autoClose: 3000,
@@ -24,11 +25,13 @@ class ProductivityApp extends React.Component {
   componentDidUpdate(prevProps) {
     this.verifyUser();
 
+    // If the currently logged in user is different from last time, redirect to main content
     if (prevProps.user?.uid !== this.props.user?.uid && this.props.user) {
       this.props.history.replace("/track");
     }
   }
 
+  // Prevents the user from manully entering routes while logged out
   verifyUser() {
     if (
       (this.props.user === null) &

@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 
+// Restores Luxon dates after retrieved from db
 export const restoreTodo = (todo) => {
   const restoredTodo = {
     ...todo,

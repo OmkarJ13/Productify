@@ -1,3 +1,4 @@
+// Returns object array grouped by keys provided
 export const groupObjectArrayBy = (array, keys) => {
   const groupedArray = [];
 

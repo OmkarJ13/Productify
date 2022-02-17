@@ -57,6 +57,7 @@ class TimerMode extends React.Component {
     this.timerID = setInterval(this.updateTimer, 1000);
   }
 
+  // Ticks the timer every second
   updateTimer() {
     const { timerEntry } = this.props;
 
@@ -68,8 +69,6 @@ class TimerMode extends React.Component {
 
   stopTracking(e) {
     this.resetTimer();
-
-    console.log(this.props.timerEntry);
 
     const timerEntry = {
       ...this.props.timerEntry,
@@ -93,6 +92,7 @@ class TimerMode extends React.Component {
     return this.props.timer !== null && !this.timerExists();
   }
 
+  // Restores previously running timer stored in db
   restoreTimer() {
     const { timer } = this.props;
 

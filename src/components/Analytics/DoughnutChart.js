@@ -101,6 +101,7 @@ class DoughnutChart extends React.Component {
     return filteredRevenueEarnedPerTag;
   }
 
+  // Returns data to show for doughnutchart based on current view
   getData(view, timerEntries, todos, tags) {
     switch (view) {
       case "trackedHours":

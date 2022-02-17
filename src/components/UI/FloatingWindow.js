@@ -31,6 +31,7 @@ class FloatingWindow extends React.Component {
     this.updatePosition();
   }
 
+  // Automatically updates the position of the window to fit inside the screen
   updatePosition() {
     const { buttonRef } = this.props;
     const windowRef = this.floatingWindow.current;

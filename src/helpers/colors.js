@@ -1,3 +1,4 @@
+// Colors for tag creation
 export const colors = [
   "#da4466",
   "#d9858c",

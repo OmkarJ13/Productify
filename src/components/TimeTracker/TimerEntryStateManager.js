@@ -106,6 +106,7 @@ class TimerEntryStateManager extends React.Component {
     );
   }
 
+  // Calculates duration, if start time is greater than end time, cycles back from 24 hours
   calculateDuration() {
     const { startTime, endTime } = this.state.timerEntry;
     const difference = endTime.diff(startTime);

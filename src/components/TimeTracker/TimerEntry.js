@@ -38,6 +38,7 @@ class TimerEntry extends React.Component {
     this.continueTimerEntry = this.continueTimerEntry.bind(this);
   }
 
+  // Sets timer to save the edited content, if user edits content before this timer ends, resets the previous one and starts a new one
   setSaveTimer() {
     if (this.saveTimerID !== undefined) {
       clearTimeout(this.saveTimerID);
@@ -80,6 +81,7 @@ class TimerEntry extends React.Component {
     });
   }
 
+  // Starts timer with data from this timer entry
   continueTimerEntry(e) {
     const { id, ...timerEntryData } = this.props.timerEntry;
 
