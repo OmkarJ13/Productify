@@ -126,7 +126,7 @@ class TimerEntry extends React.Component {
         />
 
         <div
-          className="flex w-full flex-col items-center gap-4 border-x border-b border-gray-300 px-2 py-4 xs:gap-2 md:flex-row md:flex-wrap"
+          className={`flex w-full flex-col items-center gap-4 border-x border-b border-gray-300 px-2 py-4 xs:gap-2 md:flex-row md:flex-wrap`}
           onClick={isCombined ? this.toggleAllEntries : null}
         >
           <div className="flex w-full items-center gap-2">
@@ -135,7 +135,9 @@ class TimerEntry extends React.Component {
                 {this.props.allEntries.length}
               </div>
             )}
-            {isDuplicate && <div className="h-[35px] w-[35px]"></div>}
+            {isDuplicate && (
+              <div className="hidden h-[35px] w-[35px] lg:inline"></div>
+            )}
             <input
               type="text"
               name="task"
@@ -149,7 +151,7 @@ class TimerEntry extends React.Component {
           </div>
 
           {(isDuplicate || isCombined) && (
-            <div className="h-[35px] w-[35px]"></div>
+            <div className="hidden h-[35px] w-[35px] lg:inline"></div>
           )}
           <div className="flex flex-col items-center gap-2 xs:w-full xs:flex-row xs:justify-between md:w-fit md:flex-grow md:justify-between">
             <div className="flex items-center gap-2 sm:gap-4">

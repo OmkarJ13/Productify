@@ -1,3 +1,8 @@
+ - The web app uses React for the frontend with Redux for global state management
+ - Implemented user authentication and database to store user generated data using Firebase
+ - Used Redux-Thunk for managing asynchronous interactions between Redux state and Firebase Firestore
+ - Built responsive designs with TailwindCSS
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
