@@ -7,7 +7,7 @@ import {
   MoneyOffCsred,
   Save,
 } from "@mui/icons-material";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { DatePicker } from "@mui/lab";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
@@ -167,114 +167,103 @@ class Todo extends React.Component {
       this.props.todo;
 
     return (
-      <>
-        <ToastContainer
-          position="bottom-right"
-          autoClose={3000}
-          toastClassName={
-            "bg-white text-gray-600 font-inter rounded-none border shadow-md border-gray-200"
-          }
-          hideProgressBar={true}
-        />
+      <div className="group flex w-full flex-wrap justify-center gap-4 border-x border-b border-gray-300 py-4 px-2 xs:justify-between xs:gap-2">
+        <div className="flex w-full items-center gap-2">
+          <button
+            onClick={this.handleIsDone}
+            className={`h-[30px] w-[30px] border border-gray-300 text-white transition-colors ${
+              isDone && "border-blue-500 bg-blue-500"
+            }`}
+          >
+            {isDone ? <Check /> : null}
+          </button>
 
-        <div className="group flex w-full flex-wrap justify-center gap-4 border-x border-b border-gray-300 py-4 px-2 xs:justify-between xs:gap-2">
-          <div className="flex w-full items-center gap-2">
-            <button
-              onClick={this.handleIsDone}
-              className={`h-[30px] w-[30px] border border-gray-300 text-white transition-colors ${
-                isDone && "border-blue-500 bg-blue-500"
-              }`}
-            >
-              {isDone ? <Check /> : null}
-            </button>
+          <input
+            type="text"
+            name="task"
+            value={task}
+            placeholder="Add Task Name"
+            autoComplete="off"
+            onChange={this.props.onTaskChanged}
+            className="flex-grow text-ellipsis border border-gray-300 p-1 focus:outline-none"
+          />
+        </div>
 
-            <input
-              type="text"
-              name="task"
-              value={task}
-              placeholder="Add Task Name"
-              autoComplete="off"
-              onChange={this.props.onTaskChanged}
-              className="flex-grow text-ellipsis border border-gray-300 p-1 focus:outline-none"
-            />
-          </div>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <TagSelector
+            className="max-w-[125px]"
+            value={tag}
+            onChange={this.props.onTagSelected}
+          />
+
+          <PrioritySelector
+            value={priority}
+            onChange={this.props.onPrioritySelected}
+          />
+        </div>
+
+        <div className="flex w-full items-center justify-between gap-2 xs:w-fit xs:flex-grow xs:justify-end sm:gap-4">
+          <button
+            className="border-x border-gray-300 py-1 px-2 text-gray-500"
+            onClick={this.props.onBillableChanged}
+          >
+            {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
+          </button>
+
+          <MUIPickerHandler
+            renderPicker={(otherProps) => {
+              return (
+                <DatePicker
+                  {...otherProps}
+                  value={date.toJSDate()}
+                  onChange={this.props.onDateChanged}
+                  disablePast
+                  showToolbar={false}
+                  renderInput={({ inputRef, InputProps }) => {
+                    return (
+                      <button
+                        ref={inputRef}
+                        onClick={InputProps.onClick}
+                        className="flex w-[130px] items-center justify-between gap-2 border border-gray-300 p-2"
+                      >
+                        <span className="flex flex-grow justify-center capitalize">
+                          {getRelativeDate(date, "day")}
+                        </span>
+                        <CalendarToday fontSize="small" />
+                      </button>
+                    );
+                  }}
+                />
+              );
+            }}
+          />
 
           <div className="flex items-center gap-2 sm:gap-4">
-            <TagSelector
-              className="max-w-[125px]"
-              value={tag}
-              onChange={this.props.onTagSelected}
+            {this.props.timer?.timerRef === id ? (
+              <button
+                className="flex h-[25px] w-[25px] animate-pulse items-center justify-center rounded-[50%] bg-red-500 text-white"
+                onClick={this.stopTrackingTodo}
+              >
+                <Stop fontSize="small" />
+              </button>
+            ) : (
+              <TodoTracker
+                className="flex h-[25px] w-[25px] items-center justify-center rounded-[50%] bg-blue-500 text-white disabled:bg-gray-600"
+                disabled={isDone}
+                onStartTracking={this.startTrackingTodo}
+                onManualTimeEntered={this.manualTrackTodo}
+              >
+                <PlayArrow fontSize="small" />
+              </TodoTracker>
+            )}
+
+            <TimerEntryOptionsSelector
+              onDuplicate={this.duplicateTodo}
+              onDelete={this.deleteTodo}
             />
-
-            <PrioritySelector
-              value={priority}
-              onChange={this.props.onPrioritySelected}
-            />
-          </div>
-
-          <div className="flex w-full items-center justify-between gap-2 xs:w-fit xs:flex-grow xs:justify-end sm:gap-4">
-            <button
-              className="border-x border-gray-300 py-1 px-2 text-gray-500"
-              onClick={this.props.onBillableChanged}
-            >
-              {isBillable ? <AttachMoney /> : <MoneyOffCsred />}
-            </button>
-
-            <MUIPickerHandler
-              renderPicker={(otherProps) => {
-                return (
-                  <DatePicker
-                    {...otherProps}
-                    value={date.toJSDate()}
-                    onChange={this.props.onDateChanged}
-                    disablePast
-                    showToolbar={false}
-                    renderInput={({ inputRef, InputProps }) => {
-                      return (
-                        <button
-                          ref={inputRef}
-                          onClick={InputProps.onClick}
-                          className="flex w-[130px] items-center justify-between gap-2 border border-gray-300 p-2"
-                        >
-                          <span className="flex flex-grow justify-center capitalize">
-                            {getRelativeDate(date, "day")}
-                          </span>
-                          <CalendarToday fontSize="small" />
-                        </button>
-                      );
-                    }}
-                  />
-                );
-              }}
-            />
-
-            <div className="flex items-center gap-2 sm:gap-4">
-              {this.props.timer?.timerRef === id ? (
-                <button
-                  className="flex h-[25px] w-[25px] animate-pulse items-center justify-center rounded-[50%] bg-red-500 text-white"
-                  onClick={this.stopTrackingTodo}
-                >
-                  <Stop fontSize="small" />
-                </button>
-              ) : (
-                <TodoTracker
-                  className="flex h-[25px] w-[25px] items-center justify-center rounded-[50%] bg-blue-500 text-white disabled:bg-gray-600"
-                  disabled={isDone}
-                  onStartTracking={this.startTrackingTodo}
-                  onManualTimeEntered={this.manualTrackTodo}
-                >
-                  <PlayArrow fontSize="small" />
-                </TodoTracker>
-              )}
-
-              <TimerEntryOptionsSelector
-                onDuplicate={this.duplicateTodo}
-                onDelete={this.deleteTodo}
-              />
-            </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }

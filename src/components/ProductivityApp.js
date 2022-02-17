@@ -9,6 +9,16 @@ import Tags from "./Tags/Tags";
 import Account from "./Account/Account";
 import TaskTracker from "./Todo/TaskTracker";
 import Welcome from "./Welcome/Welcome";
+import { toast } from "react-toastify";
+
+toast.configure({
+  position: "bottom-right",
+  autoClose: 3000,
+  toastClassName:
+    "bg-white text-gray-600 font-inter rounded-none border shadow-md border-gray-200",
+  hideProgressBar: true,
+  draggablePercent: 60,
+});
 
 class ProductivityApp extends React.Component {
   componentDidUpdate(prevProps) {

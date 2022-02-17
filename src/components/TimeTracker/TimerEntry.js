@@ -7,7 +7,7 @@ import {
   PlayArrow,
   Save,
 } from "@mui/icons-material";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { DateTime } from "luxon";
 import { TimePicker, DatePicker } from "@mui/lab";
 
@@ -116,15 +116,6 @@ class TimerEntry extends React.Component {
 
     return (
       <>
-        <ToastContainer
-          position="bottom-right"
-          autoClose={3000}
-          toastClassName={
-            "bg-white text-gray-600 font-inter rounded-none border shadow-md border-gray-200"
-          }
-          hideProgressBar={true}
-        />
-
         <div
           className={`flex w-full flex-col items-center gap-4 border-x border-b border-gray-300 px-2 py-4 xs:gap-2 md:flex-row md:flex-wrap`}
           onClick={isCombined ? this.toggleAllEntries : null}
