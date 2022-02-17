@@ -81,7 +81,7 @@ class Todo extends React.Component {
 
     let difference = endTime.diff(startTime);
     if (difference.toMillis() < 0) {
-      difference = difference.plus({ day: 1 });
+      difference = difference.plus({ day: 1 }).normalize();
     }
 
     const timerEntry = {
@@ -95,6 +95,14 @@ class Todo extends React.Component {
     };
 
     this.props.createTimerEntry(timerEntry);
+
+    toast(() => {
+      return (
+        <div className="flex items-center gap-4">
+          <Save /> Successfully Saved Timer Entry!
+        </div>
+      );
+    });
   }
 
   duplicateTodo() {

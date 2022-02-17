@@ -152,11 +152,13 @@ class TagCreatorWindow extends React.Component {
                     key={color}
                     onClick={this.colorChangeHandler}
                     data-color={color}
-                    className={"relative h-[35px] w-[35px]"}
+                    className={
+                      "relative flex h-[35px] w-[35px] items-center justify-center"
+                    }
                     style={{ backgroundColor: `${color}` }}
                   >
                     <Done
-                      className={`absolute top-0 left-0 z-10 border-2 border-white opacity-0 ${
+                      className={`z-10 opacity-0 sm:border-2 sm:border-white ${
                         this.state.tag.color === color && "opacity-100"
                       } text-white`}
                       fontSize="large"

@@ -111,7 +111,7 @@ class TimerEntryStateManager extends React.Component {
     const difference = endTime.diff(startTime);
 
     if (difference.toMillis() < 0) {
-      return difference.plus({ day: 1 });
+      return difference.plus({ day: 1 }).normalize();
     }
 
     return difference;

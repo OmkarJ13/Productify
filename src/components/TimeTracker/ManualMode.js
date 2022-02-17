@@ -158,14 +158,20 @@ class ManualMode extends React.Component {
               <div className="flex flex-col">
                 <button
                   title="Timer Mode"
-                  onClick={this.props.onSwitchTimerMode}
+                  onClick={() => {
+                    this.props.resetState();
+                    this.props.onSwitchTimerMode();
+                  }}
                   className="text-gray-400"
                 >
                   <Schedule fontSize="small" />
                 </button>
                 <button
                   title="Manual Mode"
-                  onClick={this.props.onSwitchManualMode}
+                  onClick={() => {
+                    this.props.resetState();
+                    this.props.onSwitchManualMode();
+                  }}
                   className={`${
                     this.props.trackingMode === "manual"
                       ? "text-gray-600"

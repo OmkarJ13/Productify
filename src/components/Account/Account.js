@@ -20,7 +20,6 @@ class Account extends React.Component {
     super(props);
     this.state = {
       username: this.props.user?.displayName ?? "",
-      photoURL: this.props.user?.photoURL ?? "",
       email: this.props.user?.email ?? "",
 
       errorMessage: "",
@@ -58,7 +57,7 @@ class Account extends React.Component {
     await updateProfile(user, { photoURL });
 
     this.setState({
-      photoURL,
+      errorMessage: "",
     });
   }
 
@@ -68,7 +67,7 @@ class Account extends React.Component {
   }
 
   render() {
-    const { username, email, photoURL } = this.state;
+    const { username, email } = this.state;
 
     return (
       <div className="mb-auto flex h-[90%] w-full flex-col gap-4 overflow-y-auto p-6 text-gray-600 xl:mb-0 xl:ml-auto xl:min-h-screen xl:w-[85%] xl:gap-6">
