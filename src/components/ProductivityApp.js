@@ -12,16 +12,24 @@ import Welcome from "./Welcome/Welcome";
 
 class ProductivityApp extends React.Component {
   componentDidUpdate(prevProps) {
+    this.verifyUser();
+
+    if (prevProps.user?.uid !== this.props.user?.uid && this.props.user) {
+      this.props.history.replace("/track");
+    }
+  }
+
+  verifyUser() {
     if (
       (this.props.user === null) &
       (this.props.location.pathname !== "/welcome")
     ) {
       this.props.history.replace("/welcome");
     }
+  }
 
-    if (prevProps.user?.uid !== this.props.user?.uid && this.props.user) {
-      this.props.history.replace("/track");
-    }
+  componentDidMount() {
+    this.verifyUser();
   }
 
   render() {
