@@ -1,75 +1,23 @@
- - The web app uses React for the frontend with Redux for global state management
- - Implemented user authentication and database to store user generated data using Firebase
- - Used Redux-Thunk for managing asynchronous interactions between Redux state and Firebase Firestore
- - Built responsive designs with TailwindCSS
+# Productify
 
-# Getting Started with Create React App
+Productify is a productivity app which helps you track and manage your time. [Try it out!](https://productify-5e45b.web.app/)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+I built this initially for personal use, inspired by the simplicity of [Todoist](https://www.todoist.com/) and the powerful tracking capabilities of [Toggl](https://toggl.com/).
 
-## Available Scripts
+<img width="1470" alt="productify" src="https://github.com/user-attachments/assets/4b465662-1b4c-4c6e-b025-7f4e6a246802" />
 
-In the project directory, you can run:
 
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+ ## Features
+ - Automatic time tracking
+ - Manual time tracking when you need it
+ - Task management with integrated time tracking support
+ - Tags for organizing your time
+ - Calculate monetization for your working hours
+ - Get insights from your time and track productivity
+ - Works on mobile and web
+ - More!
+ 
+ ## Tech
+ - The app uses React for the frontend with Redux for state management
+ - Database and auth is handled using Firebase
+ - Tailwind helped with building a mobile first interface
